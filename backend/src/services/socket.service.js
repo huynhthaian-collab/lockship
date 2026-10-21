@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { Server } from "socket.io";
 import { env } from "../config/env.js";
+import { isOriginAllowed } from "../config/cors.js";
 import RevokedToken from "../models/revoked-token.model.js";
 import User from "../models/user.model.js";
 import { hashToken } from "../utils/token.js";
@@ -62,8 +63,15 @@ export function initializeSocket(httpServer) {
 
     socketServer = new Server(httpServer, {
         cors: {
-            origin: env.CORS_ORIGIN.split(",").map((origin) => origin.trim()),
+            origin: function (origin, callback) {
+                if (isOriginAllowed(origin)) {
+                    callback(null, true);
+                } else {
+                    callback(new Error("Not allowed by CORS"));
+                }
+            },
             credentials: true,
+            methods: ["GET", "POST"],
         },
         maxHttpBufferSize: 16 * 1024,
     });

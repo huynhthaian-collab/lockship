@@ -5,7 +5,7 @@ dotenv.config();
 const port = Number(process.env.PORT ?? 5000);
 const saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS ?? 12);
 const resetTokenTtlMinutes = Number(process.env.PASSWORD_RESET_TOKEN_TTL_MINUTES ?? 15);
-const clientUrl = process.env.CLIENT_URL ?? process.env.CORS_ORIGIN ?? "http://localhost:5173";
+const clientUrl = process.env.CLIENT_URL ?? process.env.CORS_ORIGIN ?? "https://lockship-gamma.vercel.app";
 const unlockCodeTtlMinutes = Number(process.env.UNLOCK_CODE_TTL_MINUTES ?? 10);
 const unlockCodeMaxAttempts = Number(process.env.UNLOCK_CODE_MAX_ATTEMPTS ?? 5);
 const smtpPort = Number(process.env.SMTP_PORT ?? 587);
@@ -75,8 +75,8 @@ if (nodeEnv === "production" && (!smtpHost || !smtpFrom)) {
     throw new Error("SMTP_HOST and EMAIL_FROM (or SMTP_FROM) must be set in production.");
 }
 
-if (nodeEnv === "production" && !process.env.CLIENT_URL) {
-    throw new Error("CLIENT_URL must be set in production.");
+if (nodeEnv === "production" && !process.env.CLIENT_URL && !process.env.CORS_ORIGIN) {
+    throw new Error("CLIENT_URL or CORS_ORIGIN must be set in production.");
 }
 
 if (mqttUrl) {

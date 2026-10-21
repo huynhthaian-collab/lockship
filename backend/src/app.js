@@ -3,6 +3,7 @@ import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 import { env } from "./config/env.js";
+import { corsOptions, isOriginAllowed } from "./config/cors.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 import { notFound } from "./middleware/not-found.middleware.js";
 import { apiRateLimiter } from "./middleware/rate-limit.middleware.js";
@@ -19,26 +20,24 @@ import { readAuthCookie } from "./utils/auth-cookie.js";
 const app = express();
 
 app.disable("x-powered-by");
-app.use(helmet());
-app.use(
-    cors({
-        origin: env.CORS_ORIGIN.split(",").map((origin) => origin.trim()),
-        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Authorization", "Accept"],
-        credentials: true,
-    }),
-);
+app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
+
+// Robust CORS Middleware - executed before all route handlers
+app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
+
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: false, limit: "10kb" }));
 app.use(sanitizeInputs);
 app.use(morgan(env.NODE_ENV === "production" ? "combined" : "dev"));
+
+// CSRF & Request Origin Protection for mutating requests
 app.use((req, res, next) => {
     if (["GET", "HEAD", "OPTIONS"].includes(req.method)) {
         return next();
     }
     const origin = req.get("origin");
-    const allowedOrigins = env.CORS_ORIGIN.split(",").map((value) => value.trim());
-    if ((origin && !allowedOrigins.includes(origin)) || (!origin && readAuthCookie(req))) {
+    if ((origin && !isOriginAllowed(origin)) || (!origin && readAuthCookie(req))) {
         return res.status(403).json({
             success: false,
             message: "Request origin is not allowed.",
