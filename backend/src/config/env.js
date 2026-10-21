@@ -5,7 +5,19 @@ dotenv.config();
 const port = Number(process.env.PORT ?? 5000);
 const saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS ?? 12);
 const resetTokenTtlMinutes = Number(process.env.PASSWORD_RESET_TOKEN_TTL_MINUTES ?? 15);
-const clientUrl = process.env.CLIENT_URL ?? process.env.CORS_ORIGIN ?? "https://lockship-gamma.vercel.app";
+function resolveClientUrl() {
+    const raw = process.env.CLIENT_URL || process.env.CORS_ORIGIN || "https://lockship-gamma.vercel.app";
+    const unquoted = String(raw).trim().replace(/^['"]|['"]$/g, "");
+    const candidate = unquoted.split(",")[0].trim().replace(/\/+$/, "");
+    if (!candidate) return "https://lockship-gamma.vercel.app";
+    try {
+        const parsed = new URL(candidate.startsWith("http") ? candidate : `https://${candidate}`);
+        return parsed.origin;
+    } catch {
+        return "https://lockship-gamma.vercel.app";
+    }
+}
+const clientUrl = resolveClientUrl();
 const unlockCodeTtlMinutes = Number(process.env.UNLOCK_CODE_TTL_MINUTES ?? 10);
 const unlockCodeMaxAttempts = Number(process.env.UNLOCK_CODE_MAX_ATTEMPTS ?? 5);
 const smtpPort = Number(process.env.SMTP_PORT ?? 587);

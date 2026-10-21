@@ -33,6 +33,16 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use((config) => {
     config.lockshipAuthenticatedRequest = !config.skipAuth
     delete config.skipAuth
+    if (typeof window !== 'undefined') {
+        try {
+            const token = localStorage.getItem('lockship_token')
+            if (token && !config.headers.Authorization) {
+                config.headers.Authorization = `Bearer ${token}`
+            }
+        } catch {
+            // Ignore storage errors
+        }
+    }
     return config
 })
 

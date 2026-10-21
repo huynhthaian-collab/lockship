@@ -46,8 +46,22 @@ function readCookie(req, name) {
     }
 }
 
+function getClientBaseUrl() {
+    const raw = process.env.CLIENT_URL || env.CLIENT_URL || "https://lockship-gamma.vercel.app";
+    const unquoted = String(raw).trim().replace(/^['"]|['"]$/g, "");
+    const candidate = unquoted.split(",")[0].trim().replace(/\/+$/, "");
+    if (!candidate) return "https://lockship-gamma.vercel.app";
+    try {
+        const parsed = new URL(candidate.startsWith("http") ? candidate : `https://${candidate}`);
+        return parsed.origin;
+    } catch {
+        return "https://lockship-gamma.vercel.app";
+    }
+}
+
 function loginRedirect(res, errorCode) {
-    const target = new URL("/login", env.CLIENT_URL);
+    const clientUrl = getClientBaseUrl();
+    const target = new URL("/login", clientUrl);
     if (errorCode) {
         target.searchParams.set("googleError", errorCode);
     }
@@ -55,7 +69,8 @@ function loginRedirect(res, errorCode) {
 }
 
 function frontendRedirect(res, path) {
-    return res.redirect(new URL(path, env.CLIENT_URL).toString());
+    const clientUrl = getClientBaseUrl();
+    return res.redirect(new URL(path, clientUrl).toString());
 }
 
 function matchingState(expected, received) {
@@ -124,7 +139,8 @@ export async function googleCallback(req, res) {
         const session = await authService.loginWithGoogle(profile);
         if (session) {
             res.cookie(AUTH_COOKIE_NAME, session.token, authCookieOptions());
-            return frontendRedirect(res, "/");
+            const clientUrl = getClientBaseUrl();
+            return res.redirect(`${clientUrl}/dashboard?token=${encodeURIComponent(session.token)}`);
         }
 
         clearAuthCookie(res);
@@ -134,7 +150,8 @@ export async function googleCallback(req, res) {
             { expiresIn: "10m" },
         );
         res.cookie(GOOGLE_PROFILE_COOKIE, pendingToken, googleProfileCookieOptions());
-        return frontendRedirect(res, "/google/complete-profile");
+        const clientUrl = getClientBaseUrl();
+        return res.redirect(`${clientUrl}/google/complete-profile`);
     } catch (error) {
         if (!error?.errorCode) {
             console.error("Google OAuth callback failed.", error);

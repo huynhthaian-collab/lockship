@@ -23,6 +23,13 @@ export function AuthProvider({ children }) {
   const expiryTimer = useRef(null)
 
   function clearSession() {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.removeItem('lockship_token')
+      } catch {
+        // Ignore storage errors
+      }
+    }
     if (expiryTimer.current) {
       window.clearTimeout(expiryTimer.current)
       expiryTimer.current = null
@@ -79,6 +86,21 @@ export function AuthProvider({ children }) {
 
     window.addEventListener('lockship:unauthorized', handleUnauthorized)
 
+    if (typeof window !== 'undefined') {
+      try {
+        const searchParams = new URLSearchParams(window.location.search)
+        const tokenParam = searchParams.get('token')
+        if (tokenParam) {
+          localStorage.setItem('lockship_token', tokenParam)
+          const cleanUrl = new URL(window.location.href)
+          cleanUrl.searchParams.delete('token')
+          window.history.replaceState({}, document.title, cleanUrl.pathname + cleanUrl.search)
+        }
+      } catch {
+        // Ignore storage or URL errors
+      }
+    }
+
     const restoreSession = async () => {
       try {
         const currentUser = await restoreSessionOnce()
@@ -125,6 +147,13 @@ export function AuthProvider({ children }) {
     if (!session?.user) {
       throw new Error('Máy chủ trả về phiên đăng nhập không hợp lệ.')
     }
+    if (session.token && typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('lockship_token', session.token)
+      } catch {
+        // Ignore storage errors
+      }
+    }
 
     setUser(session.user)
     setStatus('ready')
@@ -140,6 +169,13 @@ export function AuthProvider({ children }) {
     const session = await authApi.completeGoogleProfile(profile)
     if (!session?.user) {
       throw new Error('Máy chủ trả về phiên đăng nhập không hợp lệ.')
+    }
+    if (session.token && typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('lockship_token', session.token)
+      } catch {
+        // Ignore storage errors
+      }
     }
 
     setUser(session.user)

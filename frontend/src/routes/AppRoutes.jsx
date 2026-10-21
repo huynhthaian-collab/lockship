@@ -44,6 +44,7 @@ import AdminIoTPage from '../pages/admin/AdminIoTPage.jsx'
 import AdminIoTDetailPage from '../pages/admin/AdminIoTDetailPage.jsx'
 import AdminReportsPage from '../pages/admin/AdminReportsPage.jsx'
 import AdminLogsPage from '../pages/admin/AdminLogsPage.jsx'
+import { getRoleLandingPath } from './rolePaths.js'
 
 function GuestOnlyRoute({ children }) {
   const { isAuthenticated, status } = useAuth()
@@ -51,10 +52,18 @@ function GuestOnlyRoute({ children }) {
   return isAuthenticated ? <Navigate to="/" replace /> : children
 }
 
+function DashboardRedirect() {
+  const { user, isAuthenticated, status } = useAuth()
+  if (status === 'loading') return <Loading fullScreen label="Đang chuyển hướng tới bảng điều khiển..." />
+  if (!isAuthenticated) return <Navigate to="/login" replace />
+  return <Navigate to={getRoleLandingPath(user?.role)} replace />
+}
+
 export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/dashboard" element={<DashboardRedirect />} />
       <Route path="/login" element={<GuestOnlyRoute><LoginPage /></GuestOnlyRoute>} />
       <Route path="/google/complete-profile" element={<GuestOnlyRoute><GoogleCompleteProfilePage /></GuestOnlyRoute>} />
       <Route path="/register" element={<GuestOnlyRoute><RegisterPage /></GuestOnlyRoute>} />
