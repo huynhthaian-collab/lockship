@@ -1,0 +1,16 @@
+[
+  {
+    "_id": { "$oid": "671000000000000000000004" },
+    "deviceId": "lockship-demo-device",
+    "credentialId": "c1baa2be-264e-4f06-b990-06eb6d25ba9e",
+    "vehicleId": { "$oid": "671000000000000000000003" },
+    "ownerId": { "$oid": "671000000000000000000001" },
+    "status": "offline",
+    "lockStatus": "locked",
+    "battery": 100,
+    "lastSeen": null,
+    "firmwareVersion": "sim-1.0.0",
+    "createdAt": { "$date": "2026-10-02T00:00:00.000Z" },
+    "updatedAt": { "$date": "2026-10-02T00:00:00.000Z" }
+  }
+]

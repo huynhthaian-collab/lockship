@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7-jammy
+    container_name: lockship-mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: lockship
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+
+  # Lockship Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: lockship-backend
+    restart: always
+    depends_on:
+      - mongodb
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      MONGODB_URI: mongodb://mongodb:27017/lockship
+      JWT_SECRET: ${JWT_SECRET:-lockship_production_super_secret_jwt_key_32chars_minimum_length!}
+      UNLOCK_CODE_ENCRYPTION_KEY: ${UNLOCK_CODE_ENCRYPTION_KEY:-lockship_production_super_secret_encryption_key_32chars!}
+      CLIENT_URL: ${CLIENT_URL:-http://localhost:5173}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
+      MQTT_URL: ${MQTT_URL:-}
+      MQTT_USERNAME: ${MQTT_USERNAME:-}
+      MQTT_PASSWORD: ${MQTT_PASSWORD:-}
+    ports:
+      - "5000:5000"
+
+volumes:
+  mongo_data:

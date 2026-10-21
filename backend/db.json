@@ -1,0 +1,63 @@
+{
+  "users": {
+    "owner": {
+      "_id": "671000000000000000000001",
+      "name": "Demo Owner",
+      "email": "owner.demo@lockship.local",
+      "role": "owner",
+      "status": "active",
+      "phone": "+10000000001"
+    },
+    "shipper": {
+      "_id": "671000000000000000000002",
+      "name": "Demo Shipper",
+      "email": "shipper.demo@lockship.local",
+      "role": "shipper",
+      "status": "active",
+      "phone": "+10000000002",
+      "ownerId": "671000000000000000000001"
+    },
+    "admin": {
+      "_id": "671000000000000000000006",
+      "name": "Demo Admin",
+      "email": "admin.demo@lockship.local",
+      "role": "admin",
+      "status": "active",
+      "phone": "+10000000003",
+      "ownerId": null
+    }
+  },
+  "vehicle": {
+    "_id": "671000000000000000000003",
+    "ownerId": "671000000000000000000001",
+    "plateNumber": "DEMO-001",
+    "type": "van",
+    "model": "Demo Delivery Van",
+    "iotDeviceId": "lockship-demo-device",
+    "status": "active"
+  },
+  "iotDevice": {
+    "_id": "671000000000000000000004",
+    "deviceId": "lockship-demo-device",
+    "vehicleId": "671000000000000000000003",
+    "ownerId": "671000000000000000000001",
+    "status": "offline",
+    "lockStatus": "locked",
+    "battery": 100,
+    "firmwareVersion": "sim-1.0.0"
+  },
+  "delivery": {
+    "_id": "671000000000000000000005",
+    "ownerId": "671000000000000000000001",
+    "shipperId": "671000000000000000000002",
+    "vehicleId": "671000000000000000000003",
+    "pickupAddress": "Kho tổng Lockship Ninh Kiều, 1 Đại lộ Hòa Bình, P. Tân An, Q. Ninh Kiều, TP. Cần Thơ",
+    "deliveryAddress": "Trạm Smart Locker ĐH Cần Thơ, Đường 3/2, P. Xuân Khánh, Q. Ninh Kiều, TP. Cần Thơ",
+    "description": "Đơn hàng vận chuyển qua trạm tủ thông minh Ninh Kiều, Cần Thơ",
+    "status": "assigned",
+    "unlockStatus": null,
+    "arrivedAt": null,
+    "authorizedAt": null,
+    "completedAt": null
+  }
+}

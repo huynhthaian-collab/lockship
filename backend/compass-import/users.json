@@ -1,0 +1,34 @@
+[
+  {
+    "_id": { "$oid": "671000000000000000000001" },
+    "name": "Demo Owner",
+    "email": "owner.demo@lockship.local",
+    "password": "$2a$12$0qcdVW.K5NcWaervOEiiGufw6XvHjdbjwlQDdk1yhxRTUjLDOxtpG",
+    "phone": "+10000000001",
+    "role": "owner",
+    "ownerId": null,
+    "status": "active",
+    "avatar": null,
+    "passwordResetTokenHash": null,
+    "passwordResetExpiresAt": null,
+    "tokenVersion": 0,
+    "createdAt": { "$date": "2026-10-02T00:00:00.000Z" },
+    "updatedAt": { "$date": "2026-10-02T00:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "671000000000000000000002" },
+    "name": "Demo Shipper",
+    "email": "shipper.demo@lockship.local",
+    "password": "$2a$12$0qcdVW.K5NcWaervOEiiGufw6XvHjdbjwlQDdk1yhxRTUjLDOxtpG",
+    "phone": "+10000000002",
+    "role": "shipper",
+    "ownerId": { "$oid": "671000000000000000000001" },
+    "status": "active",
+    "avatar": null,
+    "passwordResetTokenHash": null,
+    "passwordResetExpiresAt": null,
+    "tokenVersion": 0,
+    "createdAt": { "$date": "2026-10-02T00:00:00.000Z" },
+    "updatedAt": { "$date": "2026-10-02T00:00:00.000Z" }
+  }
+]

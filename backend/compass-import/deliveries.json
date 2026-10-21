@@ -1,0 +1,18 @@
+[
+  {
+    "_id": { "$oid": "671000000000000000000005" },
+    "ownerId": { "$oid": "671000000000000000000001" },
+    "shipperId": { "$oid": "671000000000000000000002" },
+    "vehicleId": { "$oid": "671000000000000000000003" },
+    "pickupAddress": "Kho tổng Lockship Ninh Kiều, 1 Đại lộ Hòa Bình, P. Tân An, Q. Ninh Kiều, TP. Cần Thơ",
+    "deliveryAddress": "Trạm Smart Locker ĐH Cần Thơ, Đường 3/2, P. Xuân Khánh, Q. Ninh Kiều, TP. Cần Thơ",
+    "description": "Đơn hàng vận chuyển qua trạm tủ thông minh Ninh Kiều, Cần Thơ",
+    "status": "assigned",
+    "unlockStatus": null,
+    "arrivedAt": null,
+    "authorizedAt": null,
+    "completedAt": null,
+    "createdAt": { "$date": "2026-10-02T00:00:00.000Z" },
+    "updatedAt": { "$date": "2026-10-02T00:00:00.000Z" }
+  }
+]

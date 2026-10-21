@@ -1,0 +1,447 @@
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import {
+    Lock,
+    Radio,
+    RefreshCw,
+    Trash2
+} from 'lucide-react'
+import AdminPage from '../../components/AdminPage.jsx'
+import ErrorMessage from '../../components/ErrorMessage.jsx'
+import Loading from '../../components/Loading.jsx'
+import StatusPill from '../../components/StatusPill.jsx'
+import Card from '../../components/ui/Card.jsx'
+import Button from '../../components/ui/Button.jsx'
+import Modal from '../../components/ui/Modal.jsx'
+import EmptyState from '../../components/ui/EmptyState.jsx'
+import SpatialTiltCard from '../../components/spatial/SpatialTiltCard.jsx'
+import IsometricLocker from '../../components/spatial/IsometricLocker.jsx'
+import { useSocketEvent } from '../../hooks/useSocketEvent.js'
+import { adminApi } from '../../services/adminApi.js'
+
+function formatDate(value) {
+    return value ? new Date(value).toLocaleString('vi-VN') : '—'
+}
+
+export default function AdminIoTDetailPage() {
+    const { id } = useParams()
+    const navigate = useNavigate()
+    const [device, setDevice] = useState(null)
+    const [owners, setOwners] = useState([])
+    const [vehicles, setVehicle] = useState([])
+    const [logs, setLogs] = useState([])
+    const [eventFilter, setEventFilter] = useState('all')
+    const [newVehicleId, setNewVehicleId] = useState('')
+    const [commandBusy, setCommandBusy] = useState(false)
+    const [rebindBusy, setRebindBusy] = useState(false)
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+    const [deleting, setDeleting] = useState(false)
+    const [error, setError] = useState('')
+    const [notice, setNotice] = useState('')
+    const [loading, setLoading] = useState(true)
+
+    const refresh = useCallback(async () => {
+        setError('')
+        try {
+            const [deviceRecord, deviceStatus, allUser, allVehicle, eventLogs] = await Promise.all([
+                adminApi.device(id),
+                adminApi.deviceStatus(id).catch(() => null),
+                adminApi.users().catch(() => []),
+                adminApi.vehicles().catch(() => []),
+                adminApi.deviceLogs(id).catch(() => []),
+            ])
+            const merged = { ...deviceRecord, ...(deviceStatus || {}) }
+            setDevice(merged)
+            setOwners(Array.isArray(allUser) ? allUser : [])
+            setVehicle(Array.isArray(allVehicle) ? allVehicle : [])
+            setLogs(Array.isArray(eventLogs) ? eventLogs : [])
+            setNewVehicleId(merged.vehicleId || '')
+        } catch (requestError) {
+            setError(requestError.message || 'Không thể tải chi tiết thiết bị IoT.')
+        } finally {
+            setLoading(false)
+        }
+    }, [id])
+
+    useEffect(() => {
+        let active = true
+        async function init() {
+            try {
+                const [deviceRecord, deviceStatus, allUser, allVehicle, eventLogs] = await Promise.all([
+                    adminApi.device(id),
+                    adminApi.deviceStatus(id).catch(() => null),
+                    adminApi.users().catch(() => []),
+                    adminApi.vehicles().catch(() => []),
+                    adminApi.deviceLogs(id).catch(() => []),
+                ])
+                if (active) {
+                    const merged = { ...deviceRecord, ...(deviceStatus || {}) }
+                    setDevice(merged)
+                    setOwners(Array.isArray(allUser) ? allUser : [])
+                    setVehicle(Array.isArray(allVehicle) ? allVehicle : [])
+                    setLogs(Array.isArray(eventLogs) ? eventLogs : [])
+                    setNewVehicleId(merged.vehicleId || '')
+                    setLoading(false)
+                }
+            } catch (err) {
+                if (active) {
+                    setError(err.message || 'Không thể tải chi tiết thiết bị IoT.')
+                    setLoading(false)
+                }
+            }
+        }
+        init()
+        return () => { active = false }
+    }, [id])
+
+    const onStatus = useCallback(
+        (event) => {
+            if (event.deviceId === device?.deviceId) {
+                setDevice((current) => (current ? { ...current, ...event } : current))
+            }
+        },
+        [device?.deviceId]
+    )
+
+    const onAlert = useCallback(
+        (event) => {
+            if (event.deviceId === device?.deviceId) {
+                refresh()
+            }
+        },
+        [device?.deviceId, refresh]
+    )
+
+    useSocketEvent('iot:status', onStatus)
+    useSocketEvent('iot:alert', onAlert)
+
+    const owner = useMemo(() => owners.find((o) => o._id === device?.ownerId), [owners, device?.ownerId])
+    const currentVehicle = useMemo(() => vehicles.find((v) => v._id === device?.vehicleId), [vehicles, device?.vehicleId])
+
+    const availableOwnerVehicle = useMemo(() => {
+        if (!device?.ownerId) return []
+        return vehicles.filter(
+            (v) =>
+                v.ownerId === device.ownerId &&
+                v.status === 'active' &&
+                (!v.iotDeviceId || v.iotDeviceId === device.deviceId)
+        )
+    }, [vehicles, device])
+
+    async function sendCommand(command) {
+        setCommandBusy(true)
+        setError('')
+        setNotice('')
+        try {
+            await adminApi.sendCommand(id, command)
+            setNotice(`Đã gửi lệnh MQTT "${command}" thành công đến ${device?.deviceId}.`)
+            await refresh()
+        } catch (requestError) {
+            setError(requestError.message || `Lỗi khi gửi lệnh ${command}.`)
+        } finally {
+            setCommandBusy(false)
+        }
+    }
+
+    async function handleRebindVehicle(event) {
+        event.preventDefault()
+        if (!newVehicleId || newVehicleId === String(device?.vehicleId)) return
+        setRebindBusy(true)
+        setError('')
+        setNotice('')
+        try {
+            await adminApi.updateDevice(id, { vehicleId: newVehicleId })
+            setNotice('Đã liên kết lại phương tiện với thiết bị IoT thành công.')
+            await refresh()
+        } catch (requestError) {
+            setError(requestError.message || 'Không thể liên kết lại phương tiện.')
+        } finally {
+            setRebindBusy(false)
+        }
+    }
+
+    async function handleDeleteDevice() {
+        setDeleting(true)
+        setError('')
+        try {
+            await adminApi.deleteDevice(id)
+            navigate('/admin/iot', { replace: true })
+        } catch (requestError) {
+            setError(requestError.message || 'Không thể xóa thiết bị.')
+            setDeleteModalOpen(false)
+            setDeleting(false)
+        }
+    }
+
+    const eventTypes = useMemo(() => ['all', ...new Set(logs.map((l) => l.type))], [logs])
+
+    const filteredLogs = useMemo(() => {
+        if (eventFilter === 'all') return logs
+        return logs.filter((l) => l.type === eventFilter)
+    }, [logs, eventFilter])
+
+    if (loading) return <Loading label="Đang tải dữ liệu thiết bị IoT..." />
+
+    return (
+        <AdminPage
+            eyebrow="Chi tiết phần cứng IoT"
+            title={device ? device.deviceId : 'Chi tiết thiết bị'}
+            description={`Định danh phần cứng: ${id} · Model: Khóa hàng hóa điện tử thông minh ESP32`}
+            action={
+                <Button
+                    onClick={() => setDeleteModalOpen(true)}
+                    type="button"
+                    variant="danger"
+                >
+                    <Trash2 size={15} /> Xóa thiết bị
+                </Button>
+            }
+        >
+            <div className="flex items-center justify-between pb-1">
+                <Link className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-cyan-400 no-underline transition hover:text-cyan-300 hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]" to="/admin/iot">
+                    ← Quay lại danh sách khóa
+                </Link>
+                {device && (
+                    <div className="flex items-center gap-2">
+                        <StatusPill value={device.status} />
+                        <StatusPill value={device.lockStatus} />
+                    </div>
+                )}
+            </div>
+
+            {error && <ErrorMessage message={error} />}
+            {notice && (
+                <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-xs sm:text-sm text-emerald-200 backdrop-blur-md shadow-[0_0_16px_rgba(16,185,129,0.2)]" role="status">
+                    {notice}
+                </div>
+            )}
+
+            {device && (
+                <div className="space-y-6">
+                    {/* Live Telemetry & 3D Locker Stage */}
+                    <div className="grid gap-6 lg:grid-cols-[1.2fr_1.8fr]">
+                        <SpatialTiltCard className="flex flex-col items-center justify-center p-6 text-center" glareColor="rgba(59, 130, 246, 0.3)">
+                            <div className="mb-2">
+                                <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-[11px] font-semibold text-cyan-300">
+                                    <span className="size-1.5 animate-pulse rounded-full bg-cyan-400" />
+                                    Mô phỏng cơ điện tử 3D
+                                </span>
+                            </div>
+                            <div className="py-6">
+                                <IsometricLocker
+                                    battery={device.battery ?? 100}
+                                    className="scale-110 sm:scale-125"
+                                    deviceId={device.deviceId}
+                                    lockStatus={device.lockStatus}
+                                    status={device.status}
+                                />
+                            </div>
+                            <p className="text-xs text-slate-400">
+                                Đồng bộ trạng thái chốt khóa thời gian thực với broker MQTT
+                            </p>
+                        </SpatialTiltCard>
+
+                        <Card title="Thông số kỹ thuật thiết bị" description="Dữ liệu cảm biến viễn thám và kết nối MQTT">
+                            <div className="grid gap-4 sm:grid-cols-2">
+                                <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+                                    <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Trạng thái kết nối</p>
+                                    <div className="mt-2.5"><StatusPill value={device.status} /></div>
+                                </div>
+                                <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+                                    <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Chốt khóa cơ học</p>
+                                    <div className="mt-2.5"><StatusPill value={device.lockStatus} /></div>
+                                </div>
+                                <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+                                    <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Dung lượng pin</p>
+                                    <p className="mt-1.5 font-mono text-2xl font-bold text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]">
+                                        {device.battery == null ? '—' : `${device.battery}%`}
+                                    </p>
+                                </div>
+                                <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+                                    <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Phiên bản Firmware</p>
+                                    <p className="mt-1.5 font-mono text-sm font-semibold text-slate-200">
+                                        {device.firmwareVersion || 'v1.0.0-release'}
+                                    </p>
+                                </div>
+                                <div className="sm:col-span-2 rounded-xl border border-white/10 bg-white/[0.03] p-4">
+                                    <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Thời gian nhận gói tin gần nhất</p>
+                                    <p className="mt-1.5 text-sm font-medium text-slate-200 font-mono">
+                                        {formatDate(device.lastSeen)}
+                                    </p>
+                                </div>
+                            </div>
+                        </Card>
+                    </div>
+
+                    {/* Split Row: Device Commands & Vehicle Rebinding */}
+                    <div className="grid gap-6 lg:grid-cols-2">
+                        {/* Device Commands Panel */}
+                        <Card
+                            title="Lệnh điều khiển MQTT an toàn"
+                            description="Gửi tín hiệu chẩn đoán và điều khiển quản trị trực tiếp đến vi điều khiển qua MQTT"
+                        >
+                            <div className="grid grid-cols-3 gap-3">
+                                <button
+                                    className="ui-button-secondary flex flex-col items-center justify-center p-4 text-center group"
+                                    disabled={commandBusy}
+                                    onClick={() => sendCommand('PING')}
+                                    type="button"
+                                >
+                                    <Radio className="size-5 text-cyan-400 transition group-hover:scale-110" />
+                                    <span className="mt-2 font-mono text-xs font-bold text-white">PING</span>
+                                    <span className="text-[10px] text-slate-400">Đo độ trễ</span>
+                                </button>
+
+                                <button
+                                    className="ui-button-secondary flex flex-col items-center justify-center p-4 text-center group"
+                                    disabled={commandBusy}
+                                    onClick={() => sendCommand('STATUS')}
+                                    type="button"
+                                >
+                                    <RefreshCw className="size-5 text-blue-400 transition group-hover:scale-110" />
+                                    <span className="mt-2 font-mono text-xs font-bold text-white">STATUS</span>
+                                    <span className="text-[10px] text-slate-400">Lấy dữ liệu</span>
+                                </button>
+
+                                <button
+                                    className="ui-button-secondary flex flex-col items-center justify-center p-4 text-center group hover:border-rose-400/50"
+                                    disabled={commandBusy}
+                                    onClick={() => sendCommand('LOCK')}
+                                    type="button"
+                                >
+                                    <Lock className="size-5 text-rose-400 transition group-hover:scale-110" />
+                                    <span className="mt-2 font-mono text-xs font-bold text-white">LOCK</span>
+                                    <span className="text-[10px] text-slate-400">Khóa chốt</span>
+                                </button>
+                            </div>
+
+                            <p className="mt-4 border-t border-white/10 pt-3 text-xs leading-relaxed text-slate-400">
+                                <strong>Chính sách bảo mật:</strong> Quản trị viên chỉ được phép gửi các lệnh chẩn đoán (PING, STATUS, LOCK). Lệnh UNLOCK (mở chốt) chỉ được thực thi thông qua quy trình xác thực mã OTP một lần do chủ sở hữu cấp cho shipper.
+                            </p>
+                        </Card>
+
+                        {/* Vehicle & Owner Affiliation */}
+                        <Card
+                            title="Liên kết & Quyền sở hữu"
+                            description="Thông tin chủ xe và phương tiện hiện đang được trang bị khóa"
+                        >
+                            <div className="space-y-3 rounded-xl border border-white/10 bg-white/[0.03] p-4 text-xs">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-slate-400 font-semibold">Chủ sở hữu:</span>
+                                    {owner ? (
+                                        <Link to={`/admin/users/${owner._id}`} className="font-semibold text-cyan-400 hover:text-cyan-300 hover:underline">
+                                            {owner.name} ({owner.email})
+                                        </Link>
+                                    ) : (
+                                        <span className="font-mono text-slate-400">{device.ownerId}</span>
+                                    )}
+                                </div>
+                                <div className="flex items-center justify-between border-t border-white/5 pt-2">
+                                    <span className="text-slate-400 font-semibold">Phương tiện gắn khóa:</span>
+                                    {currentVehicle ? (
+                                        <span className="font-mono font-bold text-white">
+                                            {currentVehicle.plateNumber} ({currentVehicle.model})
+                                        </span>
+                                    ) : (
+                                        <span className="text-amber-400 italic">Chưa gắn xe</span>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Rebind Vehicle Form */}
+                            <form className="mt-4 space-y-3" onSubmit={handleRebindVehicle}>
+                                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
+                                    Chuyển liên kết sang phương tiện khác (cùng chủ xe)
+                                    <select
+                                        className="ui-control mt-2"
+                                        onChange={(e) => setNewVehicleId(e.target.value)}
+                                        value={newVehicleId}
+                                    >
+                                        <option value="">Chọn phương tiện...</option>
+                                        {availableOwnerVehicle.map((v) => (
+                                            <option key={v._id} value={v._id}>
+                                                {v.plateNumber} ({v.type} • {v.model}) {v._id === device.vehicleId ? '• (Đang gắn)' : ''}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </label>
+                                <button
+                                    className="ui-button-primary px-4 py-2 text-xs font-semibold"
+                                    disabled={rebindBusy || !newVehicleId || newVehicleId === String(device.vehicleId)}
+                                    type="submit"
+                                >
+                                    {rebindBusy ? 'Đang lưu...' : 'Lưu liên kết phương tiện'}
+                                </button>
+                            </form>
+                        </Card>
+                    </div>
+
+                    {/* Recorded Events Log */}
+                    <Card
+                        title="Sự kiện thiết bị & Nhật ký kiểm toán"
+                        description="Dữ liệu lịch sử, cảnh báo và phản hồi lệnh MQTT của thiết bị"
+                        action={
+                            <div className="flex items-center gap-2">
+                                <span className="text-xs text-slate-400">Bộ lọc:</span>
+                                <select
+                                    className="ui-control py-1 text-xs"
+                                    onChange={(e) => setEventFilter(e.target.value)}
+                                    value={eventFilter}
+                                >
+                                    {eventTypes.map((type) => (
+                                        <option key={type} value={type}>
+                                            {type.replaceAll('_', ' ')}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        }
+                    >
+                        {filteredLogs.length === 0 ? (
+                            <EmptyState
+                                title="Chưa có sự kiện nào"
+                                description="Các sự kiện kết nối, thay đổi chốt và cảnh báo sẽ xuất hiện tại đây khi thiết bị truyền dữ liệu."
+                            />
+                        ) : (
+                            <ol className="divide-y divide-white/5">
+                                {filteredLogs.map((log) => (
+                                    <li className="flex flex-col gap-2 py-3.5 first:pt-0 last:pb-0 sm:flex-row sm:items-start sm:justify-between" key={log._id || log.id}>
+                                        <div className="min-w-0 pr-4">
+                                            <p className="text-sm font-semibold capitalize text-white">
+                                                {log.type?.replaceAll('_', ' ') || 'Sự kiện IoT'}
+                                            </p>
+                                            <p className="mt-1 font-mono text-xs text-cyan-300/80 break-words">
+                                                {log.payload?.errorCode || log.payload?.reason || log.payload?.command || log.payload?.event || JSON.stringify(log.payload || {})}
+                                            </p>
+                                        </div>
+                                        <time className="whitespace-nowrap font-mono text-xs text-slate-400">
+                                            {formatDate(log.createdAt)}
+                                        </time>
+                                    </li>
+                                ))}
+                            </ol>
+                        )}
+                    </Card>
+                </div>
+            )}
+
+            {/* Modal Confirm Delete */}
+            <Modal
+                description={`Thao tác này sẽ xóa thiết bị "${device?.deviceId}" khỏi hệ thống và hủy liên kết với phương tiện.`}
+                footer={
+                    <>
+                        <Button disabled={deleting} onClick={() => setDeleteModalOpen(false)} type="button" variant="secondary">
+                            Hủy bỏ
+                        </Button>
+                        <Button disabled={deleting} onClick={handleDeleteDevice} type="button" variant="danger">
+                            {deleting ? 'Đang xóa...' : 'Xác nhận xóa'}
+                        </Button>
+                    </>
+                }
+                onClose={() => setDeleteModalOpen(false)}
+                open={deleteModalOpen}
+                title="Xác nhận xóa thiết bị IoT?"
+            />
+        </AdminPage>
+    )
+}

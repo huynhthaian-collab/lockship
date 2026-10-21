@@ -1,0 +1,540 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Modern Spatial 3D Palette */
+  --color-void: #06080d;
+  --color-void-deep: #030407;
+  --color-slate-950: #07090e;
+  --color-slate-900: #0b0f19;
+  --color-slate-850: #101524;
+  --color-slate-800: #171f33;
+  --color-slate-700: #263352;
+  --color-slate-600: #3e5077;
+  --color-slate-500: #62749e;
+  --color-slate-400: #8ea1c7;
+  --color-slate-300: #b8c7e0;
+  --color-slate-200: #dce5f2;
+  --color-slate-100: #edf2f9;
+  --color-slate-50: #f8fafc;
+
+  /* Spatial Electric Blue & Hologram Cyan */
+  --color-blue-50: #eff6ff;
+  --color-blue-100: #dbeafe;
+  --color-blue-200: #bfdbfe;
+  --color-blue-300: #93c5fd;
+  --color-blue-400: #60a5fa;
+  --color-blue-500: #3b82f6;
+  --color-blue-600: #2563eb;
+  --color-blue-700: #1d4ed8;
+  --color-blue-800: #1e40af;
+  --color-blue-900: #1e3a8a;
+  --color-blue-950: #0e1a38;
+
+  --color-cyan-400: #22d3ee;
+  --color-cyan-500: #06b6d4;
+
+  /* Emerald Cybernetic & Lock Accents */
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+  --color-emerald-600: #059669;
+
+  --color-amber-400: #fbbf24;
+  --color-amber-500: #f59e0b;
+
+  --color-red-400: #f87171;
+  --color-red-500: #ef4444;
+
+  /* Aliases */
+  --color-lock-ink: #0b0f19;
+  --color-lock-leaf: #2563eb;
+  --color-lock-mist: #0b0f19;
+  --color-lock-line: rgba(255, 255, 255, 0.1);
+  --color-lock-coral: #ef4444;
+}
+
+@layer base {
+  :root {
+    --color-primary: #2563eb;
+    --color-primary-dark: #1d4ed8;
+    --color-accent: #06b6d4;
+    --color-bg: #07090e;
+    --color-surface: #0b0f19;
+    --color-text: #f1f5f9;
+    --color-text-secondary: #8ea1c7;
+    --color-border: rgba(255, 255, 255, 0.1);
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-danger: #ef4444;
+
+    font-family: var(--font-sans);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #07090e;
+    color: #f1f5f9;
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0;
+    overflow-x: hidden;
+    selection-background-color: #2563eb;
+    selection-color: #ffffff;
+  }
+
+  /* Custom Slim Glass Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 9999px;
+    backdrop-filter: blur(8px);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(59, 130, 246, 0.5);
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  button {
+    transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 3px;
+    box-shadow: 0 0 16px rgba(59, 130, 246, 0.4);
+  }
+}
+
+/* ==========================================================================
+   SPATIAL 3D & GLASSMORPHISM DESIGN SYSTEM
+   ========================================================================== */
+
+@layer components {
+  /* Spatial Multi-layer Glass Card */
+  .ui-card,
+  .spatial-card {
+    position: relative;
+    background: linear-gradient(135deg, rgba(16, 22, 36, 0.7) 0%, rgba(10, 14, 24, 0.8) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    border-left: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow:
+      0 12px 36px -8px rgba(0, 0, 0, 0.6),
+      0 1px 1px 0 rgba(255, 255, 255, 0.05) inset;
+    transition: all 260ms cubic-bezier(0.16, 1, 0.3, 1);
+    transform-style: preserve-3d;
+  }
+
+  .ui-card:hover,
+  .spatial-card:hover {
+    border-color: rgba(96, 165, 250, 0.35);
+    border-top-color: rgba(147, 197, 253, 0.5);
+    box-shadow:
+      0 20px 48px -12px rgba(0, 0, 0, 0.75),
+      0 0 24px -4px rgba(37, 99, 235, 0.2),
+      0 1px 2px 0 rgba(255, 255, 255, 0.1) inset;
+    transform: translateY(-2px);
+  }
+
+  /* Bento 3D Grid Card */
+  .bento-card {
+    position: relative;
+    background: linear-gradient(145deg, rgba(18, 26, 44, 0.65) 0%, rgba(11, 15, 26, 0.8) 100%);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-radius: 1.35rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow:
+      0 16px 40px -10px rgba(0, 0, 0, 0.7),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+    transition: all 260ms cubic-bezier(0.16, 1, 0.3, 1);
+    transform-style: preserve-3d;
+  }
+
+  .bento-card:hover {
+    border-color: rgba(59, 130, 246, 0.4);
+    box-shadow:
+      0 24px 50px -12px rgba(0, 0, 0, 0.8),
+      0 0 30px -5px rgba(37, 99, 235, 0.25);
+    transform: translateY(-3px) translateZ(10px);
+  }
+
+  /* Tactile 3D Buttons */
+  .ui-button-primary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.85rem;
+    background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 90%);
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-decoration: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.35);
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+    border-bottom: 2px solid #172554;
+    box-shadow:
+      0 10px 24px -6px rgba(37, 99, 235, 0.55),
+      0 3px 0 0 #1e3a8a,
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.3);
+    transition: all 160ms cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateZ(15px);
+  }
+
+  .ui-button-primary:hover:not(:disabled) {
+    background: linear-gradient(180deg, #60a5fa 0%, #2563eb 90%);
+    box-shadow:
+      0 14px 28px -6px rgba(37, 99, 235, 0.7),
+      0 3px 0 0 #1e3a8a,
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.45);
+    transform: translateY(-1px) translateZ(20px);
+  }
+
+  .ui-button-primary:active:not(:disabled) {
+    transform: translateY(2px) scale(0.98);
+    border-bottom-width: 1px;
+    box-shadow:
+      0 4px 12px -2px rgba(37, 99, 235, 0.4),
+      0 1px 0 0 #1e3a8a,
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+  }
+
+  .ui-button-primary:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    box-shadow: none;
+    border-bottom-width: 1px;
+  }
+
+  /* Tactile 3D Secondary Button */
+  .ui-button-secondary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.85rem;
+    background: linear-gradient(180deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-top: 1px solid rgba(255, 255, 255, 0.22);
+    border-bottom: 2px solid rgba(15, 23, 42, 0.95);
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    text-decoration: none;
+    box-shadow:
+      0 6px 16px -4px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+    transition: all 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .ui-button-secondary:hover:not(:disabled) {
+    background: linear-gradient(180deg, rgba(51, 65, 85, 0.85) 0%, rgba(30, 41, 59, 0.95) 100%);
+    border-color: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+    box-shadow:
+      0 10px 20px -4px rgba(0, 0, 0, 0.6),
+      0 0 16px rgba(255, 255, 255, 0.08);
+    transform: translateY(-1px);
+  }
+
+  .ui-button-secondary:active:not(:disabled) {
+    transform: translateY(2px) scale(0.98);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  }
+
+  .ui-button-secondary:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+
+  /* Form Controls (Spatial Dark Inset) */
+  .ui-control {
+    width: 100%;
+    border-radius: 0.85rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(11, 15, 25, 0.7);
+    backdrop-filter: blur(12px);
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: #f1f5f9;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+    transition: all 180ms ease;
+  }
+
+  .ui-control::placeholder {
+    color: #64748b;
+  }
+
+  .ui-control:hover:not(:disabled) {
+    border-color: rgba(96, 165, 250, 0.4);
+    background: rgba(15, 23, 42, 0.8);
+  }
+
+  .ui-control:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background: rgba(15, 23, 42, 0.95);
+    box-shadow:
+      0 0 0 3px rgba(59, 130, 246, 0.25),
+      0 0 16px rgba(59, 130, 246, 0.15),
+      inset 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
+  .ui-control:disabled {
+    cursor: not-allowed;
+    background: rgba(15, 23, 42, 0.4);
+    color: #64748b;
+    border-color: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* ==========================================================================
+   3D PERSPECTIVE & TRANSFORMS UTILITIES
+   ========================================================================== */
+
+.perspective-1000 {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.perspective-2000 {
+  perspective: 2000px;
+  transform-style: preserve-3d;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.translate-z-6 {
+  transform: translateZ(6px);
+}
+.translate-z-12 {
+  transform: translateZ(12px);
+}
+.translate-z-20 {
+  transform: translateZ(20px);
+}
+.translate-z-30 {
+  transform: translateZ(30px);
+}
+
+/* Perspective Grid Floor effect */
+.spatial-grid-bg {
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+}
+
+/* Glowing Holographic Orbs */
+.glow-orb-blue {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.16) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  animation: float-orb-1 14s ease-in-out infinite alternate;
+}
+
+.glow-orb-emerald {
+  position: absolute;
+  width: 450px;
+  height: 450px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.14) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  animation: float-orb-2 18s ease-in-out infinite alternate;
+}
+
+.glow-orb-purple {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(147, 51, 234, 0.12) 0%, transparent 70%);
+  filter: blur(90px);
+  pointer-events: none;
+  animation: float-orb-3 16s ease-in-out infinite alternate;
+}
+
+@keyframes float-orb-1 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(80px, 60px) scale(1.15); }
+}
+
+@keyframes float-orb-2 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-70px, -50px) scale(1.1); }
+}
+
+@keyframes float-orb-3 {
+  0% { transform: translate(0, 0) scale(1.05); }
+  100% { transform: translate(50px, -40px) scale(0.95); }
+}
+
+/* 3D Isometric Cube Styles */
+.isometric-container {
+  transform-style: preserve-3d;
+  perspective: 1200px;
+}
+
+.isometric-cube {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  transform-style: preserve-3d;
+  transform: rotateX(60deg) rotateZ(-45deg);
+  transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.isometric-cube:hover {
+  transform: rotateX(55deg) rotateZ(-40deg) translateY(-10px);
+}
+
+.cube-face {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  backface-visibility: visible;
+}
+
+.cube-top {
+  transform: rotateX(0deg) translateZ(60px);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.35), rgba(16, 185, 129, 0.25));
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 0 20px rgba(59, 130, 246, 0.4);
+}
+
+.cube-front {
+  transform: rotateX(-90deg) translateZ(60px);
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.cube-right {
+  transform: rotateY(90deg) translateZ(60px);
+  background: linear-gradient(180deg, rgba(20, 28, 44, 0.9), rgba(10, 15, 26, 0.95));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Keyframe animations */
+@keyframes hologram-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes lock-pulse-ring {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 0.3; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.animate-hologram-spin {
+  animation: hologram-spin 18s linear infinite;
+}
+
+.animate-pulse-ring {
+  animation: lock-pulse-ring 3s ease-in-out infinite;
+}
+
+/* Backward compatibility resets for input/select within dark glass */
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background-color: rgba(11, 15, 25, 0.75);
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  color: #f1f5f9;
+  transition: all 180ms ease;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):focus,
+select:focus,
+textarea:focus {
+  border-color: #3b82f6;
+  outline: none;
+  background-color: rgba(15, 23, 42, 0.95);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25), 0 0 16px rgba(59, 130, 246, 0.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transform: none !important;
+  }
+}
+
+/* Leaflet Dark Mode Styling (High-tech dark map tiles without dimming neon pins & popups) */
+.leaflet-layer,
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out,
+.leaflet-control-attribution {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+.leaflet-container {
+  background: #0b0f19 !important;
+}
+.leaflet-popup-pane,
+.leaflet-marker-pane {
+  filter: none !important;
+}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: #0b0f19 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7), 0 8px 10px -6px rgba(0, 0, 0, 0.7) !important;
+}

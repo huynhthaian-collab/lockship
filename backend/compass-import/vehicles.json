@@ -1,0 +1,13 @@
+[
+  {
+    "_id": { "$oid": "671000000000000000000003" },
+    "ownerId": { "$oid": "671000000000000000000001" },
+    "plateNumber": "DEMO-001",
+    "type": "van",
+    "model": "Demo Delivery Van",
+    "iotDeviceId": "lockship-demo-device",
+    "status": "active",
+    "createdAt": { "$date": "2026-10-02T00:00:00.000Z" },
+    "updatedAt": { "$date": "2026-10-02T00:00:00.000Z" }
+  }
+]

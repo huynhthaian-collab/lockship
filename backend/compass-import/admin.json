@@ -1,0 +1,18 @@
+[
+  {
+    "_id": { "$oid": "671000000000000000000006" },
+    "name": "Demo Admin",
+    "email": "admin.demo@lockship.local",
+    "password": "$2a$12$0qcdVW.K5NcWaervOEiiGufw6XvHjdbjwlQDdk1yhxRTUjLDOxtpG",
+    "phone": "+10000000003",
+    "role": "admin",
+    "ownerId": null,
+    "status": "active",
+    "avatar": null,
+    "passwordResetTokenHash": null,
+    "passwordResetExpiresAt": null,
+    "tokenVersion": 0,
+    "createdAt": { "$date": "2026-10-02T00:00:00.000Z" },
+    "updatedAt": { "$date": "2026-10-02T00:00:00.000Z" }
+  }
+]
