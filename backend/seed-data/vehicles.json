@@ -1,0 +1,46 @@
+[
+  {
+    "_id": { "$oid": "671000000000000000000011" },
+    "ownerId": { "$oid": "671000000000000000000002" },
+    "plateNumber": "65C-123.45",
+    "type": "Xe tải bảo ôn 1.5 tấn",
+    "model": "Hyundai New Porter 150",
+    "iotDeviceId": "LOCKSHIP-BOX-001",
+    "status": "active",
+    "createdAt": { "$date": "2026-10-20T11:00:00.000Z" },
+    "updatedAt": { "$date": "2026-10-20T11:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "671000000000000000000012" },
+    "ownerId": { "$oid": "671000000000000000000002" },
+    "plateNumber": "65C-678.90",
+    "type": "Xe tải thùng kín 2.5 tấn",
+    "model": "Kia K250 Smart Cargo",
+    "iotDeviceId": "LOCKSHIP-BOX-002",
+    "status": "active",
+    "createdAt": { "$date": "2026-10-20T11:15:00.000Z" },
+    "updatedAt": { "$date": "2026-10-20T11:15:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "671000000000000000000013" },
+    "ownerId": { "$oid": "671000000000000000000003" },
+    "plateNumber": "65B-999.88",
+    "type": "Xe Van giao hàng chuyên dụng",
+    "model": "Ford Transit Custom Van",
+    "iotDeviceId": "LOCKSHIP-BOX-003",
+    "status": "active",
+    "createdAt": { "$date": "2026-10-20T11:30:00.000Z" },
+    "updatedAt": { "$date": "2026-10-20T11:30:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "671000000000000000000014" },
+    "ownerId": { "$oid": "671000000000000000000003" },
+    "plateNumber": "65C-555.22",
+    "type": "Xe tải thùng kín 1.9 tấn",
+    "model": "Isuzu QKR77HE4",
+    "iotDeviceId": "LOCKSHIP-BOX-004",
+    "status": "active",
+    "createdAt": { "$date": "2026-10-20T11:45:00.000Z" },
+    "updatedAt": { "$date": "2026-10-20T11:45:00.000Z" }
+  }
+]

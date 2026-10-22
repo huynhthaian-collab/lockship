@@ -1,0 +1,24 @@
+[
+  {
+    "_id": { "$oid": "671000000000000000000041" },
+    "deliveryId": { "$oid": "671000000000000000000032" },
+    "ownerId": { "$oid": "671000000000000000000002" },
+    "shipperId": { "$oid": "671000000000000000000004" },
+    "category": "vehicle",
+    "description": "Đèn báo pin dự phòng của hộp khóa thông minh nhấp nháy, kiểm tra kết nối Bluetooth và MQTT vẫn ổn định.",
+    "status": "open",
+    "createdAt": { "$date": "2026-10-22T02:50:00.000Z" },
+    "updatedAt": { "$date": "2026-10-22T02:50:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "671000000000000000000042" },
+    "deliveryId": { "$oid": "671000000000000000000034" },
+    "ownerId": { "$oid": "671000000000000000000003" },
+    "shipperId": { "$oid": "671000000000000000000006" },
+    "category": "delivery",
+    "description": "Đường vào điểm giao tại Bến Ninh Kiều đang tổ chức phố đi bộ cuối tuần, tài xế phải dừng xe tại bãi đệm cách 50m.",
+    "status": "resolved",
+    "createdAt": { "$date": "2026-10-21T14:10:00.000Z" },
+    "updatedAt": { "$date": "2026-10-21T14:25:00.000Z" }
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "_id": { "$oid": "671000000000000000000061" },
+    "userId": { "$oid": "671000000000000000000004" },
+    "type": "delivery_assigned",
+    "title": "Đơn hàng mới đã được phân công",
+    "message": "Bạn đã được phân công vận chuyển đơn hàng đi ĐH Cần Thơ (Xe 65C-123.45).",
+    "deliveryId": { "$oid": "671000000000000000000031" },
+    "isRead": true,
+    "createdAt": { "$date": "2026-10-22T01:05:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "671000000000000000000062" },
+    "userId": { "$oid": "671000000000000000000002" },
+    "type": "delivery_arrived",
+    "title": "Tài xế đã đến điểm giao hàng",
+    "message": "Tài xế Lê Hoàng Nam đã đến điểm giao Tủ Locker Bến Ninh Kiều. Vui lòng cấp quyền mở khóa.",
+    "deliveryId": { "$oid": "671000000000000000000032" },
+    "isRead": false,
+    "createdAt": { "$date": "2026-10-22T02:45:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "671000000000000000000063" },
+    "userId": { "$oid": "671000000000000000000005" },
+    "type": "unlock_authorized",
+    "title": "Mã mở khóa thùng xe đã được phê duyệt",
+    "message": "Chủ xe đã phê duyệt ủy quyền mở khóa hộp IoT cho đơn hàng Vắc-xin và vật tư y tế. Mã bảo mật đã được tạo.",
+    "deliveryId": { "$oid": "671000000000000000000033" },
+    "isRead": false,
+    "createdAt": { "$date": "2026-10-22T02:50:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "671000000000000000000064" },
+    "userId": { "$oid": "671000000000000000000003" },
+    "type": "delivery_completed",
+    "title": "Giao hàng thành công",
+    "message": "Đơn hàng Cảng Cái Cui -> Tây Đô đã hoàn tất thành công. Khóa đã tự động chốt lại an toàn.",
+    "deliveryId": { "$oid": "671000000000000000000034" },
+    "isRead": true,
+    "createdAt": { "$date": "2026-10-21T14:36:00.000Z" }
+  }
+]

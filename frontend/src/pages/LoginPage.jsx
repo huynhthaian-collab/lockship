@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { ArrowRight, CheckCircle2, LockKeyhole, ShieldCheck, Sparkles, Zap, Radio } from 'lucide-react'
+import { ArrowLeft, ArrowRight, CheckCircle2, Home, LockKeyhole, Radio } from 'lucide-react'
 import Brand from '../components/Brand.jsx'
 import ErrorMessage from '../components/ErrorMessage.jsx'
 import Input from '../components/ui/Input.jsx'
@@ -65,8 +65,29 @@ export default function LoginPage() {
       <section className="relative z-10 flex items-center justify-center px-6 py-12 sm:px-12 lg:px-16 xl:px-20">
         <SpatialTiltCard className="w-full max-w-md rounded-3xl" maxTilt={5}>
           <div className="spatial-card p-8 sm:p-10">
+            {/* Top Navigation: Back to Home & Quick Access */}
+            <div className="mb-6 flex items-center justify-between">
+              <Link
+                to="/"
+                className="group inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-1.5 text-xs font-semibold text-slate-300 backdrop-blur-md shadow-sm transition-all duration-300 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-white hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:-translate-x-0.5 active:scale-95"
+                title="Quay lại trang chủ Lockship"
+              >
+                <ArrowLeft size={14} className="text-slate-400 transition-transform duration-300 group-hover:-translate-x-1 group-hover:text-blue-400" />
+                <span>Quay lại trang chủ</span>
+              </Link>
+
+              <Link
+                to="/"
+                className="group flex size-8 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] text-slate-400 transition-all duration-300 hover:border-blue-400/40 hover:bg-blue-500/10 hover:text-blue-400 hover:shadow-[0_0_15px_rgba(59,130,246,0.25)] active:scale-95"
+                title="Về trang chủ Lockship"
+                aria-label="Về trang chủ"
+              >
+                <Home size={15} />
+              </Link>
+            </div>
+
             <div className="mb-8">
-              <Brand className="mb-8" textClassName="text-lg font-extrabold tracking-wider bg-gradient-to-r from-white via-slate-100 to-blue-300 bg-clip-text text-transparent" />
+              <Brand to="/" className="mb-8" textClassName="text-lg font-extrabold tracking-wider bg-gradient-to-r from-white via-slate-100 to-blue-300 bg-clip-text text-transparent" />
               <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-400/30 bg-blue-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-blue-300 shadow-[0_0_14px_rgba(59,130,246,0.25)]">
                 <span className="size-1.5 rounded-full bg-blue-400 shadow-[0_0_6px_#60a5fa]" />
                 Cổng bảo mật không gian Lockship

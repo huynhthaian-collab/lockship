@@ -1,0 +1,28 @@
+[
+  {
+    "_id": { "$oid": "671000000000000000000091" },
+    "deliveryId": { "$oid": "671000000000000000000033" },
+    "ownerId": { "$oid": "671000000000000000000002" },
+    "shipperId": { "$oid": "671000000000000000000005" },
+    "codeHash": "ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f",
+    "encryptedCode": "7c4a1b8d2e9f3a5b6c7d8e9f0a1b2c3d",
+    "expiresAt": { "$date": "2026-10-23T03:00:00.000Z" },
+    "used": false,
+    "attempts": 0,
+    "usedAt": null,
+    "createdAt": { "$date": "2026-10-22T02:50:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "671000000000000000000092" },
+    "deliveryId": { "$oid": "671000000000000000000034" },
+    "ownerId": { "$oid": "671000000000000000000003" },
+    "shipperId": { "$oid": "671000000000000000000006" },
+    "codeHash": "4a44dc15364204a80fe80e9039455cc1608281820fe2b24f1e5233ade6769722",
+    "encryptedCode": "1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d",
+    "expiresAt": { "$date": "2026-10-21T14:40:00.000Z" },
+    "used": true,
+    "attempts": 1,
+    "usedAt": { "$date": "2026-10-21T14:30:00.000Z" },
+    "createdAt": { "$date": "2026-10-21T14:20:00.000Z" }
+  }
+]

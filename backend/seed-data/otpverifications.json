@@ -1,0 +1,26 @@
+[
+  {
+    "_id": { "$oid": "671000000000000000000071" },
+    "email": "newowner.cantho@gmail.com",
+    "otpHash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+    "purpose": "REGISTER",
+    "attempts": 0,
+    "expiresAt": { "$date": "2026-10-23T00:00:00.000Z" },
+    "verified": true,
+    "resendAvailableAt": { "$date": "2026-10-22T03:00:00.000Z" },
+    "createdAt": { "$date": "2026-10-22T02:55:00.000Z" },
+    "updatedAt": { "$date": "2026-10-22T02:56:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "671000000000000000000072" },
+    "email": "shipper.nam@lockship.vn",
+    "otpHash": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+    "purpose": "FORGOT_PASSWORD",
+    "attempts": 1,
+    "expiresAt": { "$date": "2026-10-23T00:00:00.000Z" },
+    "verified": false,
+    "resendAvailableAt": { "$date": "2026-10-22T03:10:00.000Z" },
+    "createdAt": { "$date": "2026-10-22T03:00:00.000Z" },
+    "updatedAt": { "$date": "2026-10-22T03:00:00.000Z" }
+  }
+]

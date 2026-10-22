@@ -1,0 +1,58 @@
+[
+  {
+    "_id": { "$oid": "671000000000000000000051" },
+    "deviceId": "LOCKSHIP-BOX-001",
+    "ownerId": { "$oid": "671000000000000000000002" },
+    "type": "telemetry",
+    "topic": "lockship/devices/LOCKSHIP-BOX-001/telemetry",
+    "payload": {
+      "battery": 95,
+      "lockStatus": "locked",
+      "temperature": 27.8,
+      "humidity": 65,
+      "signalStrength": -62
+    },
+    "createdAt": { "$date": "2026-10-22T03:15:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "671000000000000000000052" },
+    "deviceId": "LOCKSHIP-BOX-001",
+    "ownerId": { "$oid": "671000000000000000000002" },
+    "type": "heartbeat",
+    "topic": "lockship/devices/LOCKSHIP-BOX-001/heartbeat",
+    "payload": {
+      "status": "online",
+      "uptime": 86400,
+      "firmware": "v2.5.0-esp32"
+    },
+    "createdAt": { "$date": "2026-10-22T03:14:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "671000000000000000000053" },
+    "deviceId": "LOCKSHIP-BOX-002",
+    "ownerId": { "$oid": "671000000000000000000002" },
+    "type": "unlock_success",
+    "topic": "lockship/devices/LOCKSHIP-BOX-002/events",
+    "payload": {
+      "action": "UNLOCK",
+      "durationMs": 420,
+      "authorizedBy": "owner",
+      "deliveryId": "671000000000000000000033"
+    },
+    "createdAt": { "$date": "2026-10-22T03:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "671000000000000000000054" },
+    "deviceId": "LOCKSHIP-BOX-003",
+    "ownerId": { "$oid": "671000000000000000000003" },
+    "type": "telemetry",
+    "topic": "lockship/devices/LOCKSHIP-BOX-003/telemetry",
+    "payload": {
+      "battery": 78,
+      "lockStatus": "locked",
+      "temperature": 29.1,
+      "humidity": 70
+    },
+    "createdAt": { "$date": "2026-10-22T02:45:00.000Z" }
+  }
+]

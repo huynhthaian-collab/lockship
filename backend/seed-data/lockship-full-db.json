@@ -1,0 +1,806 @@
+{
+  "users": [
+    {
+      "_id": {
+        "$oid": "671000000000000000000001"
+      },
+      "name": "Quản trị viên Hệ thống (Admin)",
+      "email": "admin@lockship.vn",
+      "password": "$2a$12$cQP6b.U1jdPqLgzJKsQ40OS/GnZfK0K0h9zA3bZGo9Fc6MAiDEngO",
+      "role": "admin",
+      "ownerId": null,
+      "phone": "0909000001",
+      "address": "Trung tâm Điều hành Lockship, 12 Đại lộ Hòa Bình, Q. Ninh Kiều, TP. Cần Thơ",
+      "status": "active",
+      "authProvider": "local",
+      "tokenVersion": 0,
+      "createdAt": {
+        "$date": "2026-10-20T08:00:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-20T08:00:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000002"
+      },
+      "name": "Nguyễn Văn Hùng (Chủ xe Cần Thơ)",
+      "email": "owner.hung@lockship.vn",
+      "password": "$2a$12$cQP6b.U1jdPqLgzJKsQ40OS/GnZfK0K0h9zA3bZGo9Fc6MAiDEngO",
+      "role": "owner",
+      "ownerId": null,
+      "phone": "0909000002",
+      "address": "Kho vận Hùng Phát, 45 Đường 30 Tháng 4, P. An Phú, Q. Ninh Kiều, TP. Cần Thơ",
+      "status": "active",
+      "authProvider": "local",
+      "tokenVersion": 0,
+      "createdAt": {
+        "$date": "2026-10-20T08:30:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-20T08:30:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000003"
+      },
+      "name": "Trần Thị Mai (Logistics Mekong)",
+      "email": "owner.mai@lockship.vn",
+      "password": "$2a$12$cQP6b.U1jdPqLgzJKsQ40OS/GnZfK0K0h9zA3bZGo9Fc6MAiDEngO",
+      "role": "owner",
+      "ownerId": null,
+      "phone": "0909000003",
+      "address": "Trung tâm Tiếp vận Tây Đô, 78 Trần Hưng Đạo, P. An Nghiệp, Q. Ninh Kiều, TP. Cần Thơ",
+      "status": "active",
+      "authProvider": "local",
+      "tokenVersion": 0,
+      "createdAt": {
+        "$date": "2026-10-20T09:00:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-20T09:00:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000004"
+      },
+      "name": "Lê Hoàng Nam (Tài xế Đội 1)",
+      "email": "shipper.nam@lockship.vn",
+      "password": "$2a$12$cQP6b.U1jdPqLgzJKsQ40OS/GnZfK0K0h9zA3bZGo9Fc6MAiDEngO",
+      "role": "shipper",
+      "ownerId": {
+        "$oid": "671000000000000000000002"
+      },
+      "phone": "0909000004",
+      "address": "15 Cách Mạng Tháng 8, P. An Hòa, Q. Ninh Kiều, TP. Cần Thơ",
+      "status": "active",
+      "authProvider": "local",
+      "tokenVersion": 0,
+      "createdAt": {
+        "$date": "2026-10-20T09:30:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-20T09:30:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000005"
+      },
+      "name": "Phạm Quốc Tuấn (Tài xế Đội 1)",
+      "email": "shipper.tuan@lockship.vn",
+      "password": "$2a$12$cQP6b.U1jdPqLgzJKsQ40OS/GnZfK0K0h9zA3bZGo9Fc6MAiDEngO",
+      "role": "shipper",
+      "ownerId": {
+        "$oid": "671000000000000000000002"
+      },
+      "phone": "0909000005",
+      "address": "22 Võ Văn Kiệt, P. An Hòa, Q. Ninh Kiều, TP. Cần Thơ",
+      "status": "active",
+      "authProvider": "local",
+      "tokenVersion": 0,
+      "createdAt": {
+        "$date": "2026-10-20T10:00:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-20T10:00:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000006"
+      },
+      "name": "Võ Minh Khang (Tài xế Mekong)",
+      "email": "shipper.khang@lockship.vn",
+      "password": "$2a$12$cQP6b.U1jdPqLgzJKsQ40OS/GnZfK0K0h9zA3bZGo9Fc6MAiDEngO",
+      "role": "shipper",
+      "ownerId": {
+        "$oid": "671000000000000000000003"
+      },
+      "phone": "0909000006",
+      "address": "89 Mậu Thân, P. Xuân Khánh, Q. Ninh Kiều, TP. Cần Thơ",
+      "status": "active",
+      "authProvider": "local",
+      "tokenVersion": 0,
+      "createdAt": {
+        "$date": "2026-10-20T10:30:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-20T10:30:00.000Z"
+      }
+    }
+  ],
+  "vehicles": [
+    {
+      "_id": {
+        "$oid": "671000000000000000000011"
+      },
+      "ownerId": {
+        "$oid": "671000000000000000000002"
+      },
+      "plateNumber": "65C-123.45",
+      "type": "Xe tải bảo ôn 1.5 tấn",
+      "model": "Hyundai New Porter 150",
+      "iotDeviceId": "LOCKSHIP-BOX-001",
+      "status": "active",
+      "createdAt": {
+        "$date": "2026-10-20T11:00:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-20T11:00:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000012"
+      },
+      "ownerId": {
+        "$oid": "671000000000000000000002"
+      },
+      "plateNumber": "65C-678.90",
+      "type": "Xe tải thùng kín 2.5 tấn",
+      "model": "Kia K250 Smart Cargo",
+      "iotDeviceId": "LOCKSHIP-BOX-002",
+      "status": "active",
+      "createdAt": {
+        "$date": "2026-10-20T11:15:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-20T11:15:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000013"
+      },
+      "ownerId": {
+        "$oid": "671000000000000000000003"
+      },
+      "plateNumber": "65B-999.88",
+      "type": "Xe Van giao hàng chuyên dụng",
+      "model": "Ford Transit Custom Van",
+      "iotDeviceId": "LOCKSHIP-BOX-003",
+      "status": "active",
+      "createdAt": {
+        "$date": "2026-10-20T11:30:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-20T11:30:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000014"
+      },
+      "ownerId": {
+        "$oid": "671000000000000000000003"
+      },
+      "plateNumber": "65C-555.22",
+      "type": "Xe tải thùng kín 1.9 tấn",
+      "model": "Isuzu QKR77HE4",
+      "iotDeviceId": "LOCKSHIP-BOX-004",
+      "status": "active",
+      "createdAt": {
+        "$date": "2026-10-20T11:45:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-20T11:45:00.000Z"
+      }
+    }
+  ],
+  "iotdevices": [
+    {
+      "_id": {
+        "$oid": "671000000000000000000021"
+      },
+      "deviceId": "LOCKSHIP-BOX-001",
+      "credentialId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "vehicleId": {
+        "$oid": "671000000000000000000011"
+      },
+      "ownerId": {
+        "$oid": "671000000000000000000002"
+      },
+      "status": "online",
+      "lockStatus": "locked",
+      "battery": 95,
+      "lastSeen": {
+        "$date": "2026-10-22T03:15:00.000Z"
+      },
+      "firmwareVersion": "v2.5.0-esp32",
+      "createdAt": {
+        "$date": "2026-10-20T12:00:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-22T03:15:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000022"
+      },
+      "deviceId": "LOCKSHIP-BOX-002",
+      "credentialId": "c9a646d3-9c61-4cd7-bf15-970f98f077bc",
+      "vehicleId": {
+        "$oid": "671000000000000000000012"
+      },
+      "ownerId": {
+        "$oid": "671000000000000000000002"
+      },
+      "status": "online",
+      "lockStatus": "unlocked",
+      "battery": 88,
+      "lastSeen": {
+        "$date": "2026-10-22T03:10:00.000Z"
+      },
+      "firmwareVersion": "v2.5.0-esp32",
+      "createdAt": {
+        "$date": "2026-10-20T12:15:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-22T03:10:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000023"
+      },
+      "deviceId": "LOCKSHIP-BOX-003",
+      "credentialId": "e3d931be-45bb-4770-9828-98e60ec8c9a3",
+      "vehicleId": {
+        "$oid": "671000000000000000000013"
+      },
+      "ownerId": {
+        "$oid": "671000000000000000000003"
+      },
+      "status": "online",
+      "lockStatus": "locked",
+      "battery": 78,
+      "lastSeen": {
+        "$date": "2026-10-22T03:00:00.000Z"
+      },
+      "firmwareVersion": "v2.4.8-esp32",
+      "createdAt": {
+        "$date": "2026-10-20T12:30:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-22T03:00:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000024"
+      },
+      "deviceId": "LOCKSHIP-BOX-004",
+      "credentialId": "7b89d412-192a-4bc8-8123-af5c4d32e1a9",
+      "vehicleId": {
+        "$oid": "671000000000000000000014"
+      },
+      "ownerId": {
+        "$oid": "671000000000000000000003"
+      },
+      "status": "offline",
+      "lockStatus": "locked",
+      "battery": 45,
+      "lastSeen": {
+        "$date": "2026-10-21T18:00:00.000Z"
+      },
+      "firmwareVersion": "v2.4.0-esp32",
+      "createdAt": {
+        "$date": "2026-10-20T12:45:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T18:00:00.000Z"
+      }
+    }
+  ],
+  "deliveries": [
+    {
+      "_id": {
+        "$oid": "671000000000000000000031"
+      },
+      "ownerId": {
+        "$oid": "671000000000000000000002"
+      },
+      "shipperId": {
+        "$oid": "671000000000000000000004"
+      },
+      "vehicleId": {
+        "$oid": "671000000000000000000011"
+      },
+      "pickupAddress": "Kho tổng Hùng Phát, 45 Đường 30 Tháng 4, P. An Phú, Q. Ninh Kiều, TP. Cần Thơ",
+      "deliveryAddress": "Trạm Smart Locker ĐH Cần Thơ, Đường 3/2, P. Xuân Khánh, Q. Ninh Kiều, TP. Cần Thơ",
+      "description": "Kiện hàng linh kiện điện tử cao cấp & dược phẩm y tế bảo quản lạnh",
+      "status": "in-progress",
+      "unlockStatus": null,
+      "arrivedAt": null,
+      "authorizedAt": null,
+      "completedAt": null,
+      "createdAt": {
+        "$date": "2026-10-22T01:00:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-22T01:30:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000032"
+      },
+      "ownerId": {
+        "$oid": "671000000000000000000002"
+      },
+      "shipperId": {
+        "$oid": "671000000000000000000004"
+      },
+      "vehicleId": {
+        "$oid": "671000000000000000000011"
+      },
+      "pickupAddress": "Trạm Vincom Hùng Vương, 2 Hùng Vương, P. Thới Bình, Q. Ninh Kiều, TP. Cần Thơ",
+      "deliveryAddress": "Tủ Locker Bến Ninh Kiều, 2 Hai Bà Trưng, P. Tân An, Q. Ninh Kiều, TP. Cần Thơ",
+      "description": "Thiết bị viễn thông và phụ kiện công nghệ giá trị cao",
+      "status": "arrived",
+      "unlockStatus": null,
+      "arrivedAt": {
+        "$date": "2026-10-22T02:45:00.000Z"
+      },
+      "authorizedAt": null,
+      "completedAt": null,
+      "createdAt": {
+        "$date": "2026-10-22T01:15:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-22T02:45:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000033"
+      },
+      "ownerId": {
+        "$oid": "671000000000000000000002"
+      },
+      "shipperId": {
+        "$oid": "671000000000000000000005"
+      },
+      "vehicleId": {
+        "$oid": "671000000000000000000012"
+      },
+      "pickupAddress": "Kho Dược Hậu Giang, 288 Bis Nguyễn Văn Cừ, P. An Hòa, Q. Ninh Kiều, TP. Cần Thơ",
+      "deliveryAddress": "Trạm Y tế Trung tâm, 19 Trần Hưng Đạo, P. An Phú, Q. Ninh Kiều, TP. Cần Thơ",
+      "description": "Vắc-xin và vật tư y tế khẩn cấp bảo quản thùng lạnh thông minh",
+      "status": "authorized",
+      "unlockStatus": "pending",
+      "arrivedAt": {
+        "$date": "2026-10-22T02:30:00.000Z"
+      },
+      "authorizedAt": {
+        "$date": "2026-10-22T02:50:00.000Z"
+      },
+      "completedAt": null,
+      "createdAt": {
+        "$date": "2026-10-22T01:30:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-22T02:50:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000034"
+      },
+      "ownerId": {
+        "$oid": "671000000000000000000003"
+      },
+      "shipperId": {
+        "$oid": "671000000000000000000006"
+      },
+      "vehicleId": {
+        "$oid": "671000000000000000000013"
+      },
+      "pickupAddress": "Cảng Cái Cui, P. Tân Phú, Q. Cái Răng, TP. Cần Thơ",
+      "deliveryAddress": "Trung tâm Tiếp vận Tây Đô, 78 Trần Hưng Đạo, P. An Nghiệp, Q. Ninh Kiều, TP. Cần Thơ",
+      "description": "Hàng tiêu dùng nhập khẩu nguyên kiện niêm phong điện tử",
+      "status": "completed",
+      "unlockStatus": "succeeded",
+      "arrivedAt": {
+        "$date": "2026-10-21T14:15:00.000Z"
+      },
+      "authorizedAt": {
+        "$date": "2026-10-21T14:20:00.000Z"
+      },
+      "completedAt": {
+        "$date": "2026-10-21T14:35:00.000Z"
+      },
+      "createdAt": {
+        "$date": "2026-10-21T13:00:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T14:35:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000035"
+      },
+      "ownerId": {
+        "$oid": "671000000000000000000003"
+      },
+      "shipperId": null,
+      "vehicleId": null,
+      "pickupAddress": "Siêu thị Lotte Mart Cần Thơ, 84 Mậu Thân, P. An Hòa, Q. Ninh Kiều, TP. Cần Thơ",
+      "deliveryAddress": "Khu dân cư Hưng Phú 1, P. Hưng Phú, Q. Cái Răng, TP. Cần Thơ",
+      "description": "Đơn hàng mới tạo đang chờ điều phối tài xế và phương tiện",
+      "status": "pending",
+      "unlockStatus": null,
+      "arrivedAt": null,
+      "authorizedAt": null,
+      "completedAt": null,
+      "createdAt": {
+        "$date": "2026-10-22T03:00:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-22T03:00:00.000Z"
+      }
+    }
+  ],
+  "deliveryissues": [
+    {
+      "_id": {
+        "$oid": "671000000000000000000041"
+      },
+      "deliveryId": {
+        "$oid": "671000000000000000000032"
+      },
+      "ownerId": {
+        "$oid": "671000000000000000000002"
+      },
+      "shipperId": {
+        "$oid": "671000000000000000000004"
+      },
+      "category": "vehicle",
+      "description": "Đèn báo pin dự phòng của hộp khóa thông minh nhấp nháy, kiểm tra kết nối Bluetooth và MQTT vẫn ổn định.",
+      "status": "open",
+      "createdAt": {
+        "$date": "2026-10-22T02:50:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-22T02:50:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000042"
+      },
+      "deliveryId": {
+        "$oid": "671000000000000000000034"
+      },
+      "ownerId": {
+        "$oid": "671000000000000000000003"
+      },
+      "shipperId": {
+        "$oid": "671000000000000000000006"
+      },
+      "category": "delivery",
+      "description": "Đường vào điểm giao tại Bến Ninh Kiều đang tổ chức phố đi bộ cuối tuần, tài xế phải dừng xe tại bãi đệm cách 50m.",
+      "status": "resolved",
+      "createdAt": {
+        "$date": "2026-10-21T14:10:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T14:25:00.000Z"
+      }
+    }
+  ],
+  "iotevents": [
+    {
+      "_id": {
+        "$oid": "671000000000000000000051"
+      },
+      "deviceId": "LOCKSHIP-BOX-001",
+      "ownerId": {
+        "$oid": "671000000000000000000002"
+      },
+      "type": "telemetry",
+      "topic": "lockship/devices/LOCKSHIP-BOX-001/telemetry",
+      "payload": {
+        "battery": 95,
+        "lockStatus": "locked",
+        "temperature": 27.8,
+        "humidity": 65,
+        "signalStrength": -62
+      },
+      "createdAt": {
+        "$date": "2026-10-22T03:15:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000052"
+      },
+      "deviceId": "LOCKSHIP-BOX-001",
+      "ownerId": {
+        "$oid": "671000000000000000000002"
+      },
+      "type": "heartbeat",
+      "topic": "lockship/devices/LOCKSHIP-BOX-001/heartbeat",
+      "payload": {
+        "status": "online",
+        "uptime": 86400,
+        "firmware": "v2.5.0-esp32"
+      },
+      "createdAt": {
+        "$date": "2026-10-22T03:14:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000053"
+      },
+      "deviceId": "LOCKSHIP-BOX-002",
+      "ownerId": {
+        "$oid": "671000000000000000000002"
+      },
+      "type": "unlock_success",
+      "topic": "lockship/devices/LOCKSHIP-BOX-002/events",
+      "payload": {
+        "action": "UNLOCK",
+        "durationMs": 420,
+        "authorizedBy": "owner",
+        "deliveryId": "671000000000000000000033"
+      },
+      "createdAt": {
+        "$date": "2026-10-22T03:00:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000054"
+      },
+      "deviceId": "LOCKSHIP-BOX-003",
+      "ownerId": {
+        "$oid": "671000000000000000000003"
+      },
+      "type": "telemetry",
+      "topic": "lockship/devices/LOCKSHIP-BOX-003/telemetry",
+      "payload": {
+        "battery": 78,
+        "lockStatus": "locked",
+        "temperature": 29.1,
+        "humidity": 70
+      },
+      "createdAt": {
+        "$date": "2026-10-22T02:45:00.000Z"
+      }
+    }
+  ],
+  "notifications": [
+    {
+      "_id": {
+        "$oid": "671000000000000000000061"
+      },
+      "userId": {
+        "$oid": "671000000000000000000004"
+      },
+      "type": "delivery_assigned",
+      "title": "Đơn hàng mới đã được phân công",
+      "message": "Bạn đã được phân công vận chuyển đơn hàng đi ĐH Cần Thơ (Xe 65C-123.45).",
+      "deliveryId": {
+        "$oid": "671000000000000000000031"
+      },
+      "isRead": true,
+      "createdAt": {
+        "$date": "2026-10-22T01:05:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000062"
+      },
+      "userId": {
+        "$oid": "671000000000000000000002"
+      },
+      "type": "delivery_arrived",
+      "title": "Tài xế đã đến điểm giao hàng",
+      "message": "Tài xế Lê Hoàng Nam đã đến điểm giao Tủ Locker Bến Ninh Kiều. Vui lòng cấp quyền mở khóa.",
+      "deliveryId": {
+        "$oid": "671000000000000000000032"
+      },
+      "isRead": false,
+      "createdAt": {
+        "$date": "2026-10-22T02:45:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000063"
+      },
+      "userId": {
+        "$oid": "671000000000000000000005"
+      },
+      "type": "unlock_authorized",
+      "title": "Mã mở khóa thùng xe đã được phê duyệt",
+      "message": "Chủ xe đã phê duyệt ủy quyền mở khóa hộp IoT cho đơn hàng Vắc-xin và vật tư y tế. Mã bảo mật đã được tạo.",
+      "deliveryId": {
+        "$oid": "671000000000000000000033"
+      },
+      "isRead": false,
+      "createdAt": {
+        "$date": "2026-10-22T02:50:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000064"
+      },
+      "userId": {
+        "$oid": "671000000000000000000003"
+      },
+      "type": "delivery_completed",
+      "title": "Giao hàng thành công",
+      "message": "Đơn hàng Cảng Cái Cui -> Tây Đô đã hoàn tất thành công. Khóa đã tự động chốt lại an toàn.",
+      "deliveryId": {
+        "$oid": "671000000000000000000034"
+      },
+      "isRead": true,
+      "createdAt": {
+        "$date": "2026-10-21T14:36:00.000Z"
+      }
+    }
+  ],
+  "otpverifications": [
+    {
+      "_id": {
+        "$oid": "671000000000000000000071"
+      },
+      "email": "newowner.cantho@gmail.com",
+      "otpHash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+      "purpose": "REGISTER",
+      "attempts": 0,
+      "expiresAt": {
+        "$date": "2026-10-23T00:00:00.000Z"
+      },
+      "verified": true,
+      "resendAvailableAt": {
+        "$date": "2026-10-22T03:00:00.000Z"
+      },
+      "createdAt": {
+        "$date": "2026-10-22T02:55:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-22T02:56:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000072"
+      },
+      "email": "shipper.nam@lockship.vn",
+      "otpHash": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "purpose": "FORGOT_PASSWORD",
+      "attempts": 1,
+      "expiresAt": {
+        "$date": "2026-10-23T00:00:00.000Z"
+      },
+      "verified": false,
+      "resendAvailableAt": {
+        "$date": "2026-10-22T03:10:00.000Z"
+      },
+      "createdAt": {
+        "$date": "2026-10-22T03:00:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-22T03:00:00.000Z"
+      }
+    }
+  ],
+  "revokedtokens": [
+    {
+      "_id": {
+        "$oid": "671000000000000000000081"
+      },
+      "tokenHash": "3b5d5c3712955042212316173ccf37be9788f5c586a4725727f5b4fe19e8cc87",
+      "expiresAt": {
+        "$date": "2026-10-23T08:00:00.000Z"
+      },
+      "createdAt": {
+        "$date": "2026-10-22T01:00:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-22T01:00:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000082"
+      },
+      "tokenHash": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+      "expiresAt": {
+        "$date": "2026-10-23T08:00:00.000Z"
+      },
+      "createdAt": {
+        "$date": "2026-10-22T01:30:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-22T01:30:00.000Z"
+      }
+    }
+  ],
+  "unlockcodes": [
+    {
+      "_id": {
+        "$oid": "671000000000000000000091"
+      },
+      "deliveryId": {
+        "$oid": "671000000000000000000033"
+      },
+      "ownerId": {
+        "$oid": "671000000000000000000002"
+      },
+      "shipperId": {
+        "$oid": "671000000000000000000005"
+      },
+      "codeHash": "ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f",
+      "encryptedCode": "7c4a1b8d2e9f3a5b6c7d8e9f0a1b2c3d",
+      "expiresAt": {
+        "$date": "2026-10-23T03:00:00.000Z"
+      },
+      "used": false,
+      "attempts": 0,
+      "usedAt": null,
+      "createdAt": {
+        "$date": "2026-10-22T02:50:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000092"
+      },
+      "deliveryId": {
+        "$oid": "671000000000000000000034"
+      },
+      "ownerId": {
+        "$oid": "671000000000000000000003"
+      },
+      "shipperId": {
+        "$oid": "671000000000000000000006"
+      },
+      "codeHash": "4a44dc15364204a80fe80e9039455cc1608281820fe2b24f1e5233ade6769722",
+      "encryptedCode": "1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d",
+      "expiresAt": {
+        "$date": "2026-10-21T14:40:00.000Z"
+      },
+      "used": true,
+      "attempts": 1,
+      "usedAt": {
+        "$date": "2026-10-21T14:30:00.000Z"
+      },
+      "createdAt": {
+        "$date": "2026-10-21T14:20:00.000Z"
+      }
+    }
+  ]
+}

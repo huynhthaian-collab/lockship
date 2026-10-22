@@ -1,0 +1,58 @@
+[
+  {
+    "_id": { "$oid": "671000000000000000000021" },
+    "deviceId": "LOCKSHIP-BOX-001",
+    "credentialId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "vehicleId": { "$oid": "671000000000000000000011" },
+    "ownerId": { "$oid": "671000000000000000000002" },
+    "status": "online",
+    "lockStatus": "locked",
+    "battery": 95,
+    "lastSeen": { "$date": "2026-10-22T03:15:00.000Z" },
+    "firmwareVersion": "v2.5.0-esp32",
+    "createdAt": { "$date": "2026-10-20T12:00:00.000Z" },
+    "updatedAt": { "$date": "2026-10-22T03:15:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "671000000000000000000022" },
+    "deviceId": "LOCKSHIP-BOX-002",
+    "credentialId": "c9a646d3-9c61-4cd7-bf15-970f98f077bc",
+    "vehicleId": { "$oid": "671000000000000000000012" },
+    "ownerId": { "$oid": "671000000000000000000002" },
+    "status": "online",
+    "lockStatus": "unlocked",
+    "battery": 88,
+    "lastSeen": { "$date": "2026-10-22T03:10:00.000Z" },
+    "firmwareVersion": "v2.5.0-esp32",
+    "createdAt": { "$date": "2026-10-20T12:15:00.000Z" },
+    "updatedAt": { "$date": "2026-10-22T03:10:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "671000000000000000000023" },
+    "deviceId": "LOCKSHIP-BOX-003",
+    "credentialId": "e3d931be-45bb-4770-9828-98e60ec8c9a3",
+    "vehicleId": { "$oid": "671000000000000000000013" },
+    "ownerId": { "$oid": "671000000000000000000003" },
+    "status": "online",
+    "lockStatus": "locked",
+    "battery": 78,
+    "lastSeen": { "$date": "2026-10-22T03:00:00.000Z" },
+    "firmwareVersion": "v2.4.8-esp32",
+    "createdAt": { "$date": "2026-10-20T12:30:00.000Z" },
+    "updatedAt": { "$date": "2026-10-22T03:00:00.000Z" }
+  },
+  {
+    "_id": { "$oid": "671000000000000000000024" },
+    "deviceId": "LOCKSHIP-BOX-004",
+    "credentialId": "7b89d412-192a-4bc8-8123-af5c4d32e1a9",
+    "vehicleId": { "$oid": "671000000000000000000014" },
+    "ownerId": { "$oid": "671000000000000000000003" },
+    "status": "offline",
+    "lockStatus": "locked",
+    "battery": 45,
+    "lastSeen": { "$date": "2026-10-21T18:00:00.000Z" },
+    "firmwareVersion": "v2.4.0-esp32",
+    "createdAt": { "$date": "2026-10-20T12:45:00.000Z" },
+    "updatedAt": { "$date": "2026-10-21T18:00:00.000Z" }
+  }
+]

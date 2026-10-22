@@ -8,7 +8,8 @@
         "dev": "nodemon src/server.js",
         "test": "node --test",
         "test:e2e": "node --test test/e2e/delivery-flow.test.js",
-        "db:seed": "node scripts/import-seed.js"
+        "db:seed": "node scripts/import-seed.js",
+        "db:seed:all": "node scripts/import-all-seed.js"
     },
     "engines": {
         "node": ">=20"
