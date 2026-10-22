@@ -3,6 +3,7 @@ import {
     Award,
     CheckCircle,
     MessageSquarePlus,
+    Pin,
     Quote,
     RefreshCw,
     Sparkles,
@@ -269,11 +270,18 @@ export default function FeedbackSection({ id = 'feedback', className = '' }) {
                                                             <h4 className="text-sm font-bold text-white group-hover:text-blue-300 transition-colors">
                                                                 {fb.userName || 'Khách hàng Lockship'}
                                                             </h4>
-                                                            <span
-                                                                className={`inline-block mt-0.5 rounded-full border px-2 py-0.5 text-[10px] font-semibold ${roleInfo.badge}`}
-                                                            >
-                                                                {roleInfo.label}
-                                                            </span>
+                                                            <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
+                                                                <span
+                                                                    className={`inline-block rounded-full border px-2 py-0.5 text-[10px] font-semibold ${roleInfo.badge}`}
+                                                                >
+                                                                    {roleInfo.label}
+                                                                </span>
+                                                                {fb.isPinned && (
+                                                                    <span className="inline-flex items-center gap-0.5 rounded-full border border-amber-400/40 bg-amber-400/15 px-2 py-0.5 text-[10px] font-bold text-amber-300 shadow-[0_0_8px_rgba(251,191,36,0.25)]">
+                                                                        <Pin size={9} className="fill-amber-400" /> Ghim nổi bật
+                                                                    </span>
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <span className="text-[11px] font-mono text-slate-500 whitespace-nowrap">
@@ -321,6 +329,26 @@ export default function FeedbackSection({ id = 'feedback', className = '' }) {
                                                 <p className="text-xs leading-relaxed text-slate-300 sm:text-sm line-clamp-4">
                                                     {fb.comment || 'Khách hàng đã đánh giá dịch vụ 5 sao hài lòng.'}
                                                 </p>
+
+                                                {/* Official Lockship Admin Reply */}
+                                                {fb.adminReply && (
+                                                    <div className="mt-3.5 rounded-xl border border-blue-500/30 bg-blue-500/[0.08] p-3 backdrop-blur-sm shadow-[0_0_15px_rgba(59,130,246,0.1)]">
+                                                        <div className="flex items-center justify-between gap-2 mb-1.5">
+                                                            <span className="flex items-center gap-1.5 text-[11px] font-bold text-blue-300">
+                                                                <span className="inline-block size-1.5 rounded-full bg-blue-400 shadow-[0_0_6px_#60a5fa] animate-pulse" />
+                                                                Phản hồi từ Ban Quản trị Lockship
+                                                            </span>
+                                                            {fb.repliedAt && (
+                                                                <span className="font-mono text-[10px] text-slate-400">
+                                                                    {formatRelativeTime(fb.repliedAt)}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        <p className="text-xs leading-relaxed text-slate-200">
+                                                            {fb.adminReply}
+                                                        </p>
+                                                    </div>
+                                                )}
                                             </div>
 
                                             {/* Order Badge if associated */}

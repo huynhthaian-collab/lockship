@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Activity, CarFront, ClipboardList, LockKeyhole, Package, RefreshCw, Users, Wifi } from 'lucide-react'
+import { Activity, CarFront, ClipboardList, LockKeyhole, Package, RefreshCw, Star, Users, Wifi } from 'lucide-react'
 import AdminPage from '../../components/AdminPage.jsx'
 import ErrorMessage from '../../components/ErrorMessage.jsx'
 import Loading from '../../components/Loading.jsx'
@@ -11,6 +11,7 @@ import EmptyState from '../../components/ui/EmptyState.jsx'
 import SpatialTiltCard from '../../components/spatial/SpatialTiltCard.jsx'
 import { useSocketEvent } from '../../hooks/useSocketEvent.js'
 import { adminApi } from '../../services/adminApi.js'
+import { feedbackApi } from '../../services/feedbackApi.js'
 
 function AdminMetricCard({ to, label, value, detail, icon: Icon, tone = 'blue' }) {
     const toneStyles = {
@@ -32,6 +33,10 @@ function AdminMetricCard({ to, label, value, detail, icon: Icon, tone = 'blue' }
         },
         amber: {
             iconBg: 'border-amber-400/30 bg-amber-500/15 text-amber-400 shadow-[0_0_16px_rgba(245,158,11,0.25)]',
+            text: 'text-white',
+        },
+        yellow: {
+            iconBg: 'border-yellow-400/30 bg-yellow-500/15 text-yellow-400 shadow-[0_0_16px_rgba(234,179,8,0.25)]',
             text: 'text-white',
         },
     }
@@ -64,6 +69,8 @@ function AdminMetricCard({ to, label, value, detail, icon: Icon, tone = 'blue' }
 export default function AdminDashboardPage() {
     const [summary, setSummary] = useState(null)
     const [healthStatus, setHealthStatus] = useState(null)
+    const [feedbackStats, setFeedbackStats] = useState({ total: 0, averageRating: 5.0, pendingReplies: 0 })
+    const [recentFeedbacks, setRecentFeedbacks] = useState([])
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(true)
     const [refreshing, setRefreshing] = useState(false)
@@ -72,13 +79,14 @@ export default function AdminDashboardPage() {
         if (!isSilent) setError('')
         setRefreshing(true)
         try {
-            const [users, vehicles, deliveries, devices, reports, health] = await Promise.all([
+            const [users, vehicles, deliveries, devices, reports, health, feedbackData] = await Promise.all([
                 adminApi.users().catch(() => []),
                 adminApi.vehicles().catch(() => []),
                 adminApi.deliveries().catch(() => []),
                 adminApi.devices().catch(() => []),
                 adminApi.reports().catch(() => []),
                 adminApi.health().catch(() => ({ success: false, message: 'Không thể kết nối' })),
+                feedbackApi.listAdmin({ limit: 4 }).catch(() => ({ feedbacks: [], analytics: { total: 0, averageRating: 5.0, pendingReplies: 0 } })),
             ])
             setSummary({
                 users: Array.isArray(users) ? users : [],
@@ -88,6 +96,12 @@ export default function AdminDashboardPage() {
                 reports: Array.isArray(reports) ? reports : [],
             })
             setHealthStatus(health)
+            if (feedbackData?.analytics) {
+                setFeedbackStats(feedbackData.analytics)
+            }
+            if (Array.isArray(feedbackData?.feedbacks)) {
+                setRecentFeedbacks(feedbackData.feedbacks)
+            }
         } catch (requestError) {
             setError(requestError.message || 'Không thể tải tổng quan quản trị.')
         } finally {
@@ -100,13 +114,14 @@ export default function AdminDashboardPage() {
         let active = true
         async function init() {
             try {
-                const [users, vehicles, deliveries, devices, reports, health] = await Promise.all([
+                const [users, vehicles, deliveries, devices, reports, health, feedbackData] = await Promise.all([
                     adminApi.users().catch(() => []),
                     adminApi.vehicles().catch(() => []),
                     adminApi.deliveries().catch(() => []),
                     adminApi.devices().catch(() => []),
                     adminApi.reports().catch(() => []),
                     adminApi.health().catch(() => ({ success: false, message: 'Không thể kết nối' })),
+                    feedbackApi.listAdmin({ limit: 4 }).catch(() => ({ feedbacks: [], analytics: { total: 0, averageRating: 5.0, pendingReplies: 0 } })),
                 ])
                 if (active) {
                     setSummary({
@@ -117,6 +132,12 @@ export default function AdminDashboardPage() {
                         reports: Array.isArray(reports) ? reports : [],
                     })
                     setHealthStatus(health)
+                    if (feedbackData?.analytics) {
+                        setFeedbackStats(feedbackData.analytics)
+                    }
+                    if (Array.isArray(feedbackData?.feedbacks)) {
+                        setRecentFeedbacks(feedbackData.feedbacks)
+                    }
                     setLoading(false)
                 }
             } catch (err) {
@@ -194,7 +215,7 @@ export default function AdminDashboardPage() {
             {error && <ErrorMessage message={error} />}
 
             {/* Metric counters: Spatial 3D Bento */}
-            <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5" aria-label="Tóm tắt hệ thống">
+            <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6" aria-label="Tóm tắt hệ thống">
                 <AdminMetricCard
                     to="/admin/users"
                     label="Người dùng"
@@ -260,6 +281,19 @@ export default function AdminDashboardPage() {
                     }
                     icon={ClipboardList}
                     tone="amber"
+                />
+
+                <AdminMetricCard
+                    to="/admin/feedbacks"
+                    label="Đánh giá 5 sao"
+                    value={`${feedbackStats?.averageRating ? feedbackStats.averageRating.toFixed(1) : '5.0'} ★`}
+                    detail={
+                        <p className="truncate">
+                            <span className="text-amber-400 font-bold">{feedbackStats?.total || 0}</span> đánh giá · {feedbackStats?.pendingReplies || 0} chờ trả lời
+                        </p>
+                    }
+                    icon={Star}
+                    tone="yellow"
                 />
             </section>
 
@@ -445,6 +479,67 @@ export default function AdminDashboardPage() {
                     )}
                 </Card>
             </div>
+
+            {/* Đánh giá & Ý kiến khách hàng gần đây */}
+            <Card
+                title="Đánh giá & Ý kiến khách hàng gần đây"
+                description="Tổng hợp đánh giá 5 sao từ shipper, chủ xe & khách hàng với hỗ trợ phản hồi chính thức"
+                action={
+                    <Link className="text-xs font-semibold text-cyan-400 no-underline hover:text-cyan-300 hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]" to="/admin/feedbacks">
+                        Quản lý tất cả đánh giá ({feedbackStats.total || 0}) →
+                    </Link>
+                }
+            >
+                {recentFeedbacks.length === 0 ? (
+                    <EmptyState
+                        title="Chưa có đánh giá nào"
+                        description="Hệ thống chưa ghi nhận lượt đánh giá hoặc feedback nào từ người dùng."
+                    />
+                ) : (
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        {recentFeedbacks.slice(0, 4).map((fb) => (
+                            <div
+                                key={fb._id}
+                                className="flex flex-col justify-between rounded-xl border border-white/10 bg-white/[0.02] p-4 transition hover:border-amber-400/30 hover:bg-white/[0.04]"
+                            >
+                                <div>
+                                    <div className="flex items-center justify-between gap-1 mb-2">
+                                        <div className="flex items-center gap-0.5">
+                                            {[1, 2, 3, 4, 5].map((s) => (
+                                                <Star
+                                                    key={s}
+                                                    size={12}
+                                                    className={s <= fb.rating ? 'fill-amber-400 text-amber-400' : 'text-slate-600'}
+                                                />
+                                            ))}
+                                        </div>
+                                        <span className="text-[10px] text-slate-500 font-mono">
+                                            {fb.createdAt ? new Date(fb.createdAt).toLocaleDateString('vi-VN') : '—'}
+                                        </span>
+                                    </div>
+                                    <p className="text-xs font-bold text-white line-clamp-1">{fb.userName || 'Người dùng ẩn danh'}</p>
+                                    <p className="mt-1 text-xs text-slate-300 line-clamp-2 leading-relaxed">
+                                        "{fb.comment || 'Dịch vụ uy tín, an toàn.'}"
+                                    </p>
+                                </div>
+                                <div className="mt-3 pt-2.5 border-t border-white/5 flex items-center justify-between text-[11px]">
+                                    {fb.adminReply ? (
+                                        <span className="text-emerald-400 font-semibold text-[10px]">✓ Đã phản hồi</span>
+                                    ) : (
+                                        <span className="text-amber-400 font-semibold text-[10px]">Chờ phản hồi</span>
+                                    )}
+                                    <Link
+                                        to="/admin/feedbacks"
+                                        className="text-cyan-400 hover:text-cyan-300 font-medium text-[11px]"
+                                    >
+                                        Chi tiết →
+                                    </Link>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </Card>
         </AdminPage>
     )
 }

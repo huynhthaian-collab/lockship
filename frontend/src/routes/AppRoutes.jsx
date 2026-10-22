@@ -44,6 +44,7 @@ import AdminIoTPage from '../pages/admin/AdminIoTPage.jsx'
 import AdminIoTDetailPage from '../pages/admin/AdminIoTDetailPage.jsx'
 import AdminReportsPage from '../pages/admin/AdminReportsPage.jsx'
 import AdminLogsPage from '../pages/admin/AdminLogsPage.jsx'
+import AdminFeedbacksPage from '../pages/admin/AdminFeedbacksPage.jsx'
 import { getRoleLandingPath } from './rolePaths.js'
 
 function GuestOnlyRoute({ children }) {
@@ -114,6 +115,7 @@ export default function AppRoutes() {
               <Route path="deliveries" element={<AdminDeliveriesPage />} />
               <Route path="iot" element={<AdminIoTPage />} />
               <Route path="iot/:id" element={<AdminIoTDetailPage />} />
+              <Route path="feedbacks" element={<AdminFeedbacksPage />} />
               <Route path="reports" element={<AdminReportsPage />} />
               <Route path="logs" element={<AdminLogsPage />} />
             </Route>

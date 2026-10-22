@@ -42,12 +42,38 @@ const feedbackSchema = new mongoose.Schema(
             maxlength: [500, "Nội dung nhận xét tối đa 500 ký tự."],
             default: "",
         },
+        isVisible: {
+            type: Boolean,
+            default: true,
+            index: true,
+        },
+        isPinned: {
+            type: Boolean,
+            default: false,
+            index: true,
+        },
+        adminReply: {
+            type: String,
+            trim: true,
+            maxlength: [1000, "Câu trả lời của Admin tối đa 1000 ký tự."],
+            default: null,
+        },
+        repliedAt: {
+            type: Date,
+            default: null,
+        },
+        adminReplyBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            default: null,
+        },
     },
     { timestamps: true }
 );
 
-feedbackSchema.index({ createdAt: -1 });
-feedbackSchema.index({ rating: -1 });
+feedbackSchema.index({ isPinned: -1, createdAt: -1 });
+feedbackSchema.index({ isVisible: 1, createdAt: -1 });
+feedbackSchema.index({ rating: -1, createdAt: -1 });
 
 const Feedback = mongoose.model("Feedback", feedbackSchema);
 
