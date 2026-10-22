@@ -37,7 +37,7 @@ const ISSUE_QUICK_TAGS = [
 // Anti-spam & profanity filters (frontend quick validation)
 const SPAM_URL_REGEX = /(https?:\/\/|www\.|\b[a-zA-Z0-9.-]+\.(com|vn|net|org|xyz|top|cc|ru|info|biz)\b)/i
 const PROFANITY_WORDS = [
-    'đụ', 'địt', 'lồn', 'cặc', 'buồi', 'đéo', 'chó đẻ', 'dcm', 'vcl', 'đm', 'dkm', 'clmm', 'vl', 'fuck', 'shit', 'bitch', 'đĩ', 'đụ má',
+    'đụ', 'địt', 'lồn', 'cặc', 'buồi', 'đéo', 'chó đẻ', 'dcm', 'vcl', 'đm', 'dkm', 'clmm', 'vl', 'fuck', 'shit', 'bitch', 'đĩ', 'đụ má', 'mẹ', 'đm', 'má', 'má nó',
 ]
 
 function containsProfanity(text) {
@@ -411,13 +411,12 @@ export default function FeedbackModal({
                                                 key={tag}
                                                 type="button"
                                                 onClick={() => toggleTag(tag)}
-                                                className={`rounded-xl border px-3 py-1.5 text-xs font-medium transition-all duration-200 active:scale-95 ${
-                                                    isSelected
+                                                className={`rounded-xl border px-3 py-1.5 text-xs font-medium transition-all duration-200 active:scale-95 ${isSelected
                                                         ? isLowRating
                                                             ? 'border-amber-400 bg-amber-500/20 text-amber-200 font-semibold shadow-[0_0_12px_rgba(245,158,11,0.3)]'
                                                             : 'border-blue-400 bg-blue-500/20 text-white shadow-[0_0_12px_rgba(59,130,246,0.35)] font-semibold'
                                                         : 'border-white/10 bg-white/[0.03] text-slate-400 hover:border-white/20 hover:text-slate-200'
-                                                }`}
+                                                    }`}
                                             >
                                                 {isSelected ? '✓ ' : '+ '}
                                                 {tag}
@@ -434,13 +433,12 @@ export default function FeedbackModal({
                                         Nhận xét chi tiết {isLowRating && selectedTags.length === 0 && <span className="text-amber-400 font-bold">*</span>}
                                     </label>
                                     <span
-                                        className={`text-[11px] font-mono ${
-                                            comment.length >= 450
+                                        className={`text-[11px] font-mono ${comment.length >= 450
                                                 ? 'text-amber-400 font-bold'
                                                 : comment.length > 0 && comment.length < 10
-                                                ? 'text-rose-400 font-bold'
-                                                : 'text-slate-500'
-                                        }`}
+                                                    ? 'text-rose-400 font-bold'
+                                                    : 'text-slate-500'
+                                            }`}
                                     >
                                         {comment.length}/500 ký tự
                                     </span>
@@ -456,9 +454,8 @@ export default function FeedbackModal({
                                                 ? 'Mô tả chi tiết sự cố bạn gặp phải (ví dụ: thời gian trễ, chốt khóa bị kẹt, thao tác app khó khăn...)'
                                                 : 'Chia sẻ trải nghiệm của bạn về tốc độ mở khóa chốt điện tử, độ chính xác GPS hay sự tiện lợi khi sử dụng...'
                                         }
-                                        className={`ui-control w-full resize-none text-sm p-3.5 leading-relaxed placeholder:text-slate-600 ${
-                                            validationMessage ? 'border-rose-500/60 focus:border-rose-500' : ''
-                                        }`}
+                                        className={`ui-control w-full resize-none text-sm p-3.5 leading-relaxed placeholder:text-slate-600 ${validationMessage ? 'border-rose-500/60 focus:border-rose-500' : ''
+                                            }`}
                                     />
                                     <MessageSquare
                                         size={16}
