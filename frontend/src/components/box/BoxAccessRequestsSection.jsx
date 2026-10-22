@@ -22,6 +22,7 @@ import {
 } from 'lucide-react'
 import Card from '../ui/Card.jsx'
 import EmptyState from '../ui/EmptyState.jsx'
+import { Link } from 'react-router-dom'
 import { ownerAccessApi } from '../../services/ownerApi.js'
 import { useSocketEvent } from '../../hooks/useSocketEvent.js'
 import { LOCKSHIP_BOXES } from '../../data/smartLockerBoxes.js'
@@ -77,7 +78,7 @@ export default function BoxAccessRequestsSection({ className = '' }) {
 
     // QR Preview Modal State
     const [showQrModal, setShowQrModal] = useState(false)
-    const [selectedBoxForQr, setSelectedBoxForQr] = useState('box-04')
+    const [selectedBoxForQr, setSelectedBoxForQr] = useState('LOCKSHIP-BOX-001')
     const [copiedUrl, setCopiedUrl] = useState(false)
 
     // Live Toast Alert
@@ -523,13 +524,13 @@ export default function BoxAccessRequestsSection({ className = '' }) {
                         </div>
 
                         {/* Box Selector Tabs */}
-                        <div className="flex items-center justify-center gap-1.5 p-1 rounded-xl bg-slate-950 border border-slate-800 mb-4">
-                            {['box-04', 'box-05', 'box-06'].map((bId) => (
+                        <div className="flex flex-wrap items-center justify-center gap-1.5 p-1 rounded-xl bg-slate-950 border border-slate-800 mb-4 max-h-24 overflow-y-auto">
+                            {['LOCKSHIP-BOX-001', 'LOCKSHIP-BOX-002', 'LOCKSHIP-BOX-003', 'LOCKSHIP-BOX-004', 'box-04'].map((bId) => (
                                 <button
                                     key={bId}
                                     type="button"
                                     onClick={() => setSelectedBoxForQr(bId)}
-                                    className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition-all ${
+                                    className={`px-2.5 py-1.5 rounded-lg text-xs font-bold uppercase transition-all ${
                                         selectedBoxForQr === bId
                                             ? 'bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20'
                                             : 'text-slate-400 hover:text-white'
@@ -577,6 +578,19 @@ export default function BoxAccessRequestsSection({ className = '' }) {
                                 <ExternalLink className="w-3.5 h-3.5" />
                                 <span>Mở thử trang Shipper</span>
                             </a>
+                        </div>
+
+                        {/* Full QR Studio Link */}
+                        <div className="mt-3 pt-3 border-t border-slate-800">
+                            <Link
+                                to="/owner/qr-tester"
+                                onClick={() => setShowQrModal(false)}
+                                className="w-full py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 text-cyan-300 text-xs font-bold inline-flex items-center justify-center gap-1.5 border border-white/10 transition-colors"
+                            >
+                                <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                                <span>Mở Studio Tạo QR Đầy Đủ (Production & Custom)</span>
+                                <ArrowRight className="w-3 h-3" />
+                            </Link>
                         </div>
                     </div>
                 </div>

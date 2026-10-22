@@ -46,6 +46,7 @@ import AdminReportsPage from '../pages/admin/AdminReportsPage.jsx'
 import AdminLogsPage from '../pages/admin/AdminLogsPage.jsx'
 import AdminFeedbacksPage from '../pages/admin/AdminFeedbacksPage.jsx'
 import PublicBoxScanView from '../pages/public/PublicBoxScanView.jsx'
+import QrCodeTesterPage from '../pages/shared/QrCodeTesterPage.jsx'
 import { getRoleLandingPath } from './rolePaths.js'
 
 function GuestOnlyRoute({ children }) {
@@ -66,6 +67,7 @@ export default function AppRoutes() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/public/box-scan/:boxId" element={<PublicBoxScanView />} />
+      <Route path="/qr-tester" element={<QrCodeTesterPage />} />
       <Route path="/dashboard" element={<DashboardRedirect />} />
       <Route path="/login" element={<GuestOnlyRoute><LoginPage /></GuestOnlyRoute>} />
       <Route path="/google/complete-profile" element={<GuestOnlyRoute><GoogleCompleteProfilePage /></GuestOnlyRoute>} />
@@ -92,6 +94,7 @@ export default function AppRoutes() {
               <Route path="locks" element={<OwnerLocksPage />} />
               <Route path="locks/:id" element={<OwnerLockDetailPage />} />
               <Route path="notifications" element={<OwnerNotificationsPage />} />
+              <Route path="qr-tester" element={<QrCodeTesterPage role="owner" />} />
             </Route>
           </Route>
           <Route path="shipper" element={<ProtectedRoute allowedRoles={['shipper']} />}>
@@ -120,6 +123,7 @@ export default function AppRoutes() {
               <Route path="feedbacks" element={<AdminFeedbacksPage />} />
               <Route path="reports" element={<AdminReportsPage />} />
               <Route path="logs" element={<AdminLogsPage />} />
+              <Route path="qr-tester" element={<QrCodeTesterPage role="admin" />} />
             </Route>
           </Route>
         </Route>
