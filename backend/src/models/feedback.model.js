@@ -74,6 +74,8 @@ const feedbackSchema = new mongoose.Schema(
 feedbackSchema.index({ isPinned: -1, createdAt: -1 });
 feedbackSchema.index({ isVisible: 1, createdAt: -1 });
 feedbackSchema.index({ rating: -1, createdAt: -1 });
+feedbackSchema.index({ userId: 1, orderId: 1 });
+feedbackSchema.index({ userId: 1, createdAt: -1 });
 
 const Feedback = mongoose.model("Feedback", feedbackSchema);
 

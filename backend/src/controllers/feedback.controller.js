@@ -4,27 +4,22 @@ import AppError from "../utils/app-error.js";
 
 export async function createFeedback(req, res, next) {
     try {
-        const { rating, comment, tags, orderId, userName, userRole } = req.body;
+        const { rating, comment, tags, orderId } = req.body;
 
-        const numericRating = Number(rating);
-        if (!numericRating || numericRating < 1 || numericRating > 5) {
-            return next(new AppError("Vui lòng chọn số sao đánh giá từ 1 đến 5.", 400));
+        const resolvedUserId = req.user?._id || req.user?.id;
+        if (!resolvedUserId) {
+            return next(new AppError("Bạn cần đăng nhập tài khoản để gửi đánh giá dịch vụ.", 401));
         }
 
-        if (comment && String(comment).length > 500) {
-            return next(new AppError("Nội dung nhận xét không được vượt quá 500 ký tự.", 400));
-        }
-
-        const resolvedUserId = req.user?._id || req.user?.id || null;
-        const resolvedUserName = req.user?.name || userName || "Khách hàng Lockship";
-        const resolvedUserRole = req.user?.role || userRole || "customer";
+        const resolvedUserName = req.user?.name || "Khách hàng Lockship";
+        const resolvedUserRole = req.user?.role || "customer";
 
         const feedback = await feedbackService.createFeedback({
             userId: resolvedUserId,
             userName: resolvedUserName,
             userRole: resolvedUserRole,
             orderId: orderId || null,
-            rating: numericRating,
+            rating,
             tags: tags || [],
             comment: comment || "",
         });
@@ -33,6 +28,27 @@ export async function createFeedback(req, res, next) {
             statusCode: 201,
             message: "Đánh giá của bạn đã được ghi nhận thành công! Cảm ơn bạn đã phản hồi.",
             data: { feedback },
+        });
+    } catch (error) {
+        return next(error);
+    }
+}
+
+export async function checkEligibility(req, res, next) {
+    try {
+        const { orderId } = req.query;
+        const userId = req.user?._id || req.user?.id || null;
+        const userRole = req.user?.role || "customer";
+
+        const eligibility = await feedbackService.checkFeedbackEligibility({
+            userId,
+            userRole,
+            orderId: orderId || null,
+        });
+
+        return sendSuccess(res, {
+            message: "Kiểm tra điều kiện đánh giá.",
+            data: eligibility,
         });
     } catch (error) {
         return next(error);

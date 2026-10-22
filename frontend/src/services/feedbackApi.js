@@ -211,6 +211,20 @@ export const feedbackApi = {
         }
     },
 
+    async checkEligibility({ orderId = null } = {}) {
+        try {
+            const params = new URLSearchParams()
+            if (orderId) params.append('orderId', orderId)
+            const response = await apiClient.get(`/feedbacks/eligibility?${params.toString()}`)
+            return response.data?.data || { canReview: true }
+        } catch (err) {
+            return {
+                canReview: false,
+                reason: err.response?.data?.message || 'Không thể xác thực điều kiện đánh giá.',
+            }
+        }
+    },
+
     async create({ rating, comment = '', tags = [], orderId = null, userName = '', userRole = '' }) {
         const payload = {
             rating: Number(rating),
@@ -232,18 +246,26 @@ export const feedbackApi = {
             }
             saveLocalFeedback(feedback)
             return feedback
-        } catch {
-            const fallbackFeedback = {
-                _id: 'local-' + Date.now(),
-                ...payload,
-                userName: payload.userName || 'Bạn',
-                userRole: payload.userRole || 'customer',
-                isVisible: true,
-                isPinned: false,
-                createdAt: new Date().toISOString(),
+        } catch (err) {
+            // If backend returned an error response (400, 401, 403, 429), propagate the message
+            if (err.response?.data?.message) {
+                throw new Error(err.response.data.message)
             }
-            saveLocalFeedback(fallbackFeedback)
-            return fallbackFeedback
+            if (err.message && !err.response) {
+                // Only use offline fallback if backend was completely unreachable
+                const fallbackFeedback = {
+                    _id: 'local-' + Date.now(),
+                    ...payload,
+                    userName: payload.userName || 'Bạn',
+                    userRole: payload.userRole || 'customer',
+                    isVisible: true,
+                    isPinned: false,
+                    createdAt: new Date().toISOString(),
+                }
+                saveLocalFeedback(fallbackFeedback)
+                return fallbackFeedback
+            }
+            throw err
         }
     },
 

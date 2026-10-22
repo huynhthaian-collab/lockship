@@ -5,8 +5,9 @@ import { authorizeRoles } from "../middleware/authorize.middleware.js";
 
 const router = Router();
 
-// Public routes
-router.post("/", optionalAuthenticate, feedbackController.createFeedback);
+// User eligibility check & creation (auth required)
+router.get("/eligibility", optionalAuthenticate, feedbackController.checkEligibility);
+router.post("/", authenticate, feedbackController.createFeedback);
 router.get("/", feedbackController.listFeedbacks);
 
 // Admin-only routes
