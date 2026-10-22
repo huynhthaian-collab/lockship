@@ -1,9 +1,6 @@
-/**
- * Mock & Predefined Smart Locker Station Boxes for GIS Map & Delivery Integration
- * Vị trí các trạm Smart Locker tại Quận Ninh Kiều, TP. Cần Thơ
- */
+const STORAGE_KEY = 'lockship_smart_boxes_v1'
 
-export const LOCKSHIP_BOXES = [
+const DEFAULT_BOXES = [
     {
         id: 'box-04',
         code: 'BOX-NK-CT-04',
@@ -62,3 +59,74 @@ export const LOCKSHIP_BOXES = [
         description: 'Trạm tủ thương mại Vincom Plaza Hùng Vương, cửa hộc đang mở sẵn sàng nạp kiện hàng',
     },
 ]
+
+export function getBoxes() {
+    try {
+        const stored = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null
+        if (stored) {
+            const parsed = JSON.parse(stored)
+            if (Array.isArray(parsed) && parsed.length) return parsed
+        }
+    } catch {
+        // fallback
+    }
+    return DEFAULT_BOXES
+}
+
+export function saveBoxes(boxes) {
+    try {
+        if (typeof window !== 'undefined') {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(boxes))
+        }
+    } catch {
+        // ignore
+    }
+}
+
+export function reserveBoxCompartment(boxId, size = 'M') {
+    const boxes = getBoxes()
+    const target = boxes.find((b) => b.id === boxId)
+    if (!target) return null
+    if (target.availableCompartments <= 0 || target.status === 'Locked') {
+        throw new Error(`Tủ khóa "${target.name}" đã hết hộc trống hoặc đang khóa bảo trì.`)
+    }
+    target.availableCompartments = Math.max(0, target.availableCompartments - 1)
+    if (target.slots && target.slots[size]) {
+        target.slots[size].available = Math.max(0, target.slots[size].available - 1)
+    }
+    if (target.availableCompartments === 0) {
+        target.status = 'Locked'
+    }
+    saveBoxes(boxes)
+    // Synchronize in-memory LOCKSHIP_BOXES
+    const memTarget = LOCKSHIP_BOXES.find((b) => b.id === boxId)
+    if (memTarget) {
+        memTarget.availableCompartments = target.availableCompartments
+        memTarget.status = target.status
+        if (memTarget.slots?.[size]) memTarget.slots[size].available = target.slots[size]?.available
+    }
+    return target
+}
+
+export function releaseBoxCompartment(boxId, size = 'M') {
+    const boxes = getBoxes()
+    const target = boxes.find((b) => b.id === boxId)
+    if (!target) return null
+    target.availableCompartments = Math.min(target.totalCompartments, target.availableCompartments + 1)
+    if (target.slots && target.slots[size]) {
+        target.slots[size].available = Math.min(target.slots[size].total, target.slots[size].available + 1)
+    }
+    if (target.availableCompartments > 0 && target.status === 'Locked') {
+        target.status = 'Available'
+    }
+    saveBoxes(boxes)
+    const memTarget = LOCKSHIP_BOXES.find((b) => b.id === boxId)
+    if (memTarget) {
+        memTarget.availableCompartments = target.availableCompartments
+        memTarget.status = target.status
+        if (memTarget.slots?.[size]) memTarget.slots[size].available = target.slots[size]?.available
+    }
+    return target
+}
+
+export const LOCKSHIP_BOXES = getBoxes()

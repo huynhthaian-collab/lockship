@@ -16,6 +16,7 @@ import Modal from '../../components/ui/Modal.jsx'
 import EmptyState from '../../components/ui/EmptyState.jsx'
 import SpatialTiltCard from '../../components/spatial/SpatialTiltCard.jsx'
 import IsometricLocker from '../../components/spatial/IsometricLocker.jsx'
+import ModernActivityTimeline from '../../components/activity/ModernActivityTimeline.jsx'
 import { useSocketEvent } from '../../hooks/useSocketEvent.js'
 import { adminApi } from '../../services/adminApi.js'
 
@@ -379,48 +380,13 @@ export default function AdminIoTDetailPage() {
                     {/* Recorded Events Log */}
                     <Card
                         title="Sự kiện thiết bị & Nhật ký kiểm toán"
-                        description="Dữ liệu lịch sử, cảnh báo và phản hồi lệnh MQTT của thiết bị"
-                        action={
-                            <div className="flex items-center gap-2">
-                                <span className="text-xs text-slate-400">Bộ lọc:</span>
-                                <select
-                                    className="ui-control py-1 text-xs"
-                                    onChange={(e) => setEventFilter(e.target.value)}
-                                    value={eventFilter}
-                                >
-                                    {eventTypes.map((type) => (
-                                        <option key={type} value={type}>
-                                            {type.replaceAll('_', ' ')}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                        }
+                        description="Dữ liệu lịch sử, cảnh báo và phản hồi lệnh MQTT của thiết bị đã được chuẩn hóa thân thiện"
                     >
-                        {filteredLogs.length === 0 ? (
-                            <EmptyState
-                                title="Chưa có sự kiện nào"
-                                description="Các sự kiện kết nối, thay đổi chốt và cảnh báo sẽ xuất hiện tại đây khi thiết bị truyền dữ liệu."
-                            />
-                        ) : (
-                            <ol className="divide-y divide-white/5">
-                                {filteredLogs.map((log) => (
-                                    <li className="flex flex-col gap-2 py-3.5 first:pt-0 last:pb-0 sm:flex-row sm:items-start sm:justify-between" key={log._id || log.id}>
-                                        <div className="min-w-0 pr-4">
-                                            <p className="text-sm font-semibold capitalize text-white">
-                                                {log.type?.replaceAll('_', ' ') || 'Sự kiện IoT'}
-                                            </p>
-                                            <p className="mt-1 font-mono text-xs text-cyan-300/80 break-words">
-                                                {log.payload?.errorCode || log.payload?.reason || log.payload?.command || log.payload?.event || JSON.stringify(log.payload || {})}
-                                            </p>
-                                        </div>
-                                        <time className="whitespace-nowrap font-mono text-xs text-slate-400">
-                                            {formatDate(log.createdAt)}
-                                        </time>
-                                    </li>
-                                ))}
-                            </ol>
-                        )}
+                        <ModernActivityTimeline
+                            emptyDescription="Các sự kiện kết nối, thay đổi chốt và cảnh báo sẽ xuất hiện tại đây khi thiết bị truyền dữ liệu."
+                            emptyMessage="Chưa có sự kiện nào cho thiết bị này"
+                            logs={logs.map((l) => ({ ...l, deviceId: l.deviceId || device?.deviceId }))}
+                        />
                     </Card>
                 </div>
             )}

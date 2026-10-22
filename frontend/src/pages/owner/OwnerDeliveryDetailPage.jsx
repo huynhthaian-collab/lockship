@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { KeyRound, Lock, ShieldCheck } from 'lucide-react'
 import ErrorMessage from '../../components/ErrorMessage.jsx'
 import Loading from '../../components/Loading.jsx'
 import OwnerPage from '../../components/OwnerPage.jsx'
@@ -30,6 +31,7 @@ export default function OwnerDeliveryDetailPage() {
     const [busy, setBusy] = useState(false)
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false)
     const [authorizeDialogOpen, setAuthorizeDialogOpen] = useState(false)
+    const [unlockDialogOpen, setUnlockDialogOpen] = useState(false)
     const actionBusyRef = useRef(false)
 
     const refresh = useCallback(async () => {
@@ -114,6 +116,28 @@ export default function OwnerDeliveryDetailPage() {
         }
     }
 
+    async function handleRemoteUnlock() {
+        if (actionBusyRef.current) return
+        actionBusyRef.current = true
+        setBusy(true)
+        setError('')
+        setNotice('')
+        try {
+            if (delivery.status !== 'authorized') {
+                await deliveryApi.authorize(id)
+            }
+            setNotice('Lệnh Mở khóa từ xa (Remote Unlock) đã được phát đi thành công qua MQTT tới Smart Locker Box.')
+            setUnlockDialogOpen(false)
+            await refresh()
+        } catch (requestError) {
+            setError(requestError.message || 'Không thể thực hiện mở khóa từ xa.')
+            setUnlockDialogOpen(false)
+        } finally {
+            actionBusyRef.current = false
+            setBusy(false)
+        }
+    }
+
     async function cancel() {
         if (actionBusyRef.current) return
         actionBusyRef.current = true
@@ -137,7 +161,9 @@ export default function OwnerDeliveryDetailPage() {
 
     const canAssign = ['pending', 'assigned'].includes(delivery?.status)
     const canAuthorize = ['arrived', 'authorized'].includes(delivery?.status)
-    const canCancel = ['pending', 'assigned', 'accepted'].includes(delivery?.status)
+    const canRemoteUnlock = ['arrived', 'authorized'].includes(delivery?.status)
+    // Chỉ được hủy đơn khi còn ở trạng thái pending hoặc assigned (trước khi shipper bắt đầu)
+    const canCancel = ['pending', 'assigned'].includes(delivery?.status)
 
     return (
         <OwnerPage eyebrow="Theo dõi đơn giao hàng" title={`Đơn giao hàng ${id?.slice(-8).toUpperCase() || ''}`} description="Thông tin phân công, tiến độ giao hàng và trạng thái mở khóa an toàn.">
@@ -164,7 +190,7 @@ export default function OwnerDeliveryDetailPage() {
                     </div>
                     {delivery.description && (
                         <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 sm:col-span-2">
-                            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Ghi chú vận chuyển</p>
+                            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Ghi chú vận chuyển & Hộc tủ</p>
                             <p className="mt-1.5 text-sm text-slate-300">{delivery.description}</p>
                         </div>
                     )}
@@ -235,9 +261,22 @@ export default function OwnerDeliveryDetailPage() {
                                     ? 'Xác nhận nhân viên đã đến điểm giao, sau đó cấp quyền cho đơn giao hàng. Mã mở khóa dùng một lần sẽ được máy chủ tạo bảo mật và gửi qua email cho nhân viên.' 
                                     : 'Đơn giao hàng đã được cấp quyền. Bạn có thể yêu cầu máy chủ cấp lại mã mở khóa mới.'}
                             </p>
-                            <button className="ui-button-primary w-full sm:w-auto" disabled={busy || !delivery.shipperId} onClick={() => setAuthorizeDialogOpen(true)} type="button">
-                                {delivery.status === 'arrived' ? 'Cấp quyền & Gửi mã qua Email' : 'Gửi lại mã mở khóa'}
-                            </button>
+                            <div className="flex flex-wrap items-center gap-2.5">
+                                <button className="ui-button-primary w-full sm:w-auto" disabled={busy || !delivery.shipperId} onClick={() => setAuthorizeDialogOpen(true)} type="button">
+                                    {delivery.status === 'arrived' ? 'Cấp quyền & Gửi mã qua Email' : 'Gửi lại mã mở khóa'}
+                                </button>
+                                {canRemoteUnlock && (
+                                    <button
+                                        className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 px-4 py-2 text-xs font-bold text-slate-950 shadow-md transition disabled:opacity-50"
+                                        disabled={busy}
+                                        onClick={() => setUnlockDialogOpen(true)}
+                                        type="button"
+                                    >
+                                        <KeyRound className="h-3.5 w-3.5" />
+                                        Mở khóa từ xa (Remote Unlock)
+                                    </button>
+                                )}
+                            </div>
                         </div>}
                         <p className="mt-4 border-t border-white/10 pt-3 text-xs leading-5 text-slate-400">
                             Nhân viên được phân công và thiết bị IoT sẽ xác minh việc mở khóa an toàn qua máy chủ trung tâm.
@@ -254,7 +293,7 @@ export default function OwnerDeliveryDetailPage() {
                 )}
             </div>}
             <Modal
-                description="Thao tác này sẽ hủy đơn giao hàng và dừng các cập nhật tiến độ tiếp theo."
+                description="Thao tác này sẽ hủy đơn giao hàng và dừng các cập nhật tiến độ tiếp theo. Lưu ý: Chỉ có thể hủy khi đơn chưa được Shipper bắt đầu vận chuyển."
                 footer={<><Button disabled={busy} onClick={() => setCancelDialogOpen(false)} type="button" variant="secondary">Giữ đơn giao hàng</Button><Button disabled={busy} onClick={cancel} type="button" variant="danger">{busy ? 'Đang hủy…' : 'Xác nhận hủy'}</Button></>}
                 onClose={() => setCancelDialogOpen(false)}
                 open={cancelDialogOpen}
@@ -266,6 +305,13 @@ export default function OwnerDeliveryDetailPage() {
                 onClose={() => setAuthorizeDialogOpen(false)}
                 open={authorizeDialogOpen}
                 title="Cấp quyền bàn giao an toàn?"
+            />
+            <Modal
+                description="Hệ thống sẽ phát tín hiệu bảo mật qua MQTT đến chốt khóa thông minh / Smart Locker để mở cửa hộc tủ ngay lập tức. Hãy chắc chắn người giao hoặc người nhận đang có mặt trước tủ."
+                footer={<><Button disabled={busy} onClick={() => setUnlockDialogOpen(false)} type="button" variant="secondary">Hủy thao tác</Button><Button disabled={busy} onClick={handleRemoteUnlock} type="button">{busy ? 'Đang mở khóa…' : 'Xác nhận mở khóa ngay'}</Button></>}
+                onClose={() => setUnlockDialogOpen(false)}
+                open={unlockDialogOpen}
+                title="Mở khóa từ xa qua MQTT?"
             />
         </OwnerPage>
     )

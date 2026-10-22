@@ -214,12 +214,20 @@ export default function DeliverySupplementalBoxes({
                                 onChange={(e) => handleStationSelect(e.target.value)}
                                 value={currentStation?.id || boxConfig.stationId}
                             >
-                                {LOCKSHIP_BOXES.map((b) => (
-                                    <option key={b.id} value={b.id}>
-                                        {b.name} ({b.status === 'Available' ? `${b.availableCompartments} hộc trống` : b.status})
-                                    </option>
-                                ))}
+                                {LOCKSHIP_BOXES.map((b) => {
+                                    const isUnavailable = b.status === 'Locked' || b.availableCompartments <= 0 || b.isOnline === false
+                                    return (
+                                        <option key={b.id} value={b.id} disabled={isUnavailable}>
+                                            {b.name} ({isUnavailable ? 'ĐÃ ĐẦY / TẠM KHÓA' : `${b.availableCompartments} hộc trống`})
+                                        </option>
+                                    )
+                                })}
                             </select>
+                            {currentStation && (currentStation.availableCompartments <= 0 || currentStation.status === 'Locked') && (
+                                <p className="mt-1.5 text-[11px] font-medium text-rose-400">
+                                    ⚠️ Trạm này hiện không còn hộc trống hoặc đang khóa bảo trì. Vui lòng chọn trạm khác.
+                                </p>
+                            )}
                         </div>
 
                         <div>

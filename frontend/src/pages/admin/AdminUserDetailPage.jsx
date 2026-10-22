@@ -116,6 +116,8 @@ export default function AdminUserDetailPage() {
 
     const userMap = useMemo(() => new Map(allUser.map((u) => [u._id, u])), [allUser])
     const isSelf = currentUser?.id === id || currentUser?._id === id
+    const isAdmin = user?.role === 'admin'
+    const isProtectedAdmin = isAdmin && !isSelf
 
     const userVehicle = useMemo(
         () => (user?.role === 'owner' ? vehicles.filter((v) => v.ownerId === id) : []),
@@ -137,6 +139,10 @@ export default function AdminUserDetailPage() {
 
     async function saveProfile(event) {
         event.preventDefault()
+        if (isProtectedAdmin) {
+            setError('Không thể chỉnh sửa, vô hiệu hóa hoặc xóa tài khoản Quản trị viên (Admin) khác.')
+            return
+        }
         setBusy(true)
         setError('')
         setNotice('')
@@ -160,7 +166,14 @@ export default function AdminUserDetailPage() {
 
     async function saveRole(event) {
         event.preventDefault()
-        if (isSelf) return
+        if (isProtectedAdmin) {
+            setError('Không thể chỉnh sửa, vô hiệu hóa hoặc xóa tài khoản Quản trị viên (Admin) khác.')
+            return
+        }
+        if (isSelf) {
+            setError('Bạn không thể tự hạ quyền hoặc thay đổi vai trò tài khoản Quản trị viên của chính mình.')
+            return
+        }
         setBusy(true)
         setError('')
         setNotice('')
@@ -179,7 +192,14 @@ export default function AdminUserDetailPage() {
     }
 
     async function setStatus(newStatus) {
-        if (isSelf) return
+        if (isProtectedAdmin) {
+            setError('Không thể chỉnh sửa, vô hiệu hóa hoặc xóa tài khoản Quản trị viên (Admin) khác.')
+            return
+        }
+        if (isSelf) {
+            setError('Bạn không thể tự thay đổi trạng thái hoặc vô hiệu hóa tài khoản Quản trị viên của chính mình.')
+            return
+        }
         setBusy(true)
         setError('')
         setNotice('')
@@ -196,7 +216,14 @@ export default function AdminUserDetailPage() {
     }
 
     async function remove() {
-        if (isSelf) return
+        if (isProtectedAdmin) {
+            setError('Không thể chỉnh sửa, vô hiệu hóa hoặc xóa tài khoản Quản trị viên (Admin) khác.')
+            return
+        }
+        if (isSelf) {
+            setError('Bạn không thể tự xóa tài khoản Quản trị viên của chính mình.')
+            return
+        }
         if (!window.confirm(`Xóa vĩnh viễn người dùng "${user?.name}"? Thao tác này không thể hoàn tác.`)) {
             return
         }
@@ -246,6 +273,25 @@ export default function AdminUserDetailPage() {
                 </div>
             )}
 
+            {isAdmin && (
+                <div className="flex items-start gap-3 rounded-2xl border border-purple-500/40 bg-purple-500/10 p-4 mb-6 backdrop-blur-md shadow-lg shadow-purple-950/20">
+                    <Shield className="h-5 w-5 text-purple-400 mt-0.5 shrink-0" />
+                    <div>
+                        <h4 className="text-sm font-bold text-purple-200 flex items-center gap-2">
+                            <span>{isSelf ? 'Tài khoản Quản trị viên của bạn' : 'Tài khoản Quản trị viên được bảo vệ (Protected Admin)'}</span>
+                            <span className="rounded-md border border-purple-500/50 bg-purple-500/20 px-2 py-0.5 text-[10px] font-bold text-purple-300">
+                                Bảo mật cấp cao
+                            </span>
+                        </h4>
+                        <p className="text-xs text-purple-300/80 mt-1 leading-relaxed">
+                            {isSelf
+                                ? 'Bạn có thể chỉnh sửa thông tin hồ sơ cơ bản của chính mình. Quyền hạn quản trị viên, ngừng kích hoạt hoặc xóa tài khoản đã được bảo vệ để ngăn chặn sự cố ngoài ý muốn.'
+                                : 'Theo quy chuẩn bảo mật phân quyền (Admin Protection), Quản trị viên TUYỆT ĐỐI KHÔNG THỂ chỉnh sửa thông tin, đổi vai trò, vô hiệu hóa hoặc xóa bất kỳ tài khoản Quản trị viên nào khác.'}
+                        </p>
+                    </div>
+                </div>
+            )}
+
             {user && (
                 <div className="grid gap-6 lg:grid-cols-3">
                     {/* Cột trái: Hồ sơ & Vai trò & Dữ liệu liên quan */}
@@ -268,7 +314,8 @@ export default function AdminUserDetailPage() {
                                         <div className="relative">
                                             <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                                             <input
-                                                className="w-full rounded-xl border border-white/10 bg-slate-950/60 pl-9 pr-3 py-2.5 text-sm text-white focus:border-cyan-500/50 focus:outline-none"
+                                                className="w-full rounded-xl border border-white/10 bg-slate-950/60 pl-9 pr-3 py-2.5 text-sm text-white focus:border-cyan-500/50 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                                                disabled={isProtectedAdmin || busy}
                                                 maxLength={100}
                                                 minLength={2}
                                                 onChange={(e) => setProfile({ ...profile, name: e.target.value })}
@@ -285,7 +332,8 @@ export default function AdminUserDetailPage() {
                                         <div className="relative">
                                             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                                             <input
-                                                className="w-full rounded-xl border border-white/10 bg-slate-950/60 pl-9 pr-3 py-2.5 text-sm text-white focus:border-cyan-500/50 focus:outline-none"
+                                                className="w-full rounded-xl border border-white/10 bg-slate-950/60 pl-9 pr-3 py-2.5 text-sm text-white focus:border-cyan-500/50 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                                                disabled={isProtectedAdmin || busy}
                                                 maxLength={254}
                                                 onChange={(e) => setProfile({ ...profile, email: e.target.value })}
                                                 required
@@ -302,7 +350,8 @@ export default function AdminUserDetailPage() {
                                         <div className="relative">
                                             <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                                             <input
-                                                className="w-full rounded-xl border border-white/10 bg-slate-950/60 pl-9 pr-3 py-2.5 text-sm text-white focus:border-cyan-500/50 focus:outline-none"
+                                                className="w-full rounded-xl border border-white/10 bg-slate-950/60 pl-9 pr-3 py-2.5 text-sm text-white focus:border-cyan-500/50 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                                                disabled={isProtectedAdmin || busy}
                                                 maxLength={30}
                                                 onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
                                                 placeholder="+84 901 234 567"
@@ -319,7 +368,8 @@ export default function AdminUserDetailPage() {
                                             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                                             <input
                                                 autoComplete="street-address"
-                                                className="w-full rounded-xl border border-white/10 bg-slate-950/60 pl-9 pr-3 py-2.5 text-sm text-white focus:border-cyan-500/50 focus:outline-none"
+                                                className="w-full rounded-xl border border-white/10 bg-slate-950/60 pl-9 pr-3 py-2.5 text-sm text-white focus:border-cyan-500/50 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                                                disabled={isProtectedAdmin || busy}
                                                 maxLength={500}
                                                 minLength={3}
                                                 onChange={(e) => setProfile({ ...profile, address: e.target.value })}
@@ -336,7 +386,8 @@ export default function AdminUserDetailPage() {
                                         <div className="relative">
                                             <Image className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                                             <input
-                                                className="w-full rounded-xl border border-white/10 bg-slate-950/60 pl-9 pr-3 py-2.5 text-sm text-white placeholder-slate-500 focus:border-cyan-500/50 focus:outline-none"
+                                                className="w-full rounded-xl border border-white/10 bg-slate-950/60 pl-9 pr-3 py-2.5 text-sm text-white placeholder-slate-500 focus:border-cyan-500/50 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                                                disabled={isProtectedAdmin || busy}
                                                 maxLength={2048}
                                                 onChange={(e) => setProfile({ ...profile, avatar: e.target.value })}
                                                 placeholder="https://..."
@@ -348,14 +399,21 @@ export default function AdminUserDetailPage() {
                                 </div>
 
                                 <div className="pt-3 border-t border-white/10">
-                                    <button
-                                        className="inline-flex items-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 px-5 py-2.5 text-xs font-bold text-slate-950 shadow-lg shadow-cyan-950/40 transition disabled:opacity-50"
-                                        disabled={busy}
-                                        type="submit"
-                                    >
-                                        <Save className="h-4 w-4" />
-                                        {busy ? 'Đang lưu...' : 'Cập nhật hồ sơ'}
-                                    </button>
+                                    {isProtectedAdmin ? (
+                                        <div className="flex items-center gap-2 text-xs text-purple-300 bg-purple-500/10 border border-purple-500/20 rounded-xl px-4 py-2.5">
+                                            <Shield className="h-4 w-4 text-purple-400 shrink-0" />
+                                            <span>Tài khoản Admin khác được bảo vệ — Chỉ chủ tài khoản mới được cập nhật thông tin cá nhân.</span>
+                                        </div>
+                                    ) : (
+                                        <button
+                                            className="inline-flex items-center gap-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 px-5 py-2.5 text-xs font-bold text-slate-950 shadow-lg shadow-cyan-950/40 transition disabled:opacity-50"
+                                            disabled={busy}
+                                            type="submit"
+                                        >
+                                            <Save className="h-4 w-4" />
+                                            {busy ? 'Đang lưu...' : 'Cập nhật hồ sơ'}
+                                        </button>
+                                    )}
                                 </div>
                             </form>
                         </Card>
@@ -370,7 +428,12 @@ export default function AdminUserDetailPage() {
                                 <StatusPill value={user.role} />
                             </div>
 
-                            {isSelf ? (
+                            {isProtectedAdmin ? (
+                                <p className="mt-4 rounded-xl border border-purple-500/30 bg-purple-500/10 p-3.5 text-xs text-purple-300 flex items-center gap-2">
+                                    <Shield className="h-4 w-4 text-purple-400 shrink-0" />
+                                    Tài khoản Quản trị viên được bảo vệ — Tuyệt đối không thể thay đổi vai trò hoặc hạ quyền.
+                                </p>
+                            ) : isSelf ? (
                                 <p className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3.5 text-xs text-amber-300">
                                     Bạn đang đăng nhập bằng tài khoản này nên không thể tự thay đổi vai trò của chính mình.
                                 </p>
@@ -487,7 +550,12 @@ export default function AdminUserDetailPage() {
                                 {user.status === 'suspended' && 'Tài khoản đã bị đình chỉ do vi phạm hoặc quyết định quản trị.'}
                             </p>
 
-                            {isSelf ? (
+                            {isProtectedAdmin ? (
+                                <div className="mt-4 rounded-xl border border-purple-500/30 bg-purple-500/10 p-3.5 text-xs text-purple-300 flex items-center gap-2">
+                                    <Shield className="h-4 w-4 text-purple-400 shrink-0" />
+                                    Tài khoản Quản trị viên được bảo vệ — Không thể ngừng hoạt động hoặc đình chỉ.
+                                </div>
+                            ) : isSelf ? (
                                 <p className="mt-4 text-xs text-slate-500 italic">
                                     Bạn không thể thay đổi trạng thái của chính mình.
                                 </p>
@@ -541,13 +609,17 @@ export default function AdminUserDetailPage() {
                             </p>
                             <div className="mt-4">
                                 <button
-                                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 hover:bg-red-500/20 py-2.5 text-xs font-bold text-red-400 transition disabled:opacity-50"
-                                    disabled={busy || isSelf}
+                                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 hover:bg-red-500/20 py-2.5 text-xs font-bold text-red-400 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                    disabled={busy || isSelf || isProtectedAdmin}
                                     onClick={remove}
                                     type="button"
                                 >
                                     <Trash2 className="h-4 w-4" />
-                                    {isSelf ? 'Không thể tự xóa' : 'Xóa tài khoản vĩnh viễn'}
+                                    {isProtectedAdmin
+                                        ? 'Không thể xóa Admin khác'
+                                        : isSelf
+                                        ? 'Không thể tự xóa tài khoản'
+                                        : 'Xóa tài khoản vĩnh viễn'}
                                 </button>
                             </div>
                         </Card>

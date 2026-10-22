@@ -17,7 +17,7 @@ import AddressAutocompleteInput from '../../components/gis/AddressAutocompleteIn
 import InteractiveMapPicker from '../../components/gis/InteractiveMapPicker.jsx'
 import DeliverySupplementalBoxes, { calculateDistanceKm } from '../../components/gis/DeliverySupplementalBoxes.jsx'
 import { deliveryApi } from '../../services/ownerApi.js'
-import { LOCKSHIP_BOXES } from '../../data/smartLockerBoxes.js'
+import { LOCKSHIP_BOXES, reserveBoxCompartment, releaseBoxCompartment } from '../../data/smartLockerBoxes.js'
 
 export default function OwnerDeliveryCreatePage() {
     const navigate = useNavigate()
@@ -112,6 +112,42 @@ export default function OwnerDeliveryCreatePage() {
             return
         }
 
+        // 1. Kiểm tra tọa độ bản đồ GIS
+        if (!pickupCoords?.lat || !pickupCoords?.lng || !deliveryCoords?.lat || !deliveryCoords?.lng) {
+            setError('Vui lòng xác thực vị trí tọa độ trên bản đồ cho cả điểm lấy và điểm giao hàng.')
+            return
+        }
+
+        // 2. Kiểm tra thông tin người nhận chuẩn định dạng
+        const recipientName = supplemental.recipientName?.trim()
+        if (!recipientName || recipientName.length < 2) {
+            setError('Vui lòng nhập họ tên người nhận hợp lệ (tối thiểu 2 ký tự).')
+            return
+        }
+
+        const rawPhone = supplemental.recipientPhone?.trim().replace(/[\s.-]+/g, '')
+        const phoneRegex = /^(0|\+84)[35789]\d{8}$/
+        if (!rawPhone || !phoneRegex.test(rawPhone)) {
+            setError('Số điện thoại người nhận không đúng định dạng chuẩn Việt Nam (Ví dụ: 0901234567 hoặc +84901234567).')
+            return
+        }
+
+        // 3. Kiểm tra tính sẵn sàng của Tủ khóa (Smart Locker Box)
+        if (!selectedBox) {
+            setError('Vui lòng chọn Tủ khóa thông minh (Lockship Box) cho đơn hàng.')
+            return
+        }
+
+        if (selectedBox.status === 'Locked' || (selectedBox.availableCompartments !== undefined && selectedBox.availableCompartments <= 0)) {
+            setError(`Tủ khóa "${selectedBox.name}" hiện đã hết hộc trống hoặc đang bảo trì. Vui lòng chọn Box khác!`)
+            return
+        }
+
+        if (selectedBox.isOnline === false) {
+            setError(`Tủ khóa "${selectedBox.name}" hiện đang ngoại tuyến (Offline). Vui lòng chọn trạm đang hoạt động.`)
+            return
+        }
+
         // Calculate final distance
         const distance = calculateDistanceKm(
             pickupCoords.lat,
@@ -124,9 +160,7 @@ export default function OwnerDeliveryCreatePage() {
         const metadataParts = [
             form.description.trim() ? `Ghi chú: ${form.description.trim()}` : null,
             supplemental.building ? `Tòa nhà/Căn hộ: ${supplemental.building}` : null,
-            supplemental.recipientName
-                ? `Người nhận: ${supplemental.recipientName} (${supplemental.recipientPhone || 'Chưa có SĐT'})`
-                : null,
+            `Người nhận: ${recipientName} (${rawPhone})`,
             `Hộc tủ: Size ${supplemental.boxSize || 'M'} · Trạm: ${selectedBox?.name || supplemental.stationId}`,
             `GPS Lấy: ${pickupCoords.lat.toFixed(5)}, ${pickupCoords.lng.toFixed(5)}`,
             `GPS Giao: ${deliveryCoords.lat.toFixed(5)}, ${deliveryCoords.lng.toFixed(5)}`,
@@ -139,6 +173,9 @@ export default function OwnerDeliveryCreatePage() {
         submittingRef.current = true
         setSaving(true)
         try {
+            // Giữ chỗ hộc tủ an toàn để tránh xung đột đơn hàng
+            reserveBoxCompartment(selectedBox.id, supplemental.boxSize || 'M')
+
             const delivery = await deliveryApi.create({
                 pickupAddress,
                 deliveryAddress,
@@ -150,6 +187,12 @@ export default function OwnerDeliveryCreatePage() {
                 navigate('/owner/deliveries', { replace: true })
             }
         } catch (requestError) {
+            // Hoàn lại slot nếu lỗi
+            try {
+                releaseBoxCompartment(selectedBox.id, supplemental.boxSize || 'M')
+            } catch {
+                // ignore
+            }
             setError(requestError.message || 'Không thể tạo đơn giao hàng.')
         } finally {
             submittingRef.current = false

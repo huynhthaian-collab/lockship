@@ -144,8 +144,12 @@ export default function AdminUserPage() {
     }
 
     async function handleStatusChange(targetUser, newStatus) {
+        if (targetUser.role === 'admin') {
+            setError('Không thể chỉnh sửa, vô hiệu hóa hoặc xóa tài khoản Quản trị viên (Admin) khác.')
+            return
+        }
         if (targetUser._id === currentUser?.id || targetUser._id === currentUser?._id) {
-            setError('Bạn không thể thay đổi trạng thái của chính mình.')
+            setError('Bạn không thể tự thay đổi trạng thái hoặc vô hiệu hóa tài khoản Quản trị viên của chính mình.')
             return
         }
         setError('')
@@ -164,8 +168,12 @@ export default function AdminUserPage() {
     }
 
     async function handleDeleteUser(targetUser) {
+        if (targetUser.role === 'admin') {
+            setError('Không thể chỉnh sửa, vô hiệu hóa hoặc xóa tài khoản Quản trị viên (Admin) khác.')
+            return
+        }
         if (targetUser._id === currentUser?.id || targetUser._id === currentUser?._id) {
-            setError('Bạn không thể xóa tài khoản quản trị viên của chính mình.')
+            setError('Bạn không thể tự xóa tài khoản Quản trị viên của chính mình.')
             return
         }
         if (!window.confirm(`Bạn có chắc chắn muốn xóa vĩnh viễn người dùng "${targetUser.name}" (${targetUser.email}) không?`)) {
@@ -524,9 +532,20 @@ export default function AdminUserPage() {
                                             </div>
                                         </td>
                                         <td className="px-5 py-3.5">
-                                            <span className={`inline-block rounded-lg border px-2.5 py-1 text-xs font-bold uppercase tracking-wider ${getRoleBadge(item.role)}`}>
-                                                {{ owner: 'Chủ sở hữu', shipper: 'Shipper', admin: 'Quản trị viên' }[item.role] || item.role}
-                                            </span>
+                                            <div className="flex flex-col gap-1 items-start">
+                                                <span className={`inline-block rounded-lg border px-2.5 py-1 text-xs font-bold uppercase tracking-wider ${getRoleBadge(item.role)}`}>
+                                                    {{ owner: 'Chủ sở hữu', shipper: 'Shipper', admin: 'Quản trị viên' }[item.role] || item.role}
+                                                </span>
+                                                {item.role === 'admin' && (
+                                                    <span
+                                                        className="inline-flex items-center gap-1 rounded-md border border-purple-500/40 bg-purple-500/15 px-2 py-0.5 text-[10px] font-bold text-purple-300 shadow-sm"
+                                                        title="Tài khoản Quản trị viên được bảo vệ: Tuyệt đối không thể sửa, khóa hoặc xóa bởi Admin khác"
+                                                    >
+                                                        <Shield className="h-2.5 w-2.5 text-purple-400" />
+                                                        Admin được bảo vệ
+                                                    </span>
+                                                )}
+                                            </div>
                                         </td>
                                         <td className="px-5 py-3.5 text-xs text-slate-400">
                                             {item.role === 'shipper' ? (
@@ -549,63 +568,84 @@ export default function AdminUserPage() {
                                         </td>
                                         <td className="px-5 py-3.5 text-right">
                                             <div className="flex items-center justify-end gap-2">
-                                                {!isSelf && (
+                                                {item.role === 'admin' ? (
                                                     <>
-                                                        {item.status !== 'active' ? (
-                                                            <button
-                                                                className="inline-flex items-center gap-1 rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-2 py-1 text-xs font-bold text-emerald-400 hover:bg-emerald-500/20 transition disabled:opacity-50"
-                                                                disabled={isBusy}
-                                                                onClick={() => handleStatusChange(item, 'active')}
-                                                                title="Kích hoạt tài khoản"
-                                                                type="button"
-                                                            >
-                                                                <Power className="h-3 w-3" />
-                                                                Kích hoạt
-                                                            </button>
-                                                        ) : (
-                                                            <button
-                                                                className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-xs font-bold text-slate-300 hover:bg-white/10 transition disabled:opacity-50"
-                                                                disabled={isBusy}
-                                                                onClick={() => handleStatusChange(item, 'inactive')}
-                                                                title="Ngừng hoạt động"
-                                                                type="button"
-                                                            >
-                                                                <Power className="h-3 w-3" />
-                                                                Ngừng
-                                                            </button>
+                                                        <span
+                                                            className="inline-flex items-center gap-1 rounded-lg border border-purple-500/30 bg-purple-500/10 px-2 py-1 text-[11px] font-semibold text-purple-300"
+                                                            title="Tài khoản Quản trị viên được bảo vệ tuyệt đối: Không thể sửa, khóa hoặc xóa"
+                                                        >
+                                                            <Shield className="h-3 w-3 text-purple-400" />
+                                                            Được bảo vệ
+                                                        </span>
+
+                                                        <Link
+                                                            className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-semibold text-slate-200 hover:bg-white/10 hover:text-white transition"
+                                                            to={`/admin/users/${item._id}`}
+                                                        >
+                                                            {isSelf ? 'Hồ sơ của bạn' : 'Xem thông tin'}
+                                                        </Link>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        {!isSelf && (
+                                                            <>
+                                                                {item.status !== 'active' ? (
+                                                                    <button
+                                                                        className="inline-flex items-center gap-1 rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-2 py-1 text-xs font-bold text-emerald-400 hover:bg-emerald-500/20 transition disabled:opacity-50"
+                                                                        disabled={isBusy}
+                                                                        onClick={() => handleStatusChange(item, 'active')}
+                                                                        title="Kích hoạt tài khoản"
+                                                                        type="button"
+                                                                    >
+                                                                        <Power className="h-3 w-3" />
+                                                                        Kích hoạt
+                                                                    </button>
+                                                                ) : (
+                                                                    <button
+                                                                        className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-xs font-bold text-slate-300 hover:bg-white/10 transition disabled:opacity-50"
+                                                                        disabled={isBusy}
+                                                                        onClick={() => handleStatusChange(item, 'inactive')}
+                                                                        title="Ngừng hoạt động"
+                                                                        type="button"
+                                                                    >
+                                                                        <Power className="h-3 w-3" />
+                                                                        Ngừng
+                                                                    </button>
+                                                                )}
+                                                                {item.status !== 'suspended' && (
+                                                                    <button
+                                                                        className="inline-flex items-center gap-1 rounded-lg border border-amber-500/20 bg-amber-500/10 px-2 py-1 text-xs font-bold text-amber-400 hover:bg-amber-500/20 transition disabled:opacity-50"
+                                                                        disabled={isBusy}
+                                                                        onClick={() => handleStatusChange(item, 'suspended')}
+                                                                        title="Đình chỉ tài khoản"
+                                                                        type="button"
+                                                                    >
+                                                                        <Slash className="h-3 w-3" />
+                                                                        Đình chỉ
+                                                                    </button>
+                                                                )}
+                                                            </>
                                                         )}
-                                                        {item.status !== 'suspended' && (
+
+                                                        <Link
+                                                            className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-semibold text-slate-200 hover:bg-white/10 hover:text-white transition"
+                                                            to={`/admin/users/${item._id}`}
+                                                        >
+                                                            Quản lý
+                                                        </Link>
+
+                                                        {!isSelf && (
                                                             <button
-                                                                className="inline-flex items-center gap-1 rounded-lg border border-amber-500/20 bg-amber-500/10 px-2 py-1 text-xs font-bold text-amber-400 hover:bg-amber-500/20 transition disabled:opacity-50"
+                                                                className="inline-flex items-center gap-1 rounded-lg border border-red-500/20 bg-red-500/10 px-2 py-1 text-xs font-bold text-red-400 hover:bg-red-500/20 transition disabled:opacity-50"
                                                                 disabled={isBusy}
-                                                                onClick={() => handleStatusChange(item, 'suspended')}
-                                                                title="Đình chỉ tài khoản"
+                                                                onClick={() => handleDeleteUser(item)}
                                                                 type="button"
                                                             >
-                                                                <Slash className="h-3 w-3" />
-                                                                Đình chỉ
+                                                                <Trash2 className="h-3 w-3" />
+                                                                Xóa
                                                             </button>
                                                         )}
                                                     </>
-                                                )}
-
-                                                <Link
-                                                    className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-semibold text-slate-200 hover:bg-white/10 hover:text-white transition"
-                                                    to={`/admin/users/${item._id}`}
-                                                >
-                                                    Quản lý
-                                                </Link>
-
-                                                {!isSelf && (
-                                                    <button
-                                                        className="inline-flex items-center gap-1 rounded-lg border border-red-500/20 bg-red-500/10 px-2 py-1 text-xs font-bold text-red-400 hover:bg-red-500/20 transition disabled:opacity-50"
-                                                        disabled={isBusy}
-                                                        onClick={() => handleDeleteUser(item)}
-                                                        type="button"
-                                                    >
-                                                        <Trash2 className="h-3 w-3" />
-                                                        Xóa
-                                                    </button>
                                                 )}
                                             </div>
                                         </td>

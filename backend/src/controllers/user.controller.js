@@ -42,7 +42,7 @@ export async function createUser(req, res) {
 }
 
 export async function updateUser(req, res) {
-    const user = await userService.updateUser(req.params.userId, req.body);
+    const user = await userService.updateUser(req.user.id, req.params.userId, req.body);
     return sendSuccess(res, { message: "User updated successfully.", data: { user } });
 }
 

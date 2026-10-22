@@ -87,8 +87,36 @@ export async function createUser(input) {
     return User.create({ ...userData, ownerId: ownerId ?? null });
 }
 
-export async function updateUser(userId, profile) {
+export async function updateUser(actorIdOrUserId, userIdOrProfile, maybeProfile) {
+    let actorId, userId, profile;
+    if (maybeProfile !== undefined) {
+        actorId = actorIdOrUserId;
+        userId = userIdOrProfile;
+        profile = maybeProfile;
+    } else {
+        userId = actorIdOrUserId;
+        profile = userIdOrProfile;
+        actorId = null;
+    }
+
     const user = await getUser(userId);
+
+    // Admin Protection:
+    if (user.role?.toLowerCase() === "admin") {
+        if (actorId && String(actorId) !== String(user.id || user._id)) {
+            throw new AppError("Không thể chỉnh sửa, vô hiệu hóa hoặc xóa tài khoản Quản trị viên (Admin) khác.", 403);
+        }
+        if (profile.role && profile.role.toLowerCase() !== "admin") {
+            throw new AppError("Bạn không thể tự hạ quyền hoặc thay đổi vai trò tài khoản Quản trị viên của chính mình.", 403);
+        }
+        if (profile.status && profile.status !== "active") {
+            throw new AppError("Bạn không thể tự thay đổi trạng thái hoặc vô hiệu hóa tài khoản Quản trị viên của chính mình.", 403);
+        }
+        if (profile.isActive === false) {
+            throw new AppError("Bạn không thể tự thay đổi trạng thái hoặc vô hiệu hóa tài khoản Quản trị viên của chính mình.", 403);
+        }
+    }
+
     applyProfile(user, profile);
     await user.save();
     return user;
@@ -96,8 +124,11 @@ export async function updateUser(userId, profile) {
 
 export async function deleteUser(actorId, userId) {
     const user = await getUser(userId);
-    if (user.id === actorId) {
-        throw new AppError("You cannot delete your own account through user management.", 403);
+    if (actorId && String(user.id || user._id) === String(actorId)) {
+        throw new AppError("Bạn không thể tự xóa tài khoản Quản trị viên của chính mình.", 403);
+    }
+    if (user.role?.toLowerCase() === "admin") {
+        throw new AppError("Không thể chỉnh sửa, vô hiệu hóa hoặc xóa tài khoản Quản trị viên (Admin) khác.", 403);
     }
 
     if (user.role === "owner") {
@@ -110,8 +141,11 @@ export async function deleteUser(actorId, userId) {
 
 export async function updateUserStatus(actorId, userId, status) {
     const user = await getUser(userId);
-    if (user.id === actorId) {
-        throw new AppError("You cannot change your own status through user management.", 403);
+    if (actorId && String(user.id || user._id) === String(actorId)) {
+        throw new AppError("Bạn không thể tự thay đổi trạng thái hoặc vô hiệu hóa tài khoản Quản trị viên của chính mình.", 403);
+    }
+    if (user.role?.toLowerCase() === "admin") {
+        throw new AppError("Không thể chỉnh sửa, vô hiệu hóa hoặc xóa tài khoản Quản trị viên (Admin) khác.", 403);
     }
 
     user.status = status;
@@ -123,8 +157,11 @@ export async function updateUserStatus(actorId, userId, status) {
 
 export async function updateUserRole(actorId, userId, role, ownerId) {
     const user = await getUser(userId);
-    if (user.id === actorId) {
-        throw new AppError("You cannot change your own role.", 403);
+    if (actorId && String(user.id || user._id) === String(actorId)) {
+        throw new AppError("Bạn không thể tự hạ quyền hoặc thay đổi vai trò tài khoản Quản trị viên của chính mình.", 403);
+    }
+    if (user.role?.toLowerCase() === "admin") {
+        throw new AppError("Không thể chỉnh sửa, vô hiệu hóa hoặc xóa tài khoản Quản trị viên (Admin) khác.", 403);
     }
 
     if (role === "shipper") {

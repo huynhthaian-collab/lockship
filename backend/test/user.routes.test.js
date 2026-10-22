@@ -144,3 +144,71 @@ test("admin profile updates allow profile fields but ignore protected fields in 
         User.findById = originalFindById;
     }
 });
+
+test("ADMIN PROTECTION: Admin cannot delete, deactivate, demote, or modify another Admin account", async () => {
+    const originalFindById = User.findById;
+    const admin1Id = "507f1f77bcf86cd799439091";
+    const admin2Id = "507f1f77bcf86cd799439092";
+
+    const adminUser2 = {
+        id: admin2Id,
+        _id: admin2Id,
+        name: "Admin Two",
+        email: "admin2@example.com",
+        role: "admin",
+        status: "active",
+        tokenVersion: 1,
+        save: async () => {},
+        deleteOne: async () => {},
+    };
+
+    User.findById = () => ({
+        select: async () => adminUser2,
+    });
+
+    try {
+        // 1. Admin 1 cannot update Admin 2 profile
+        await assert.rejects(
+            userService.updateUser(admin1Id, admin2Id, { name: "Hacked Admin" }),
+            (err) => err.statusCode === 403 && err.message.includes("Không thể chỉnh sửa"),
+        );
+
+        // 2. Admin 1 cannot delete Admin 2
+        await assert.rejects(
+            userService.deleteUser(admin1Id, admin2Id),
+            (err) => err.statusCode === 403 && err.message.includes("Không thể chỉnh sửa"),
+        );
+
+        // 3. Admin 1 cannot change Admin 2 status
+        await assert.rejects(
+            userService.updateUserStatus(admin1Id, admin2Id, "inactive"),
+            (err) => err.statusCode === 403 && err.message.includes("Không thể chỉnh sửa"),
+        );
+
+        // 4. Admin 1 cannot change Admin 2 role
+        await assert.rejects(
+            userService.updateUserRole(admin1Id, admin2Id, "shipper"),
+            (err) => err.statusCode === 403 && err.message.includes("Không thể chỉnh sửa"),
+        );
+
+        // 5. Admin 2 cannot self-delete
+        await assert.rejects(
+            userService.deleteUser(admin2Id, admin2Id),
+            (err) => err.statusCode === 403 && err.message.includes("Bạn không thể tự xóa"),
+        );
+
+        // 6. Admin 2 cannot self-deactivate
+        await assert.rejects(
+            userService.updateUserStatus(admin2Id, admin2Id, "inactive"),
+            (err) => err.statusCode === 403 && err.message.includes("Bạn không thể tự thay đổi trạng thái"),
+        );
+
+        // 7. Admin 2 cannot self-demote
+        await assert.rejects(
+            userService.updateUserRole(admin2Id, admin2Id, "owner"),
+            (err) => err.statusCode === 403 && err.message.includes("Bạn không thể tự hạ quyền"),
+        );
+    } finally {
+        User.findById = originalFindById;
+    }
+});

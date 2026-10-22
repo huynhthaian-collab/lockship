@@ -7,6 +7,7 @@ import Card from '../../components/ui/Card.jsx'
 import EmptyState from '../../components/ui/EmptyState.jsx'
 import IsometricLocker from '../../components/spatial/IsometricLocker.jsx'
 import SpatialTiltCard from '../../components/spatial/SpatialTiltCard.jsx'
+import ModernActivityTimeline from '../../components/activity/ModernActivityTimeline.jsx'
 import { useSocketEvent } from '../../hooks/useSocketEvent.js'
 import { deviceApi } from '../../services/ownerApi.js'
 
@@ -101,26 +102,12 @@ export default function OwnerLockDetailPage() {
                         </Card>
                     </div>
 
-                    <Card description="Nhật ký sự kiện thời gian thực do thiết bị này gửi về" title="Lịch sử viễn thám & Sự kiện">
-                        {logs.length === 0 ? (
-                            <EmptyState description="Sự kiện thiết bị sẽ hiển thị tại đây khi được gửi về." title="Chưa ghi nhận hoạt động" />
-                        ) : (
-                            <ol className="divide-y divide-white/5">
-                                {logs.map((log) => (
-                                    <li className="flex flex-col gap-2 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-start sm:justify-between" key={log._id}>
-                                        <div>
-                                            <p className="text-sm font-semibold capitalize text-white">
-                                                {(log.type || 'Sự kiện IoT').replaceAll('_', ' ')}
-                                            </p>
-                                            <p className="mt-1 font-mono text-xs text-cyan-300/80">
-                                                {log.payload?.errorCode || log.payload?.reason || log.payload?.command || log.payload?.event || 'Sự kiện thiết bị'}
-                                            </p>
-                                        </div>
-                                        <time className="whitespace-nowrap font-mono text-xs text-slate-400">{formatDate(log.createdAt)}</time>
-                                    </li>
-                                ))}
-                            </ol>
-                        )}
+                    <Card description="Lịch sử các lần đóng mở, cảm biến và trạng thái của khóa thông minh" title="Lịch sử viễn thám & Hoạt động thời gian thực">
+                        <ModernActivityTimeline
+                            emptyDescription="Các sự kiện đóng mở khóa, pin và cảnh báo sẽ xuất hiện tại đây ngay khi thiết bị phát sinh hoạt động."
+                            emptyMessage="Chưa ghi nhận sự kiện nào cho thiết bị khóa này"
+                            logs={logs.map((log) => ({ ...log, deviceId: log.deviceId || device.deviceId }))}
+                        />
                     </Card>
                 </div>
             )}
