@@ -180,6 +180,12 @@ export default function OwnerDeliveryCreatePage() {
                 pickupAddress,
                 deliveryAddress,
                 description: finalDescription,
+                pickupLocation: pickupCoords,
+                deliveryLocation: deliveryCoords,
+                boxId: selectedBox?.id,
+                recipientName,
+                recipientPhone: rawPhone,
+                packageSize: supplemental.boxSize || 'M',
             })
             if (delivery?._id) {
                 navigate(`/owner/deliveries/${delivery._id}`, { replace: true })

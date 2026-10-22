@@ -29,8 +29,24 @@ function deliveryDetailsValidation({ isCreate }) {
             .trim()
             .isLength({ max: 2000 })
             .withMessage("Description must be at most 2000 characters."),
+        body("pickupLocation").optional().isObject(),
+        body("deliveryLocation").optional().isObject(),
+        body("boxId").optional({ nullable: true }).isString().trim(),
+        body("recipientName").optional({ nullable: true }).isString().trim(),
+        body("recipientPhone").optional({ nullable: true }).isString().trim(),
+        body("packageSize").optional({ nullable: true }).isString().trim(),
         body().custom((value) => {
-            const allowedFields = ["pickupAddress", "deliveryAddress", "description"];
+            const allowedFields = [
+                "pickupAddress",
+                "deliveryAddress",
+                "description",
+                "pickupLocation",
+                "deliveryLocation",
+                "boxId",
+                "recipientName",
+                "recipientPhone",
+                "packageSize",
+            ];
             if (!value || typeof value !== "object" || Array.isArray(value)) {
                 throw new Error("A JSON object is required.");
             }
@@ -50,6 +66,7 @@ function deliveryDetailsValidation({ isCreate }) {
 
 router.use(authenticate);
 router.get("/", authorizeRoles("owner", "shipper", "admin"), deliveryController.listDeliveries);
+router.get("/available", authorizeRoles("shipper"), deliveryController.listAvailableDeliveries);
 router.get("/issues", authorizeRoles("owner", "shipper", "admin"), deliveryController.listDeliveryIssues);
 router.get(
     "/:id/unlock-code",

@@ -2,8 +2,13 @@ import * as deliveryService from "../services/delivery.service.js";
 import { sendSuccess } from "../utils/api-response.js";
 
 export async function listDeliveries(req, res) {
-    const deliveries = await deliveryService.listDeliveries(req.user.role, req.user.id);
+    const deliveries = await deliveryService.listDeliveries(req.user.role, req.user.id, req.query);
     return sendSuccess(res, { message: "Deliveries retrieved successfully.", data: { deliveries } });
+}
+
+export async function listAvailableDeliveries(_req, res) {
+    const deliveries = await deliveryService.listAvailableDeliveries();
+    return sendSuccess(res, { message: "Available deliveries retrieved successfully.", data: { deliveries } });
 }
 
 export async function createDelivery(req, res) {

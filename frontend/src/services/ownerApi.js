@@ -95,6 +95,9 @@ export const shipperDeliveryApi = {
     async list() {
         return dataOf(await apiClient.get('/deliveries')).deliveries ?? []
     },
+    async listAvailable() {
+        return dataOf(await apiClient.get('/deliveries/available')).deliveries ?? []
+    },
     async get(id) {
         return dataOf(await apiClient.get(`/deliveries/${id}`)).delivery
     },

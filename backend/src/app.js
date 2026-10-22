@@ -57,6 +57,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/deliveries", deliveryRoutes);
+app.use("/api/orders", deliveryRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/feedbacks", feedbackRoutes);
 app.use("/api/v1/feedbacks", feedbackRoutes);

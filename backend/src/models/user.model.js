@@ -78,6 +78,23 @@ const userSchema = new mongoose.Schema(
             trim: true,
             default: null,
         },
+        vehicleType: {
+            type: String,
+            trim: true,
+            default: null,
+            maxlength: 100,
+        },
+        vehiclePlate: {
+            type: String,
+            trim: true,
+            default: null,
+            maxlength: 30,
+        },
+        currentLocation: {
+            lat: { type: Number, default: null },
+            lng: { type: Number, default: null },
+            updatedAt: { type: Date, default: null },
+        },
         passwordResetTokenHash: {
             type: String,
             select: false,

@@ -42,6 +42,34 @@ const deliverySchema = new mongoose.Schema(
             trim: true,
             maxlength: 500,
         },
+        pickupLocation: {
+            lat: { type: Number, default: 10.0360 },
+            lng: { type: Number, default: 105.7818 },
+        },
+        deliveryLocation: {
+            lat: { type: Number, default: 10.0336 },
+            lng: { type: Number, default: 105.7882 },
+        },
+        boxId: {
+            type: String,
+            trim: true,
+            default: null,
+        },
+        recipientName: {
+            type: String,
+            trim: true,
+            default: null,
+        },
+        recipientPhone: {
+            type: String,
+            trim: true,
+            default: null,
+        },
+        packageSize: {
+            type: String,
+            trim: true,
+            default: 'M',
+        },
         description: {
             type: String,
             trim: true,

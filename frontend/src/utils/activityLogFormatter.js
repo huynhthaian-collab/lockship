@@ -171,6 +171,12 @@ export function formatHumanActivityLog(rawLog, context = {}) {
         eventTitle = 'Tạo đơn giao hàng'
         iconType = 'package'
         message = `Chủ sở hữu ${actorName} vừa tạo mới đơn hàng ${deliveryCode || '#LS-1024'} tại trạm ${deviceName}.`
+    } else if (type.includes('delivery_accepted') || type.includes('delivery:accepted') || type.includes('order_accepted') || type.includes('delivery:claimed')) {
+        category = 'order'
+        eventTitle = 'Shipper đã nhận đơn'
+        iconType = 'truck'
+        const vInfo = payload.vehiclePlate ? ` (${payload.vehicleType || 'Xe máy'} - ${payload.vehiclePlate})` : ''
+        message = `Shipper ${actorName}${vInfo} đã nhận đơn hàng ${deliveryCode || '#LS-1024'} và đang di chuyển!`
     } else if (type.includes('delivery_assigned') || type.includes('delivery:assigned')) {
         category = 'order'
         eventTitle = 'Phân công đơn hàng'

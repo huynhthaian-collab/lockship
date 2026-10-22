@@ -120,6 +120,9 @@ export function initializeSocket(httpServer) {
     socketServer.on("connection", (socket) => {
         socket.join(userRoom(socket.data.userId));
         socket.join(tokenRoom(socket.data.tokenHash));
+        if (socket.data.role) {
+            socket.join(`role:${socket.data.role}`);
+        }
 
         let expiryTimer;
         const disconnectAtExpiry = () => {
@@ -135,6 +138,22 @@ export function initializeSocket(httpServer) {
     });
 
     return socketServer;
+}
+
+export function broadcastSocket(eventName, payload) {
+    if (!socketServer) {
+        return false;
+    }
+    socketServer.emit(eventName, sanitizeSocketPayload(payload));
+    return true;
+}
+
+export function emitToRole(role, eventName, payload) {
+    if (!socketServer || !role) {
+        return false;
+    }
+    socketServer.to(`role:${role}`).emit(eventName, sanitizeSocketPayload(payload));
+    return true;
 }
 
 export function emitToUser(userId, eventName, payload) {

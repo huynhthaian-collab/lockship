@@ -6,7 +6,7 @@ import Vehicle from "../models/vehicle.model.js";
 import AppError from "../utils/app-error.js";
 import { createDeliveryArrivedNotification, createNotification, createUnlockCodeNotification } from "./notification.service.js";
 import { getActiveUnlockCode, issueUnlockCode, verifyUnlockCode } from "./unlock-code.service.js";
-import { emitToUser } from "./socket.service.js";
+import { emitToUser, broadcastSocket } from "./socket.service.js";
 
 const editableFields = ["pickupAddress", "deliveryAddress", "description"];
 
@@ -65,9 +65,16 @@ async function transitionDelivery({ deliveryId, scope, allowedStatuses, nextStat
     );
 }
 
-export async function listDeliveries(role, userId) {
+export async function listDeliveries(role, userId, query = {}) {
+    if (role === "shipper" && (query.available === "true" || query.status === "pending")) {
+        return Delivery.find({ status: "pending", shipperId: null }).sort({ createdAt: -1 });
+    }
     const scope = getDeliveryScope(role, userId);
     return Delivery.find(scope).sort({ createdAt: -1 });
+}
+
+export async function listAvailableDeliveries() {
+    return Delivery.find({ status: "pending", shipperId: null }).sort({ createdAt: -1 });
 }
 
 export async function getDelivery(role, userId, deliveryId) {
@@ -141,12 +148,82 @@ export async function assignDelivery(ownerId, deliveryId, shipperId, vehicleId) 
 }
 
 export async function acceptDelivery(shipperId, deliveryId) {
-    return transitionDelivery({
-        deliveryId,
-        scope: { shipperId },
-        allowedStatuses: ["assigned"],
-        nextStatus: "accepted",
+    validateDeliveryId(deliveryId);
+
+    // 1. Try atomic claim for unassigned PENDING delivery (Grab-style exclusive claiming)
+    const claimed = await Delivery.findOneAndUpdate(
+        { _id: deliveryId, status: "pending", shipperId: null },
+        { $set: { status: "accepted", shipperId: shipperId } },
+        { new: true, runValidators: true },
+    );
+
+    let delivery = claimed;
+
+    // 2. Fallback to pre-assigned flow if previously assigned to this shipper (legacy compatibility)
+    if (!delivery) {
+        delivery = await Delivery.findOneAndUpdate(
+            { _id: deliveryId, shipperId: shipperId, status: "assigned" },
+            { $set: { status: "accepted" } },
+            { new: true, runValidators: true },
+        );
+    }
+
+    // 3. If neither matched, provide precise status code
+    if (!delivery) {
+        const existing = await Delivery.findById(deliveryId);
+        if (!existing) {
+            throw new AppError("Delivery was not found.", 404);
+        }
+        // If delivery was assigned by owner to a specific other shipper, scope check returns 404
+        if (existing.status === "assigned" && existing.shipperId && !existing.shipperId.equals(shipperId)) {
+            throw new AppError("Delivery was not found.", 404);
+        }
+        // If another driver just claimed it
+        if (existing.status === "accepted" || existing.shipperId) {
+            throw new AppError("Đơn hàng này vừa có tài xế khác nhận mất rồi!", 409);
+        }
+        throw new AppError(`Delivery cannot transition from ${existing.status} to accepted.`, 409);
+    }
+
+    // 4. Fetch shipper profile to get vehicleType and vehiclePlate
+    const shipper = await User.findById(shipperId).select("name phone vehicleType vehiclePlate");
+    const shipperName = shipper?.name || "Tài xế";
+    const vType = shipper?.vehicleType || "Xe máy";
+    const vPlate = shipper?.vehiclePlate || "Đang cập nhật";
+    const shortCode = `#LS-${String(delivery._id).slice(-4).toUpperCase()}`;
+
+    // A. Broadcast real-time Socket.IO to other shippers so the order disappears instantly from their lists
+    broadcastSocket("delivery:claimed", {
+        deliveryId: delivery.id,
+        status: "accepted",
+        claimedBy: shipperId.toString(),
     });
+
+    // B. Send real-time notification + socket to Owner
+    const ownerMessage = `🚚 Shipper ${shipperName} (${vType} - ${vPlate}) đã nhận đơn hàng ${shortCode} và đang di chuyển!`;
+    try {
+        await createNotification({
+            userId: delivery.ownerId,
+            type: "delivery_accepted",
+            title: "Shipper đã nhận đơn hàng",
+            message: ownerMessage,
+            deliveryId: delivery._id,
+            isRead: false,
+        });
+        emitToUser(delivery.ownerId, "delivery:accepted", {
+            deliveryId: delivery.id,
+            status: "accepted",
+            shipperId: shipperId,
+            shipperName,
+            vehicleType: vType,
+            vehiclePlate: vPlate,
+            message: ownerMessage,
+        });
+    } catch (err) {
+        console.error("Failed to notify owner upon delivery accept:", err);
+    }
+
+    return delivery;
 }
 
 export async function startDelivery(shipperId, deliveryId) {

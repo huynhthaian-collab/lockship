@@ -111,7 +111,7 @@ export async function loginWithGoogle(profile) {
     return user ? createSession(user) : null;
 }
 
-export async function completeGoogleProfile(profile, { role, address }) {
+export async function completeGoogleProfile(profile, { role, address, vehicleType, vehiclePlate }) {
     const normalizedRole = typeof role === "string" ? role.trim().toLowerCase() : "";
     if (!["owner", "shipper"].includes(normalizedRole)) {
         throw new AppError("Invalid role.", 400, null, "INVALID_ROLE");
@@ -119,6 +119,15 @@ export async function completeGoogleProfile(profile, { role, address }) {
     const normalizedAddress = typeof address === "string" ? address.trim() : "";
     if (normalizedAddress.length < 3 || normalizedAddress.length > 500) {
         throw new AppError("Address must be 3 to 500 characters.", 400, null, "INVALID_ADDRESS");
+    }
+
+    if (normalizedRole === "shipper") {
+        if (!vehicleType || !String(vehicleType).trim()) {
+            throw new AppError("Vui lòng chọn loại phương tiện khi đăng ký tài xế.", 400, null, "VEHICLE_TYPE_REQUIRED");
+        }
+        if (!vehiclePlate || !String(vehiclePlate).trim()) {
+            throw new AppError("Vui lòng nhập biển số xe khi đăng ký tài xế.", 400, null, "VEHICLE_PLATE_REQUIRED");
+        }
     }
 
     try {
@@ -132,6 +141,8 @@ export async function completeGoogleProfile(profile, { role, address }) {
                 avatar: profile.picture,
                 role: normalizedRole,
                 address: normalizedAddress,
+                vehicleType: vehicleType ? String(vehicleType).trim() : null,
+                vehiclePlate: vehiclePlate ? String(vehiclePlate).trim() : null,
                 status: "active",
             });
         }
@@ -184,7 +195,7 @@ async function issueOtp(email, purpose) {
     }
 }
 
-export async function registerUser({ name, email, password, confirmPassword, phone, address, role }) {
+export async function registerUser({ name, email, password, confirmPassword, phone, address, role, vehicleType, vehiclePlate }) {
     if (typeof confirmPassword !== "string" || confirmPassword !== password) {
         throw new AppError("Passwords do not match.", 400, null, "INVALID_CONFIRM_PASSWORD");
     }
@@ -198,6 +209,15 @@ export async function registerUser({ name, email, password, confirmPassword, pho
     const normalizedAddress = typeof address === "string" ? address.trim() : "";
     if (!normalizedAddress || normalizedAddress.length < 3 || normalizedAddress.length > 500) {
         throw new AppError("Address must be 3 to 500 characters.", 400, null, "INVALID_ADDRESS");
+    }
+
+    if (normalizedRole === "shipper") {
+        if (!vehicleType || !String(vehicleType).trim()) {
+            throw new AppError("Vui lòng chọn loại phương tiện khi đăng ký tài xế.", 400, null, "VEHICLE_TYPE_REQUIRED");
+        }
+        if (!vehiclePlate || !String(vehiclePlate).trim()) {
+            throw new AppError("Vui lòng nhập biển số xe khi đăng ký tài xế.", 400, null, "VEHICLE_PLATE_REQUIRED");
+        }
     }
 
     const existingUser = await User.exists({ email });
@@ -216,6 +236,8 @@ export async function registerUser({ name, email, password, confirmPassword, pho
         phone,
         address: normalizedAddress,
         role: normalizedRole,
+        vehicleType: vehicleType ? String(vehicleType).trim() : null,
+        vehiclePlate: vehiclePlate ? String(vehiclePlate).trim() : null,
         status: "inactive",
         registrationPending: true,
     });
@@ -370,7 +392,7 @@ export async function updateUserProfile(userId, profile) {
         throw new AppError("User account was not found.", 404);
     }
 
-    for (const field of ["name", "phone", "address", "avatar"]) {
+    for (const field of ["name", "phone", "address", "avatar", "vehicleType", "vehiclePlate", "currentLocation"]) {
         if (Object.hasOwn(profile, field)) {
             user[field] = profile[field];
         }

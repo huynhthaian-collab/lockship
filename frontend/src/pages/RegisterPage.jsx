@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ArrowRight, UserPlus } from 'lucide-react'
+import { ArrowRight, UserPlus, Truck } from 'lucide-react'
 import Brand from '../components/Brand.jsx'
 import ErrorMessage from '../components/ErrorMessage.jsx'
 import SpatialTiltCard from '../components/spatial/SpatialTiltCard.jsx'
@@ -15,6 +15,8 @@ export default function RegisterPage() {
     phone: '',
     address: '',
     role: 'owner',
+    vehicleType: 'Xe máy',
+    vehiclePlate: '',
     password: '',
     confirmPassword: '',
   })
@@ -50,6 +52,19 @@ export default function RegisterPage() {
       setError('Vai trò không hợp lệ.')
       return
     }
+
+    if (normalizedRole === 'shipper') {
+      const trimmedPlate = form.vehiclePlate.trim()
+      if (!form.vehicleType) {
+        setError('Vui lòng chọn loại phương tiện giao hàng.')
+        return
+      }
+      if (!trimmedPlate || trimmedPlate.length < 4) {
+        setError('Vui lòng nhập biển số xe giao hàng hợp lệ (tối thiểu 4 ký tự, ví dụ: 65B1-123.45).')
+        return
+      }
+    }
+
     if (form.password.length < 8 || form.password.length > 128) {
       setError('Mật khẩu phải có từ 8 đến 128 ký tự.')
       return
@@ -71,6 +86,8 @@ export default function RegisterPage() {
         email: normalizedEmail,
         address: trimmedAddress,
         role: normalizedRole,
+        vehicleType: normalizedRole === 'shipper' ? form.vehicleType : undefined,
+        vehiclePlate: normalizedRole === 'shipper' ? form.vehiclePlate.trim() : undefined,
         confirmPassword: form.confirmPassword,
       })
       navigate(`/register/verify?email=${encodeURIComponent(normalizedEmail)}`, { replace: true })
@@ -189,6 +206,52 @@ export default function RegisterPage() {
                 <option value="shipper">Nhân viên giao nhận (Shipper)</option>
               </select>
             </div>
+
+            {form.role === 'shipper' && (
+              <div className="rounded-2xl border border-cyan-500/30 bg-cyan-950/20 p-4 space-y-3.5 backdrop-blur-md">
+                <div className="flex items-center gap-2 text-cyan-300 font-bold text-xs uppercase tracking-wider">
+                  <Truck className="h-4 w-4" />
+                  Thông tin phương tiện giao hàng (Bắt buộc)
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold text-slate-300">
+                      Loại phương tiện <span className="text-rose-400">*</span>
+                    </label>
+                    <select
+                      className="ui-control rounded-xl"
+                      name="vehicleType"
+                      onChange={updateField}
+                      value={form.vehicleType}
+                      required
+                    >
+                      <option value="Xe máy">Xe máy / Hai bánh</option>
+                      <option value="Xe tải nhỏ / Van">Xe tải nhỏ / Van</option>
+                      <option value="Xe đạp điện">Xe đạp điện</option>
+                      <option value="Xe bán tải">Xe bán tải</option>
+                      <option value="Xe ô tô con">Xe ô tô con</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold text-slate-300">
+                      Biển số xe <span className="text-rose-400">*</span>
+                    </label>
+                    <input
+                      className="ui-control rounded-xl font-mono uppercase"
+                      maxLength={30}
+                      name="vehiclePlate"
+                      onChange={updateField}
+                      placeholder="65B1-123.45"
+                      required
+                      value={form.vehiclePlate}
+                    />
+                  </div>
+                </div>
+                <p className="text-[11px] text-slate-400">
+                  Thông tin phương tiện sẽ hiển thị cho Chủ hàng (Owner) khi bạn nhận đơn giao hàng.
+                </p>
+              </div>
+            )}
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div>

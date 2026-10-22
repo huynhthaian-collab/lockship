@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ShieldCheck, ArrowRight, MapPin, UserCheck } from 'lucide-react'
+import { ShieldCheck, ArrowRight, MapPin, UserCheck, Truck } from 'lucide-react'
 import Brand from '../components/Brand.jsx'
 import ErrorMessage from '../components/ErrorMessage.jsx'
 import Input from '../components/ui/Input.jsx'
@@ -12,6 +12,8 @@ export default function GoogleCompleteProfilePage() {
   const navigate = useNavigate()
   const [role, setRole] = useState('owner')
   const [address, setAddress] = useState('')
+  const [vehicleType, setVehicleType] = useState('Xe máy')
+  const [vehiclePlate, setVehiclePlate] = useState('')
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
@@ -24,9 +26,26 @@ export default function GoogleCompleteProfilePage() {
       return
     }
 
+    if (role === 'shipper') {
+      const trimmedPlate = vehiclePlate.trim()
+      if (!vehicleType) {
+        setError('Vui lòng chọn loại phương tiện giao hàng.')
+        return
+      }
+      if (!trimmedPlate || trimmedPlate.length < 4) {
+        setError('Vui lòng nhập biển số xe giao hàng hợp lệ (tối thiểu 4 ký tự, ví dụ: 65B1-123.45).')
+        return
+      }
+    }
+
     setSubmitting(true)
     try {
-      await completeGoogleProfile({ role, address: normalizedAddress })
+      await completeGoogleProfile({
+        role,
+        address: normalizedAddress,
+        vehicleType: role === 'shipper' ? vehicleType : undefined,
+        vehiclePlate: role === 'shipper' ? vehiclePlate.trim() : undefined,
+      })
       navigate('/', { replace: true })
     } catch (profileError) {
       setError(profileError.message || 'Không thể lưu hồ sơ.')
@@ -75,6 +94,52 @@ export default function GoogleCompleteProfilePage() {
                 <option value="shipper">Nhân viên giao hàng (Vận chuyển & mở khóa)</option>
               </select>
             </div>
+
+            {role === 'shipper' && (
+              <div className="rounded-2xl border border-cyan-500/30 bg-cyan-950/20 p-4 space-y-3.5 backdrop-blur-md">
+                <div className="flex items-center gap-2 text-cyan-300 font-bold text-xs uppercase tracking-wider">
+                  <Truck className="h-4 w-4" />
+                  Thông tin phương tiện giao hàng (Bắt buộc)
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      Loại phương tiện <span className="text-rose-400">*</span>
+                    </label>
+                    <select
+                      className="w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-xs text-white focus:border-cyan-500/50 focus:outline-none"
+                      name="vehicleType"
+                      onChange={(e) => setVehicleType(e.target.value)}
+                      value={vehicleType}
+                      required
+                    >
+                      <option value="Xe máy">Xe máy / Hai bánh</option>
+                      <option value="Xe tải nhỏ / Van">Xe tải nhỏ / Van</option>
+                      <option value="Xe đạp điện">Xe đạp điện</option>
+                      <option value="Xe bán tải">Xe bán tải</option>
+                      <option value="Xe ô tô con">Xe ô tô con</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      Biển số xe <span className="text-rose-400">*</span>
+                    </label>
+                    <input
+                      className="w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2 text-xs font-mono uppercase text-white focus:border-cyan-500/50 focus:outline-none"
+                      maxLength={30}
+                      name="vehiclePlate"
+                      onChange={(e) => setVehiclePlate(e.target.value)}
+                      placeholder="65B1-123.45"
+                      required
+                      value={vehiclePlate}
+                    />
+                  </div>
+                </div>
+                <p className="text-[11px] text-slate-400">
+                  Thông tin phương tiện sẽ hiển thị cho Chủ hàng (Owner) khi bạn nhận đơn giao hàng.
+                </p>
+              </div>
+            )}
 
             <Input
               autoComplete="street-address"
