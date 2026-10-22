@@ -13,6 +13,7 @@ import Notification from "../src/models/notification.model.js";
 import OtpVerification from "../src/models/otp-verification.model.js";
 import RevokedToken from "../src/models/revoked-token.model.js";
 import UnlockCode from "../src/models/unlock-code.model.js";
+import Feedback from "../src/models/feedback.model.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const seedDir = path.resolve(__dirname, "../seed-data");
@@ -52,6 +53,7 @@ const mapping = [
     { name: "otpverifications", model: OtpVerification },
     { name: "revokedtokens", model: RevokedToken },
     { name: "unlockcodes", model: UnlockCode },
+    { name: "feedbacks", model: Feedback },
 ];
 
 try {
@@ -67,7 +69,7 @@ try {
         console.info(`✓ Đã nạp thành công ${records.length} bản ghi vào collection '${name}'`);
     }
 
-    console.info("\n🎉 NẠP TOÀN BỘ 10 COLLECTIONS MẪU THÀNH CÔNG VÀO MONGODB!");
+    console.info("\n🎉 NẠP TOÀN BỘ 11 COLLECTIONS MẪU THÀNH CÔNG VÀO MONGODB!");
     console.info("Thông tin đăng nhập tài khoản mẫu (Mật khẩu: Lockship@123):");
     console.info("- Admin:   admin@lockship.vn");
     console.info("- Owner:   owner.hung@lockship.vn  (Nguyễn Văn Hùng)");

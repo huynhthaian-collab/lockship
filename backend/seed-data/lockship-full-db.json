@@ -802,5 +802,151 @@
         "$date": "2026-10-21T14:20:00.000Z"
       }
     }
+  ],
+  "feedbacks": [
+    {
+      "_id": {
+        "$oid": "671000000000000000000091"
+      },
+      "userId": {
+        "$oid": "671000000000000000000002"
+      },
+      "userName": "Nguyễn Văn Hùng",
+      "userRole": "owner",
+      "orderId": {
+        "$oid": "671000000000000000000034"
+      },
+      "rating": 5,
+      "tags": [
+        "Mở khóa siêu nhanh",
+        "Tủ khóa an toàn",
+        "Bảo mật cao"
+      ],
+      "comment": "Cơ chế chốt khóa cơ điện tử chuẩn quân sự và định vị Geofence 3D kiểm soát thùng hàng cực kỳ tin cậy. Đơn hàng giá trị cao từ Cảng Cái Cui được bảo vệ an toàn 100%, hệ thống tự cấp quyền mở khóa khi đến đúng tọa độ.",
+      "createdAt": {
+        "$date": "2026-10-21T15:00:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T15:00:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000092"
+      },
+      "userId": {
+        "$oid": "671000000000000000000004"
+      },
+      "userName": "Lê Hoàng Nam",
+      "userRole": "shipper",
+      "orderId": null,
+      "rating": 5,
+      "tags": [
+        "Giao diện dễ dùng",
+        "Mở khóa siêu nhanh",
+        "Shipper nhiệt tình"
+      ],
+      "comment": "Ứng dụng tài xế tối ưu rất tốt, giao diện kính tương lai dễ nhìn ngoài trời nắng. Cảm biến gia tốc và GPS bắt sóng nhạy, không bị delay khi nhận mã OTP mở khóa.",
+      "createdAt": {
+        "$date": "2026-10-21T16:30:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T16:30:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000093"
+      },
+      "userId": {
+        "$oid": "671000000000000000000003"
+      },
+      "userName": "Trần Thị Mai",
+      "userRole": "owner",
+      "orderId": null,
+      "rating": 5,
+      "tags": [
+        "Tủ khóa an toàn",
+        "Hỗ trợ 24/7",
+        "Bảo mật cao"
+      ],
+      "comment": "Doanh nghiệp Mekong Logistics của tôi đã triển khai cho toàn bộ đội xe vận chuyển dược phẩm. Báo cáo telemetry trực tiếp qua WebSocket 60fps giúp chúng tôi phát hiện ngay mọi rung chấn bất thường.",
+      "createdAt": {
+        "$date": "2026-10-21T18:00:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T18:00:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000094"
+      },
+      "userId": null,
+      "userName": "Phan Thùy Linh",
+      "userRole": "customer",
+      "orderId": {
+        "$oid": "671000000000000000000034"
+      },
+      "rating": 5,
+      "tags": [
+        "Mở khóa siêu nhanh",
+        "Giao diện dễ dùng"
+      ],
+      "comment": "Nhận kiện hàng niêm phong bằng khóa điện tử thông minh, shipper thao tác mở tủ trước mặt mình rất minh bạch. Quá chuyên nghiệp!",
+      "createdAt": {
+        "$date": "2026-10-21T19:20:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T19:20:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000095"
+      },
+      "userId": {
+        "$oid": "671000000000000000000006"
+      },
+      "userName": "Võ Minh Khang",
+      "userRole": "shipper",
+      "orderId": {
+        "$oid": "671000000000000000000034"
+      },
+      "rating": 4,
+      "tags": [
+        "Tủ khóa an toàn",
+        "Shipper nhiệt tình"
+      ],
+      "comment": "Khóa vận hành ổn định và chắc chắn, pin trâu dùng cả tuần không lo hết. Đề xuất thêm tính năng rung phản hồi xúc giác khi chốt khóa đóng hoàn toàn.",
+      "createdAt": {
+        "$date": "2026-10-22T01:45:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-22T01:45:00.000Z"
+      }
+    },
+    {
+      "_id": {
+        "$oid": "671000000000000000000096"
+      },
+      "userId": null,
+      "userName": "Đỗ Trọng Nghĩa",
+      "userRole": "customer",
+      "orderId": null,
+      "rating": 5,
+      "tags": [
+        "Bảo mật cao",
+        "Mở khóa siêu nhanh",
+        "Tủ khóa an toàn"
+      ],
+      "comment": "Hệ thống bảo mật 3 chiều chuẩn không gian. Từ giao diện web đến thiết bị vật lý đều rất cao cấp. Rất hài lòng với dịch vụ Lockship!",
+      "createdAt": {
+        "$date": "2026-10-22T03:15:00.000Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-22T03:15:00.000Z"
+      }
+    }
   ]
 }
