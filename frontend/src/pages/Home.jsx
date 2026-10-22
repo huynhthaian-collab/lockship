@@ -7,6 +7,8 @@ import HowItWorks from '../components/landing/HowItWorks.jsx'
 import SmartLockSection from '../components/landing/SmartLockSection.jsx'
 import SecuritySection from '../components/landing/SecuritySection.jsx'
 import RolesSection from '../components/landing/RolesSection.jsx'
+import FeedbackSection from '../components/feedback/FeedbackSection.jsx'
+import FloatingFeedbackButton from '../components/feedback/FloatingFeedbackButton.jsx'
 import CTA from '../components/landing/CTA.jsx'
 import Footer from '../components/landing/Footer.jsx'
 
@@ -50,9 +52,11 @@ export default function Home() {
           <SmartLockSection />
           <SecuritySection />
           <RolesSection />
+          <FeedbackSection />
           <CTA />
         </main>
         <Footer />
+        <FloatingFeedbackButton />
       </div>
     </div>
   )

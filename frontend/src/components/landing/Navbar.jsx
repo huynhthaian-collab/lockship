@@ -10,6 +10,7 @@ const links = [
   { label: 'Tính năng', href: '#features' },
   { label: 'Cách hoạt động', href: '#how-it-works' },
   { label: 'Bảo mật', href: '#security' },
+  { label: 'Đánh giá', href: '#feedback' },
   { label: 'Giới thiệu', href: '#about' },
 ]
 

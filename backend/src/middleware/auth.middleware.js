@@ -57,3 +57,42 @@ export async function authenticate(req, _res, next) {
     req.authPayload = payload;
     return next();
 }
+
+export async function optionalAuthenticate(req, _res, next) {
+    const authorization = req.get("authorization");
+    const [scheme, token] = authorization?.split(" ") ?? [];
+    const sessionToken = readAuthCookie(req) ?? (scheme === "Bearer" ? token : null);
+
+    if (!sessionToken) {
+        req.user = null;
+        return next();
+    }
+
+    try {
+        const payload = jwt.verify(sessionToken, env.JWT_SECRET);
+        if (typeof payload === "string" || !payload.sub) {
+            req.user = null;
+            return next();
+        }
+
+        const revokedToken = await RevokedToken.exists({ tokenHash: hashToken(sessionToken) });
+        if (revokedToken) {
+            req.user = null;
+            return next();
+        }
+
+        const user = await User.findById(payload.sub).select("+tokenVersion");
+        if (!user || (payload.ver ?? 0) !== user.tokenVersion || user.status !== "active") {
+            req.user = null;
+            return next();
+        }
+
+        req.user = user;
+        req.authToken = sessionToken;
+        req.authPayload = payload;
+        return next();
+    } catch {
+        req.user = null;
+        return next();
+    }
+}

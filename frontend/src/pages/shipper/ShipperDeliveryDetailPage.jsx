@@ -17,6 +17,7 @@ import ShipperPage from '../../components/ShipperPage.jsx'
 import StatusPill from '../../components/StatusPill.jsx'
 import Card from '../../components/ui/Card.jsx'
 import DeliveryTimeline from '../../components/delivery/DeliveryTimeline.jsx'
+import OrderFeedbackCard from '../../components/feedback/OrderFeedbackCard.jsx'
 import { useSocketEvent } from '../../hooks/useSocketEvent.js'
 import { shipperDeliveryApi } from '../../services/ownerApi.js'
 
@@ -184,6 +185,12 @@ export default function ShipperDeliveryDetailPage() {
 
             {delivery && (
                 <div className="space-y-6">
+                    <OrderFeedbackCard
+                        deliveryId={id}
+                        deliveryCode={id?.slice(-6).toUpperCase()}
+                        status={delivery.status}
+                    />
+
                     {/* Action Bar if actions available */}
                     {actions.length > 0 && (
                         <Card className="p-4 border-cyan-500/30 bg-cyan-500/10 backdrop-blur-xl">

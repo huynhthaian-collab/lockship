@@ -9,6 +9,7 @@ import Card from '../../components/ui/Card.jsx'
 import Button from '../../components/ui/Button.jsx'
 import Modal from '../../components/ui/Modal.jsx'
 import DeliveryTimeline from '../../components/delivery/DeliveryTimeline.jsx'
+import OrderFeedbackCard from '../../components/feedback/OrderFeedbackCard.jsx'
 import { useSocketEvent } from '../../hooks/useSocketEvent.js'
 import { deliveryApi, deviceApi, shipperApi, vehicleApi } from '../../services/ownerApi.js'
 
@@ -146,6 +147,11 @@ export default function OwnerDeliveryDetailPage() {
             {error && <ErrorMessage message={error} />}
             {notice && <div className="mt-4"><OwnerNotice>{notice}</OwnerNotice></div>}
             {delivery && <div className="space-y-6">
+                <OrderFeedbackCard
+                    deliveryId={id}
+                    deliveryCode={id?.slice(-8).toUpperCase()}
+                    status={delivery.status}
+                />
                 <Card title="Thông tin đơn giao hàng" description="Điểm lấy hàng, điểm đến và trạng thái giao hàng trực tiếp">
                 <div className="grid gap-4 sm:grid-cols-2">
                     <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">

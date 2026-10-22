@@ -17,6 +17,7 @@ import Card from '../../components/ui/Card.jsx'
 import EmptyState from '../../components/ui/EmptyState.jsx'
 import SpatialTiltCard from '../../components/spatial/SpatialTiltCard.jsx'
 import IsometricLocker from '../../components/spatial/IsometricLocker.jsx'
+import FloatingFeedbackButton from '../../components/feedback/FloatingFeedbackButton.jsx'
 import { useSocketEvent } from '../../hooks/useSocketEvent.js'
 import { deliveryApi, deviceApi, notificationApi, shipperApi, vehicleApi } from '../../services/ownerApi.js'
 
@@ -475,6 +476,7 @@ export default function OwnerDashboardPage() {
           </>
         )}
       </Card>
+      <FloatingFeedbackButton />
     </OwnerPage>
   )
 }

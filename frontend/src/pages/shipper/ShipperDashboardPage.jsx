@@ -7,6 +7,7 @@ import StatusPill from '../../components/StatusPill.jsx'
 import Card from '../../components/ui/Card.jsx'
 import DeliveryCard from '../../components/delivery/DeliveryCard.jsx'
 import EmptyState from '../../components/ui/EmptyState.jsx'
+import FloatingFeedbackButton from '../../components/feedback/FloatingFeedbackButton.jsx'
 import { useAuth } from '../../context/useAuth.js'
 import { useSocketEvent } from '../../hooks/useSocketEvent.js'
 import { shipperDeliveryApi } from '../../services/ownerApi.js'
@@ -178,6 +179,7 @@ export default function ShipperDashboardPage() {
                     )}
                 </div>
             )}
+            <FloatingFeedbackButton />
         </ShipperPage>
     )
 }

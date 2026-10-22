@@ -11,6 +11,7 @@ import { sanitizeInputs } from "./middleware/sanitize.middleware.js";
 import authRoutes from "./routes/auth.routes.js";
 import deliveryRoutes from "./routes/delivery.routes.js";
 import iotRoutes from "./routes/iot.routes.js";
+import feedbackRoutes from "./routes/feedback.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import vehicleRoutes from "./routes/vehicle.routes.js";
@@ -57,6 +58,8 @@ app.use("/api/v1/users", userRoutes);
 app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/deliveries", deliveryRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/feedbacks", feedbackRoutes);
+app.use("/api/v1/feedbacks", feedbackRoutes);
 app.use("/api/iot", iotRoutes);
 
 app.use(notFound);
