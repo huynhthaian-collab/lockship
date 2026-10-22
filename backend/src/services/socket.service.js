@@ -95,6 +95,17 @@ export function initializeSocket(httpServer) {
             return;
         }
 
+        // Support guest token for public locker access request
+        if (claims.purpose === "guest-box-access" && claims.requestId) {
+            socket.data.isGuest = true;
+            socket.data.requestId = String(claims.requestId);
+            socket.data.boxId = claims.boxId;
+            socket.data.tokenHash = hashToken(token);
+            socket.data.tokenExpiresAt = claims.exp * 1000;
+            next();
+            return;
+        }
+
         try {
             if (await RevokedToken.exists({ tokenHash: hashToken(token) })) {
                 next(new Error("Authentication token has been revoked."));
@@ -118,6 +129,24 @@ export function initializeSocket(httpServer) {
     });
 
     socketServer.on("connection", (socket) => {
+        if (socket.data.isGuest) {
+            socket.join(`request_${socket.data.requestId}`);
+            socket.join(`request:${socket.data.requestId}`);
+
+            let guestExpiryTimer;
+            const disconnectGuest = () => {
+                const remaining = socket.data.tokenExpiresAt - Date.now();
+                if (remaining <= 0) {
+                    socket.disconnect(true);
+                    return;
+                }
+                guestExpiryTimer = setTimeout(disconnectGuest, Math.min(remaining, 2_147_000_000));
+            };
+            disconnectGuest();
+            socket.once("disconnect", () => clearTimeout(guestExpiryTimer));
+            return;
+        }
+
         socket.join(userRoom(socket.data.userId));
         socket.join(tokenRoom(socket.data.tokenHash));
         if (socket.data.role) {
@@ -184,6 +213,14 @@ export function disconnectUserSockets(userId) {
     }
 }
 
+export function emitToRequest(requestId, eventName, payload) {
+    if (!socketServer || !requestId) {
+        return false;
+    }
+    socketServer.to(`request_${requestId}`).to(`request:${requestId}`).emit(eventName, payload);
+    return true;
+}
+
 export async function closeSocket() {
     if (!socketServer) {
         return;
@@ -192,4 +229,4 @@ export async function closeSocket() {
     const activeSocketServer = socketServer;
     socketServer = null;
     await new Promise((resolve) => activeSocketServer.close(resolve));
-}
+}

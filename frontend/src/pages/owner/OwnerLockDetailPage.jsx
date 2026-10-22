@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { ExternalLink, QrCode } from 'lucide-react'
 import OwnerPage from '../../components/OwnerPage.jsx'
 import { OwnerError, OwnerLoading } from '../../components/OwnerFeedback.jsx'
 import StatusPill from '../../components/StatusPill.jsx'
@@ -101,6 +102,53 @@ export default function OwnerLockDetailPage() {
                             </div>
                         </Card>
                     </div>
+
+                    {/* QR Code Identification Card for Guest Shipper */}
+                    <Card
+                        title={
+                            <div className="flex items-center gap-2">
+                                <QrCode className="w-4 h-4 text-cyan-400" />
+                                <span>Mã QR dán cố định trên Box (Dành cho Shipper vãng lai)</span>
+                            </div>
+                        }
+                        description="Mỗi Tủ khóa được dán 1 mã QR chứa định danh boxId để shipper vãng lai quét bằng điện thoại và gửi yêu cầu mở tủ không cần login."
+                    >
+                        <div className="flex flex-col sm:flex-row items-center gap-6 p-2">
+                            <div className="p-3 bg-white rounded-2xl shadow-xl border-2 border-cyan-500/30 shrink-0">
+                                <img
+                                    src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
+                                        `${typeof window !== 'undefined' ? window.location.origin : ''}/public/box-scan/${device.deviceId}`
+                                    )}`}
+                                    alt={`QR code ${device.deviceId}`}
+                                    className="w-36 h-36 block"
+                                />
+                            </div>
+                            <div className="space-y-3 text-center sm:text-left">
+                                <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
+                                    <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 uppercase tracking-wide">
+                                        Box ID: {device.deviceId}
+                                    </span>
+                                    <span className="text-xs font-mono text-slate-400">
+                                        /public/box-scan/{device.deviceId}
+                                    </span>
+                                </div>
+                                <p className="text-xs text-slate-300 leading-relaxed max-w-lg">
+                                    In và dán mã QR này trên cánh cửa tủ hoặc bảng hướng dẫn. Shipper vãng lai (Shopee, Lazada, TikTok, GHTK...) dùng camera quét mã để yêu cầu mở tủ mà không cần tạo tài khoản.
+                                </p>
+                                <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
+                                    <a
+                                        href={`${typeof window !== 'undefined' ? window.location.origin : ''}/public/box-scan/${device.deviceId}`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="ui-button-primary text-xs inline-flex items-center gap-1.5"
+                                    >
+                                        <ExternalLink size={14} />
+                                        <span>Mở thử trang quét QR của Shipper</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </Card>
 
                     <Card description="Lịch sử các lần đóng mở, cảm biến và trạng thái của khóa thông minh" title="Lịch sử viễn thám & Hoạt động thời gian thực">
                         <ModernActivityTimeline

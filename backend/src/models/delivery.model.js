@@ -8,6 +8,8 @@ const deliveryStatuses = [
     "arrived",
     "authorized",
     "completed",
+    "delivered_to_locker",
+    "DELIVERED_TO_LOCKER",
     "cancelled",
 ];
 

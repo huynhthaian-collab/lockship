@@ -15,6 +15,8 @@ import feedbackRoutes from "./routes/feedback.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import vehicleRoutes from "./routes/vehicle.routes.js";
+import publicBoxRoutes from "./routes/public-box.routes.js";
+import ownerAccessRoutes from "./routes/owner-access.routes.js";
 import { sendSuccess } from "./utils/api-response.js";
 import { readAuthCookie } from "./utils/auth-cookie.js";
 
@@ -62,6 +64,8 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/feedbacks", feedbackRoutes);
 app.use("/api/v1/feedbacks", feedbackRoutes);
 app.use("/api/iot", iotRoutes);
+app.use("/api/public/boxes", publicBoxRoutes);
+app.use("/api/owner/access-requests", ownerAccessRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

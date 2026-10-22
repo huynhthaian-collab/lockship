@@ -45,6 +45,7 @@ import AdminIoTDetailPage from '../pages/admin/AdminIoTDetailPage.jsx'
 import AdminReportsPage from '../pages/admin/AdminReportsPage.jsx'
 import AdminLogsPage from '../pages/admin/AdminLogsPage.jsx'
 import AdminFeedbacksPage from '../pages/admin/AdminFeedbacksPage.jsx'
+import PublicBoxScanView from '../pages/public/PublicBoxScanView.jsx'
 import { getRoleLandingPath } from './rolePaths.js'
 
 function GuestOnlyRoute({ children }) {
@@ -64,6 +65,7 @@ export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/public/box-scan/:boxId" element={<PublicBoxScanView />} />
       <Route path="/dashboard" element={<DashboardRedirect />} />
       <Route path="/login" element={<GuestOnlyRoute><LoginPage /></GuestOnlyRoute>} />
       <Route path="/google/complete-profile" element={<GuestOnlyRoute><GoogleCompleteProfilePage /></GuestOnlyRoute>} />

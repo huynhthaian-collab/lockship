@@ -18,6 +18,7 @@ import EmptyState from '../../components/ui/EmptyState.jsx'
 import SpatialTiltCard from '../../components/spatial/SpatialTiltCard.jsx'
 import IsometricLocker from '../../components/spatial/IsometricLocker.jsx'
 import FloatingFeedbackButton from '../../components/feedback/FloatingFeedbackButton.jsx'
+import BoxAccessRequestsSection from '../../components/box/BoxAccessRequestsSection.jsx'
 import { useSocketEvent } from '../../hooks/useSocketEvent.js'
 import { deliveryApi, deviceApi, notificationApi, shipperApi, vehicleApi } from '../../services/ownerApi.js'
 
@@ -255,6 +256,9 @@ export default function OwnerDashboardPage() {
           value={offline}
         />
       </section>
+
+      {/* Box Access Requests from Guest Shippers (QR Code Scan) */}
+      <BoxAccessRequestsSection className="my-6" />
 
       {/* Bento Row 2: Deep Analytics & 3D Isometric Locker Showcase */}
       <div className="grid min-w-0 gap-5 xl:grid-cols-[minmax(0,1.25fr)_minmax(22rem,0.95fr)]">

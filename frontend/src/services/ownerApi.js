@@ -126,3 +126,26 @@ export const shipperDeliveryApi = {
         return dataOf(await apiClient.get('/deliveries/issues')).issues ?? []
     },
 }
+
+export const publicBoxApi = {
+    async getInfo(boxId) {
+        return dataOf(await apiClient.get(`/public/boxes/${boxId}/info`)).box
+    },
+    async requestAccess(boxId, payload) {
+        const response = await apiClient.post(`/public/boxes/${boxId}/request-access`, payload)
+        return response.data?.data ?? {}
+    },
+    async getStatus(boxId, requestId) {
+        return dataOf(await apiClient.get(`/public/boxes/${boxId}/request-status/${requestId}`)).request
+    },
+}
+
+export const ownerAccessApi = {
+    async list(status) {
+        const params = status ? `?status=${status}` : ''
+        return dataOf(await apiClient.get(`/owner/access-requests${params}`))
+    },
+    async respond(requestId, payload) {
+        return dataOf(await apiClient.patch(`/owner/access-requests/${requestId}/respond`, payload))
+    },
+}

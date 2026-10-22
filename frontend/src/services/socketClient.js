@@ -49,3 +49,14 @@ export function disconnectSocket() {
 export function getSocket() {
   return socket
 }
+
+export function createGuestSocket(guestToken) {
+  return io(getSocketUrl(), {
+    auth: { token: guestToken },
+    transports: ['websocket', 'polling'],
+    reconnection: true,
+    reconnectionAttempts: 20,
+    reconnectionDelay: 1000,
+    secure: typeof window !== 'undefined' && window.location.protocol === 'https:',
+  })
+}

@@ -46,3 +46,38 @@ export async function sendUnlockCodeEmail(email, code, expiresAt) {
         text: `Your one-time unlock code is ${code}. It expires at ${expiresAt.toISOString()}. Do not share it with anyone other than the delivery owner.`,
     });
 }
+
+export async function sendBoxAccessNotificationEmail(email, { boxId, shipperName, shipperPhone, deliverySource, requestedAt }) {
+    if (!env.SMTP_HOST || !env.SMTP_FROM) {
+        return false;
+    }
+
+    try {
+        const transporter = createTransporter();
+        const dateStr = requestedAt ? new Date(requestedAt).toLocaleString("vi-VN") : new Date().toLocaleString("vi-VN");
+        await transporter.sendMail({
+            from: env.SMTP_FROM,
+            to: email,
+            subject: `[LOCKSHIP] Yêu cầu mở tủ ${boxId} từ Shipper vãng lai`,
+            text: `Có yêu cầu mở tủ mới tại tủ ${boxId}.\nShipper: ${shipperName || "Shipper vãng lai"} (${shipperPhone})\nNguồn hàng: ${deliverySource || "Đơn hàng ngoài"}\nThời gian: ${dateStr}\nVui lòng truy cập Owner Dashboard để xác thực và phê duyệt mã mở tủ.`,
+            html: `<!doctype html><html><body style="margin:0;padding:24px 16px;background:#0f172a;font-family:Arial,sans-serif;color:#f8fafc">
+            <main style="max-width:540px;margin:0 auto;padding:28px;border:1px solid #334155;border-radius:16px;background:#1e293b">
+                <p style="margin:0;color:#38bdf8;font-size:13px;font-weight:bold;letter-spacing:1px">LOCKSHIP SMART LOCKER SYSTEM</p>
+                <h2 style="margin:16px 0 8px;font-size:22px;color:#fff">Yêu cầu mở tủ từ Shipper vãng lai 📦</h2>
+                <p style="color:#94a3b8;line-height:1.5">Một shipper vãng lai vừa quét mã QR tại tủ <strong>${boxId}</strong> và gửi yêu cầu mở tủ để giao hàng.</p>
+                <div style="background:#0f172a;padding:16px;border-radius:12px;margin:20px 0;border:1px solid #334155">
+                    <p style="margin:6px 0;font-size:14px;color:#cbd5e1"><strong>Tủ khóa (Box ID):</strong> <span style="color:#38bdf8">${boxId}</span></p>
+                    <p style="margin:6px 0;font-size:14px;color:#cbd5e1"><strong>Shipper:</strong> ${shipperName || "Shipper vãng lai"}</p>
+                    <p style="margin:6px 0;font-size:14px;color:#cbd5e1"><strong>Số điện thoại:</strong> <span style="color:#4ade80">${shipperPhone}</span></p>
+                    <p style="margin:6px 0;font-size:14px;color:#cbd5e1"><strong>Nguồn đơn hàng:</strong> <span style="color:#fbbf24">${deliverySource || "Đơn ngoài"}</span></p>
+                    <p style="margin:6px 0;font-size:14px;color:#94a3b8"><strong>Thời gian:</strong> ${dateStr}</p>
+                </div>
+                <p style="color:#94a3b8;font-size:13px">Vui lòng kiểm tra đơn hàng và mở Owner Dashboard trên web Lockship để xác nhận cấp mã PIN mở tủ an toàn.</p>
+            </main></body></html>`,
+        });
+        return true;
+    } catch (err) {
+        console.warn("Failed to send box access email notification:", err.message);
+        return false;
+    }
+}
