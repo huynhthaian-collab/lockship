@@ -78,3 +78,18 @@ export const adminApi = {
         return this.deliveryIssues()
     },
 }
+
+export const boxApi = {
+    async listBoxes() {
+        return dataOf(await apiClient.get('/boxes')).boxes ?? []
+    },
+    async createBox(payload) {
+        return dataOf(await apiClient.post('/boxes', payload)).box
+    },
+    async generateBoxQr(boxId) {
+        return dataOf(await apiClient.post(`/boxes/${boxId}/generate-qr`))
+    },
+    async getBoxQr(boxId) {
+        return dataOf(await apiClient.get(`/boxes/${boxId}/qr`))
+    },
+}

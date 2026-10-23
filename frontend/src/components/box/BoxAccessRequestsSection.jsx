@@ -580,17 +580,12 @@ export default function BoxAccessRequestsSection({ className = '' }) {
                             </a>
                         </div>
 
-                        {/* Full QR Studio Link */}
+                        {/* Notice for QR Administration */}
                         <div className="mt-3 pt-3 border-t border-slate-800">
-                            <Link
-                                to="/owner/qr-tester"
-                                onClick={() => setShowQrModal(false)}
-                                className="w-full py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 text-cyan-300 text-xs font-bold inline-flex items-center justify-center gap-1.5 border border-white/10 transition-colors"
-                            >
-                                <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-                                <span>Mở Studio Tạo QR Đầy Đủ (Production & Custom)</span>
-                                <ArrowRight className="w-3 h-3" />
-                            </Link>
+                            <div className="w-full py-2 px-3 rounded-xl bg-slate-950/60 text-slate-400 text-[11px] inline-flex items-center justify-center gap-1.5 border border-slate-800">
+                                <ShieldAlert className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                                <span>Chỉ Quản trị viên (Admin) mới có quyền tạo và cấp phát mã QR cho tủ khóa.</span>
+                            </div>
                         </div>
                     </div>
                 </div>

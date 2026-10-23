@@ -1,9 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
+    ExternalLink,
     Lock,
+    Printer,
+    QrCode,
     Radio,
     RefreshCw,
+    Sparkles,
     Trash2
 } from 'lucide-react'
 import AdminPage from '../../components/AdminPage.jsx'
@@ -18,7 +22,7 @@ import SpatialTiltCard from '../../components/spatial/SpatialTiltCard.jsx'
 import IsometricLocker from '../../components/spatial/IsometricLocker.jsx'
 import ModernActivityTimeline from '../../components/activity/ModernActivityTimeline.jsx'
 import { useSocketEvent } from '../../hooks/useSocketEvent.js'
-import { adminApi } from '../../services/adminApi.js'
+import { adminApi, boxApi } from '../../services/adminApi.js'
 
 function formatDate(value) {
     return value ? new Date(value).toLocaleString('vi-VN') : '—'
@@ -35,6 +39,7 @@ export default function AdminIoTDetailPage() {
     const [newVehicleId, setNewVehicleId] = useState('')
     const [commandBusy, setCommandBusy] = useState(false)
     const [rebindBusy, setRebindBusy] = useState(false)
+    const [reissuingQr, setReissuingQr] = useState(false)
     const [deleteModalOpen, setDeleteModalOpen] = useState(false)
     const [deleting, setDeleting] = useState(false)
     const [error, setError] = useState('')
@@ -158,6 +163,21 @@ export default function AdminIoTDetailPage() {
             setError(requestError.message || 'Không thể liên kết lại phương tiện.')
         } finally {
             setRebindBusy(false)
+        }
+    }
+
+    async function handleReissueBoxQr() {
+        if (!device?.deviceId) return
+        setReissuingQr(true)
+        setError('')
+        setNotice('')
+        try {
+            await boxApi.generateBoxQr(device.deviceId)
+            setNotice(`Đã cấp phát mã QR mới cho Box "${device.deviceId}" thành công!`)
+        } catch (err) {
+            setError(err.response?.data?.message || err.message || 'Không thể cấp phát lại mã QR.')
+        } finally {
+            setReissuingQr(false)
         }
     }
 
@@ -376,6 +396,85 @@ export default function AdminIoTDetailPage() {
                             </form>
                         </Card>
                     </div>
+
+                    {/* Cấp phát & Quản lý Mã QR Tủ khóa - Admin Only */}
+                    <Card
+                        title={
+                            <div className="flex items-center gap-2">
+                                <QrCode className="w-5 h-5 text-cyan-400" />
+                                <span>Mã QR Định Danh & Cấp Phát Tủ Khóa (Box QR Code)</span>
+                            </div>
+                        }
+                        description="Mã QR dán trên thân tủ để Shipper vãng lai quét camera gửi yêu cầu mở tủ và liên kết đơn hàng"
+                        action={
+                            <div className="flex items-center gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => window.print()}
+                                    className="ui-button-secondary text-xs px-3 py-1.5 inline-flex items-center gap-1.5"
+                                >
+                                    <Printer className="w-3.5 h-3.5 text-cyan-400" />
+                                    <span>In mã QR</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    disabled={reissuingQr}
+                                    onClick={handleReissueBoxQr}
+                                    className="ui-button-primary text-xs px-3.5 py-1.5 inline-flex items-center gap-1.5"
+                                >
+                                    <RefreshCw className={`w-3.5 h-3.5 ${reissuingQr ? 'animate-spin' : ''}`} />
+                                    <span>Cấp phát QR mới cho Box</span>
+                                </button>
+                            </div>
+                        }
+                    >
+                        <div className="flex flex-col sm:flex-row items-center gap-6 p-2">
+                            <div className="p-3 bg-white rounded-2xl shadow-xl border-2 border-cyan-500/30 shrink-0 text-center">
+                                <img
+                                    src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(
+                                        `https://lockship-gamma.vercel.app/public/box-scan/${device.deviceId}`
+                                    )}`}
+                                    alt={`QR code for ${device.deviceId}`}
+                                    className="w-36 h-36 block mx-auto object-contain"
+                                />
+                                <p className="text-[10px] font-mono font-bold text-slate-800 mt-1">
+                                    {device.deviceId}
+                                </p>
+                            </div>
+
+                            <div className="space-y-3 text-center sm:text-left flex-1">
+                                <div className="space-y-1">
+                                    <p className="text-xs font-semibold text-white">
+                                        Chỉ Quản trị viên (Admin) mới có quyền tạo và cấp phát mã QR cho tủ khóa.
+                                    </p>
+                                    <p className="text-xs text-slate-400 font-mono break-all">
+                                        https://lockship-gamma.vercel.app/public/box-scan/{device.deviceId}
+                                    </p>
+                                </div>
+                                <p className="text-xs text-slate-300 leading-relaxed">
+                                    Bạn có thể in mã QR này dưới dạng nhãn decal dán trực tiếp lên tủ khóa IoT để phục vụ Shipper vãng lai quét mở tủ.
+                                </p>
+                                <div className="flex flex-wrap gap-2.5 justify-center sm:justify-start pt-1">
+                                    <Link
+                                        to={`/admin/qr-tester`}
+                                        className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 inline-flex items-center gap-1.5 transition-colors"
+                                    >
+                                        <QrCode className="w-4 h-4 text-cyan-400" />
+                                        <span>Mở Studio Quản Lý QR</span>
+                                    </Link>
+                                    <a
+                                        href={`https://lockship-gamma.vercel.app/public/box-scan/${device.deviceId}`}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="px-3.5 py-2 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 text-xs font-bold border border-cyan-500/40 inline-flex items-center gap-1.5 transition-colors"
+                                    >
+                                        <ExternalLink className="w-4 h-4" />
+                                        <span>Mở thử trang quét QR</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </Card>
 
                     {/* Recorded Events Log */}
                     <Card

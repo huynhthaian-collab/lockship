@@ -95,4 +95,7 @@ export async function optionalAuthenticate(req, _res, next) {
         req.user = null;
         return next();
     }
-}
+}
+
+export const protect = authenticate;
+

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Activity, CarFront, ClipboardList, LockKeyhole, Package, RefreshCw, Star, Users, Wifi } from 'lucide-react'
+import { Activity, CarFront, ClipboardList, LockKeyhole, Package, Plus, Printer, QrCode, RefreshCw, Star, Users, Wifi } from 'lucide-react'
 import AdminPage from '../../components/AdminPage.jsx'
 import ErrorMessage from '../../components/ErrorMessage.jsx'
 import Loading from '../../components/Loading.jsx'
@@ -296,6 +296,55 @@ export default function AdminDashboardPage() {
                     tone="yellow"
                 />
             </section>
+
+            {/* Cấp phát & Quản lý mã QR Tủ khóa (Box QR Code Generation) - Admin Only */}
+            <Card
+                title={
+                    <div className="flex items-center gap-2">
+                        <QrCode className="w-5 h-5 text-cyan-400" />
+                        <span>Cấp phát & Quản lý mã QR Tủ khóa (Box QR Code Generation)</span>
+                    </div>
+                }
+                description="Đặc quyền Quản trị viên (Admin): Tạo mới, cấp phát lại và in ấn mã QR định danh cho từng Tủ khóa thông minh."
+                action={
+                    <div className="flex items-center gap-2">
+                        <Link
+                            to="/admin/qr-tester"
+                            className="ui-button-secondary text-xs px-3 py-1.5 inline-flex items-center gap-1.5"
+                        >
+                            <Printer className="w-3.5 h-3.5 text-cyan-400" />
+                            <span>In mã QR</span>
+                        </Link>
+                        <Link
+                            to="/admin/qr-tester"
+                            className="ui-button-primary text-xs px-3.5 py-1.5 inline-flex items-center gap-1.5"
+                        >
+                            <Plus className="w-3.5 h-3.5" />
+                            <span>Tạo mã QR</span>
+                        </Link>
+                    </div>
+                }
+            >
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-3.5 rounded-2xl bg-slate-950/40 border border-white/5">
+                    <div className="space-y-1 text-xs text-slate-300">
+                        <p className="font-semibold text-white">
+                            Chỉ Quản trị viên (Admin) mới có quyền tạo và cấp phát mã QR cho tủ khóa.
+                        </p>
+                        <p className="text-slate-400 text-[11px] leading-relaxed">
+                            Mỗi mã QR định danh cho một Box, phục vụ Shipper vãng lai quét camera để yêu cầu mở tủ và liên kết tự động với đơn hàng của Owner.
+                        </p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                        <Link
+                            to="/admin/qr-tester"
+                            className="px-4 py-2 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 font-bold text-xs border border-cyan-500/30 transition-all inline-flex items-center gap-1.5"
+                        >
+                            <QrCode className="w-4 h-4" />
+                            <span>Cấp phát QR mới cho Box →</span>
+                        </Link>
+                    </div>
+                </div>
+            </Card>
 
             {/* Giám sát giao hàng trực tiếp */}
             <Card
