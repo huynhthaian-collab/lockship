@@ -1,58 +1,394 @@
 [
   {
-    "_id": { "$oid": "671000000000000000000021" },
-    "deviceId": "LOCKSHIP-BOX-001",
-    "credentialId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    "vehicleId": { "$oid": "671000000000000000000011" },
-    "ownerId": { "$oid": "671000000000000000000002" },
-    "status": "online",
-    "lockStatus": "locked",
-    "battery": 95,
-    "lastSeen": { "$date": "2026-10-22T03:15:00.000Z" },
-    "firmwareVersion": "v2.5.0-esp32",
-    "createdAt": { "$date": "2026-10-20T12:00:00.000Z" },
-    "updatedAt": { "$date": "2026-10-22T03:15:00.000Z" }
-  },
-  {
-    "_id": { "$oid": "671000000000000000000022" },
-    "deviceId": "LOCKSHIP-BOX-002",
-    "credentialId": "c9a646d3-9c61-4cd7-bf15-970f98f077bc",
-    "vehicleId": { "$oid": "671000000000000000000012" },
-    "ownerId": { "$oid": "671000000000000000000002" },
-    "status": "online",
-    "lockStatus": "unlocked",
-    "battery": 88,
-    "lastSeen": { "$date": "2026-10-22T03:10:00.000Z" },
-    "firmwareVersion": "v2.5.0-esp32",
-    "createdAt": { "$date": "2026-10-20T12:15:00.000Z" },
-    "updatedAt": { "$date": "2026-10-22T03:10:00.000Z" }
-  },
-  {
-    "_id": { "$oid": "671000000000000000000023" },
-    "deviceId": "LOCKSHIP-BOX-003",
-    "credentialId": "e3d931be-45bb-4770-9828-98e60ec8c9a3",
-    "vehicleId": { "$oid": "671000000000000000000013" },
-    "ownerId": { "$oid": "671000000000000000000003" },
-    "status": "online",
-    "lockStatus": "locked",
-    "battery": 78,
-    "lastSeen": { "$date": "2026-10-22T03:00:00.000Z" },
-    "firmwareVersion": "v2.4.8-esp32",
-    "createdAt": { "$date": "2026-10-20T12:30:00.000Z" },
-    "updatedAt": { "$date": "2026-10-22T03:00:00.000Z" }
-  },
-  {
-    "_id": { "$oid": "671000000000000000000024" },
-    "deviceId": "LOCKSHIP-BOX-004",
-    "credentialId": "7b89d412-192a-4bc8-8123-af5c4d32e1a9",
-    "vehicleId": { "$oid": "671000000000000000000014" },
-    "ownerId": { "$oid": "671000000000000000000003" },
+    "_id": {
+      "$oid": "671000000000000000000004"
+    },
+    "deviceId": "lockship-demo-device",
+    "credentialId": "c1baa2be-264e-4f06-b990-06eb6d25ba9e",
+    "vehicleId": {
+      "$oid": "671000000000000000000003"
+    },
+    "ownerId": {
+      "$oid": "671000000000000000000001"
+    },
     "status": "offline",
     "lockStatus": "locked",
+    "battery": 100,
+    "lastSeen": null,
+    "firmwareVersion": "sim-1.0.0",
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000021"
+    },
+    "__v": 0,
+    "battery": 95,
+    "createdAt": {
+      "$date": "2026-10-21T20:24:05.362Z"
+    },
+    "credentialId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "deviceId": "LOCKSHIP-BOX-001",
+    "firmwareVersion": "v2.5.0-esp32",
+    "lastSeen": {
+      "$date": "2026-10-22T03:15:00.000Z"
+    },
+    "lockStatus": "locked",
+    "ownerId": {
+      "$oid": "671000000000000000000002"
+    },
+    "status": "offline",
+    "updatedAt": {
+      "$date": "2026-10-22T09:37:27.728Z"
+    },
+    "vehicleId": {
+      "$oid": "671000000000000000000011"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000022"
+    },
+    "__v": 0,
+    "battery": 88,
+    "createdAt": {
+      "$date": "2026-10-21T20:24:05.366Z"
+    },
+    "credentialId": "c9a646d3-9c61-4cd7-bf15-970f98f077bc",
+    "deviceId": "LOCKSHIP-BOX-002",
+    "firmwareVersion": "v2.5.0-esp32",
+    "lastSeen": {
+      "$date": "2026-10-22T03:10:00.000Z"
+    },
+    "lockStatus": "unlocked",
+    "ownerId": {
+      "$oid": "671000000000000000000002"
+    },
+    "status": "offline",
+    "updatedAt": {
+      "$date": "2026-10-22T09:37:27.835Z"
+    },
+    "vehicleId": {
+      "$oid": "671000000000000000000012"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000023"
+    },
+    "__v": 0,
+    "battery": 78,
+    "createdAt": {
+      "$date": "2026-10-21T20:24:05.367Z"
+    },
+    "credentialId": "e3d931be-45bb-4770-9828-98e60ec8c9a3",
+    "deviceId": "LOCKSHIP-BOX-003",
+    "firmwareVersion": "v2.4.8-esp32",
+    "lastSeen": {
+      "$date": "2026-10-22T03:00:00.000Z"
+    },
+    "lockStatus": "locked",
+    "ownerId": {
+      "$oid": "671000000000000000000003"
+    },
+    "status": "offline",
+    "updatedAt": {
+      "$date": "2026-10-22T09:37:27.842Z"
+    },
+    "vehicleId": {
+      "$oid": "671000000000000000000013"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000024"
+    },
+    "__v": 0,
     "battery": 45,
-    "lastSeen": { "$date": "2026-10-21T18:00:00.000Z" },
+    "createdAt": {
+      "$date": "2026-10-21T20:24:05.369Z"
+    },
+    "credentialId": "7b89d412-192a-4bc8-8123-af5c4d32e1a9",
+    "deviceId": "LOCKSHIP-BOX-004",
     "firmwareVersion": "v2.4.0-esp32",
-    "createdAt": { "$date": "2026-10-20T12:45:00.000Z" },
-    "updatedAt": { "$date": "2026-10-21T18:00:00.000Z" }
+    "lastSeen": {
+      "$date": "2026-10-21T18:00:00.000Z"
+    },
+    "lockStatus": "locked",
+    "ownerId": {
+      "$oid": "671000000000000000000003"
+    },
+    "status": "offline",
+    "updatedAt": {
+      "$date": "2026-10-21T20:24:05.369Z"
+    },
+    "vehicleId": {
+      "$oid": "671000000000000000000014"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000305"
+    },
+    "deviceId": "LOCKSHIP-BOX-005",
+    "battery": 95,
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.106Z"
+    },
+    "credentialId": "954f2cd8-3b50-4665-80b1-53cc825bc979",
+    "firmwareVersion": "v2.5.0-esp32",
+    "lastSeen": {
+      "$date": "2026-11-01T04:56:35.106Z"
+    },
+    "lockStatus": "locked",
+    "ownerId": {
+      "$oid": "671000000000000000000101"
+    },
+    "status": "online",
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.106Z"
+    },
+    "vehicleId": {
+      "$oid": "671000000000000000000205"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000306"
+    },
+    "deviceId": "LOCKSHIP-BOX-006",
+    "battery": 95,
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.181Z"
+    },
+    "credentialId": "a454dacb-0427-4f0a-9cfc-584ab3b08beb",
+    "firmwareVersion": "v2.5.0-esp32",
+    "lastSeen": {
+      "$date": "2026-11-01T04:56:35.181Z"
+    },
+    "lockStatus": "locked",
+    "ownerId": {
+      "$oid": "671000000000000000000102"
+    },
+    "status": "online",
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.181Z"
+    },
+    "vehicleId": {
+      "$oid": "671000000000000000000206"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000307"
+    },
+    "deviceId": "LOCKSHIP-BOX-007",
+    "battery": 95,
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.187Z"
+    },
+    "credentialId": "5a4e38d7-a137-4509-85de-eb880cac8c79",
+    "firmwareVersion": "v2.5.0-esp32",
+    "lastSeen": {
+      "$date": "2026-11-01T04:56:35.187Z"
+    },
+    "lockStatus": "locked",
+    "ownerId": {
+      "$oid": "671000000000000000000103"
+    },
+    "status": "online",
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.187Z"
+    },
+    "vehicleId": {
+      "$oid": "671000000000000000000207"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000308"
+    },
+    "deviceId": "LOCKSHIP-BOX-008",
+    "battery": 95,
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.191Z"
+    },
+    "credentialId": "358d3ea2-ddcc-4a41-a89b-1c8c375be70b",
+    "firmwareVersion": "v2.5.0-esp32",
+    "lastSeen": {
+      "$date": "2026-11-01T04:56:35.191Z"
+    },
+    "lockStatus": "locked",
+    "ownerId": {
+      "$oid": "671000000000000000000104"
+    },
+    "status": "online",
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.191Z"
+    },
+    "vehicleId": {
+      "$oid": "671000000000000000000208"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000309"
+    },
+    "deviceId": "LOCKSHIP-BOX-009",
+    "battery": 95,
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.198Z"
+    },
+    "credentialId": "99218ded-0048-44e8-abad-080ff2248447",
+    "firmwareVersion": "v2.5.0-esp32",
+    "lastSeen": {
+      "$date": "2026-11-01T04:56:35.198Z"
+    },
+    "lockStatus": "locked",
+    "ownerId": {
+      "$oid": "671000000000000000000105"
+    },
+    "status": "online",
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.198Z"
+    },
+    "vehicleId": {
+      "$oid": "671000000000000000000209"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000310"
+    },
+    "deviceId": "LOCKSHIP-BOX-010",
+    "battery": 95,
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.204Z"
+    },
+    "credentialId": "0d5e6962-e854-4791-8086-0a0095d9bcd4",
+    "firmwareVersion": "v2.5.0-esp32",
+    "lastSeen": {
+      "$date": "2026-11-01T04:56:35.204Z"
+    },
+    "lockStatus": "locked",
+    "ownerId": {
+      "$oid": "671000000000000000000106"
+    },
+    "status": "online",
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.204Z"
+    },
+    "vehicleId": {
+      "$oid": "671000000000000000000210"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000311"
+    },
+    "deviceId": "LOCKSHIP-BOX-011",
+    "battery": 95,
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.206Z"
+    },
+    "credentialId": "b7581920-dabd-453f-a462-50586f297cbb",
+    "firmwareVersion": "v2.5.0-esp32",
+    "lastSeen": {
+      "$date": "2026-11-01T04:56:35.206Z"
+    },
+    "lockStatus": "locked",
+    "ownerId": {
+      "$oid": "671000000000000000000107"
+    },
+    "status": "online",
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.206Z"
+    },
+    "vehicleId": {
+      "$oid": "671000000000000000000211"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000312"
+    },
+    "deviceId": "LOCKSHIP-BOX-012",
+    "battery": 95,
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.212Z"
+    },
+    "credentialId": "2adb83c1-473d-427c-b9a8-de9caadc0553",
+    "firmwareVersion": "v2.5.0-esp32",
+    "lastSeen": {
+      "$date": "2026-11-01T04:56:35.212Z"
+    },
+    "lockStatus": "locked",
+    "ownerId": {
+      "$oid": "671000000000000000000108"
+    },
+    "status": "online",
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.212Z"
+    },
+    "vehicleId": {
+      "$oid": "671000000000000000000212"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000313"
+    },
+    "deviceId": "LOCKSHIP-BOX-013",
+    "battery": 95,
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.219Z"
+    },
+    "credentialId": "62a996f1-77b3-4cde-bdd6-a6f4d57a089a",
+    "firmwareVersion": "v2.5.0-esp32",
+    "lastSeen": {
+      "$date": "2026-11-01T04:56:35.219Z"
+    },
+    "lockStatus": "locked",
+    "ownerId": {
+      "$oid": "671000000000000000000109"
+    },
+    "status": "online",
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.219Z"
+    },
+    "vehicleId": {
+      "$oid": "671000000000000000000213"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000314"
+    },
+    "deviceId": "LOCKSHIP-BOX-014",
+    "battery": 95,
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.224Z"
+    },
+    "credentialId": "2466f9c1-f1ad-444b-a16b-b8657fa14532",
+    "firmwareVersion": "v2.5.0-esp32",
+    "lastSeen": {
+      "$date": "2026-11-01T04:56:35.224Z"
+    },
+    "lockStatus": "locked",
+    "ownerId": {
+      "$oid": "671000000000000000000110"
+    },
+    "status": "online",
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.224Z"
+    },
+    "vehicleId": {
+      "$oid": "671000000000000000000214"
+    }
   }
 ]

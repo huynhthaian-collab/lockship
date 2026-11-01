@@ -1,46 +1,291 @@
 [
   {
-    "_id": { "$oid": "671000000000000000000011" },
-    "ownerId": { "$oid": "671000000000000000000002" },
-    "plateNumber": "65C-123.45",
-    "type": "Xe tải bảo ôn 1.5 tấn",
-    "model": "Hyundai New Porter 150",
+    "_id": {
+      "$oid": "671000000000000000000003"
+    },
+    "ownerId": {
+      "$oid": "671000000000000000000001"
+    },
+    "plateNumber": "DEMO-001",
+    "type": "van",
+    "model": "Demo Delivery Van",
+    "iotDeviceId": "lockship-demo-device",
+    "status": "active",
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T00:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000011"
+    },
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-10-21T20:24:05.351Z"
+    },
     "iotDeviceId": "LOCKSHIP-BOX-001",
+    "model": "Hyundai New Porter 150",
+    "ownerId": {
+      "$oid": "671000000000000000000002"
+    },
+    "plateNumber": "65C-123.45",
     "status": "active",
-    "createdAt": { "$date": "2026-10-20T11:00:00.000Z" },
-    "updatedAt": { "$date": "2026-10-20T11:00:00.000Z" }
+    "type": "Xe tải bảo ôn 1.5 tấn",
+    "updatedAt": {
+      "$date": "2026-10-21T20:24:05.351Z"
+    }
   },
   {
-    "_id": { "$oid": "671000000000000000000012" },
-    "ownerId": { "$oid": "671000000000000000000002" },
-    "plateNumber": "65C-678.90",
-    "type": "Xe tải thùng kín 2.5 tấn",
-    "model": "Kia K250 Smart Cargo",
+    "_id": {
+      "$oid": "671000000000000000000012"
+    },
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-10-21T20:24:05.354Z"
+    },
     "iotDeviceId": "LOCKSHIP-BOX-002",
+    "model": "Kia K250 Smart Cargo",
+    "ownerId": {
+      "$oid": "671000000000000000000002"
+    },
+    "plateNumber": "65C-678.90",
     "status": "active",
-    "createdAt": { "$date": "2026-10-20T11:15:00.000Z" },
-    "updatedAt": { "$date": "2026-10-20T11:15:00.000Z" }
+    "type": "Xe tải thùng kín 2.5 tấn",
+    "updatedAt": {
+      "$date": "2026-10-21T20:24:05.354Z"
+    }
   },
   {
-    "_id": { "$oid": "671000000000000000000013" },
-    "ownerId": { "$oid": "671000000000000000000003" },
-    "plateNumber": "65B-999.88",
-    "type": "Xe Van giao hàng chuyên dụng",
-    "model": "Ford Transit Custom Van",
+    "_id": {
+      "$oid": "671000000000000000000013"
+    },
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-10-21T20:24:05.357Z"
+    },
     "iotDeviceId": "LOCKSHIP-BOX-003",
+    "model": "Ford Transit Custom Van",
+    "ownerId": {
+      "$oid": "671000000000000000000003"
+    },
+    "plateNumber": "65B-999.88",
     "status": "active",
-    "createdAt": { "$date": "2026-10-20T11:30:00.000Z" },
-    "updatedAt": { "$date": "2026-10-20T11:30:00.000Z" }
+    "type": "Xe Van giao hàng chuyên dụng",
+    "updatedAt": {
+      "$date": "2026-10-21T20:24:05.357Z"
+    }
   },
   {
-    "_id": { "$oid": "671000000000000000000014" },
-    "ownerId": { "$oid": "671000000000000000000003" },
-    "plateNumber": "65C-555.22",
-    "type": "Xe tải thùng kín 1.9 tấn",
-    "model": "Isuzu QKR77HE4",
+    "_id": {
+      "$oid": "671000000000000000000014"
+    },
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-10-21T20:24:05.359Z"
+    },
     "iotDeviceId": "LOCKSHIP-BOX-004",
+    "model": "Isuzu QKR77HE4",
+    "ownerId": {
+      "$oid": "671000000000000000000003"
+    },
+    "plateNumber": "65C-555.22",
     "status": "active",
-    "createdAt": { "$date": "2026-10-20T11:45:00.000Z" },
-    "updatedAt": { "$date": "2026-10-20T11:45:00.000Z" }
+    "type": "Xe tải thùng kín 1.9 tấn",
+    "updatedAt": {
+      "$date": "2026-10-21T20:24:05.359Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000205"
+    },
+    "plateNumber": "65C-100.05",
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.042Z"
+    },
+    "iotDeviceId": "LOCKSHIP-BOX-005",
+    "model": "Lockship Smart Locker Unit v2",
+    "ownerId": {
+      "$oid": "671000000000000000000101"
+    },
+    "status": "active",
+    "type": "Trạm Tủ Thông Minh Cố Định",
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.042Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000206"
+    },
+    "plateNumber": "65C-100.06",
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.176Z"
+    },
+    "iotDeviceId": "LOCKSHIP-BOX-006",
+    "model": "Lockship Smart Locker Unit v2",
+    "ownerId": {
+      "$oid": "671000000000000000000102"
+    },
+    "status": "active",
+    "type": "Trạm Tủ Thông Minh Cố Định",
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.176Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000207"
+    },
+    "plateNumber": "65C-100.07",
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.184Z"
+    },
+    "iotDeviceId": "LOCKSHIP-BOX-007",
+    "model": "Lockship Smart Locker Unit v2",
+    "ownerId": {
+      "$oid": "671000000000000000000103"
+    },
+    "status": "active",
+    "type": "Trạm Tủ Thông Minh Cố Định",
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.184Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000208"
+    },
+    "plateNumber": "65C-100.08",
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.188Z"
+    },
+    "iotDeviceId": "LOCKSHIP-BOX-008",
+    "model": "Lockship Smart Locker Unit v2",
+    "ownerId": {
+      "$oid": "671000000000000000000104"
+    },
+    "status": "active",
+    "type": "Trạm Tủ Thông Minh Cố Định",
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.188Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000209"
+    },
+    "plateNumber": "65C-100.09",
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.193Z"
+    },
+    "iotDeviceId": "LOCKSHIP-BOX-009",
+    "model": "Lockship Smart Locker Unit v2",
+    "ownerId": {
+      "$oid": "671000000000000000000105"
+    },
+    "status": "active",
+    "type": "Trạm Tủ Thông Minh Cố Định",
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.193Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000210"
+    },
+    "plateNumber": "65C-100.10",
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.201Z"
+    },
+    "iotDeviceId": "LOCKSHIP-BOX-010",
+    "model": "Lockship Smart Locker Unit v2",
+    "ownerId": {
+      "$oid": "671000000000000000000106"
+    },
+    "status": "active",
+    "type": "Trạm Tủ Thông Minh Cố Định",
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.201Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000211"
+    },
+    "plateNumber": "65C-100.11",
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.204Z"
+    },
+    "iotDeviceId": "LOCKSHIP-BOX-011",
+    "model": "Lockship Smart Locker Unit v2",
+    "ownerId": {
+      "$oid": "671000000000000000000107"
+    },
+    "status": "active",
+    "type": "Trạm Tủ Thông Minh Cố Định",
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.204Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000212"
+    },
+    "plateNumber": "65C-100.12",
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.207Z"
+    },
+    "iotDeviceId": "LOCKSHIP-BOX-012",
+    "model": "Lockship Smart Locker Unit v2",
+    "ownerId": {
+      "$oid": "671000000000000000000108"
+    },
+    "status": "active",
+    "type": "Trạm Tủ Thông Minh Cố Định",
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.207Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000213"
+    },
+    "plateNumber": "65C-100.13",
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.215Z"
+    },
+    "iotDeviceId": "LOCKSHIP-BOX-013",
+    "model": "Lockship Smart Locker Unit v2",
+    "ownerId": {
+      "$oid": "671000000000000000000109"
+    },
+    "status": "active",
+    "type": "Trạm Tủ Thông Minh Cố Định",
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.215Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000214"
+    },
+    "plateNumber": "65C-100.14",
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.221Z"
+    },
+    "iotDeviceId": "LOCKSHIP-BOX-014",
+    "model": "Lockship Smart Locker Unit v2",
+    "ownerId": {
+      "$oid": "671000000000000000000110"
+    },
+    "status": "active",
+    "type": "Trạm Tủ Thông Minh Cố Định",
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.221Z"
+    }
   }
 ]

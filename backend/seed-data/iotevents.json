@@ -1,10 +1,16 @@
 [
   {
-    "_id": { "$oid": "671000000000000000000051" },
+    "_id": {
+      "$oid": "671000000000000000000051"
+    },
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-10-21T20:24:05.383Z"
+    },
     "deviceId": "LOCKSHIP-BOX-001",
-    "ownerId": { "$oid": "671000000000000000000002" },
-    "type": "telemetry",
-    "topic": "lockship/devices/LOCKSHIP-BOX-001/telemetry",
+    "ownerId": {
+      "$oid": "671000000000000000000002"
+    },
     "payload": {
       "battery": 95,
       "lockStatus": "locked",
@@ -12,47 +18,592 @@
       "humidity": 65,
       "signalStrength": -62
     },
-    "createdAt": { "$date": "2026-10-22T03:15:00.000Z" }
+    "topic": "lockship/devices/LOCKSHIP-BOX-001/telemetry",
+    "type": "telemetry"
   },
   {
-    "_id": { "$oid": "671000000000000000000052" },
+    "_id": {
+      "$oid": "671000000000000000000052"
+    },
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-10-21T20:24:05.385Z"
+    },
     "deviceId": "LOCKSHIP-BOX-001",
-    "ownerId": { "$oid": "671000000000000000000002" },
-    "type": "heartbeat",
-    "topic": "lockship/devices/LOCKSHIP-BOX-001/heartbeat",
+    "ownerId": {
+      "$oid": "671000000000000000000002"
+    },
     "payload": {
       "status": "online",
       "uptime": 86400,
       "firmware": "v2.5.0-esp32"
     },
-    "createdAt": { "$date": "2026-10-22T03:14:00.000Z" }
+    "topic": "lockship/devices/LOCKSHIP-BOX-001/heartbeat",
+    "type": "heartbeat"
   },
   {
-    "_id": { "$oid": "671000000000000000000053" },
+    "_id": {
+      "$oid": "671000000000000000000053"
+    },
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-10-21T20:24:05.386Z"
+    },
     "deviceId": "LOCKSHIP-BOX-002",
-    "ownerId": { "$oid": "671000000000000000000002" },
-    "type": "unlock_success",
-    "topic": "lockship/devices/LOCKSHIP-BOX-002/events",
+    "ownerId": {
+      "$oid": "671000000000000000000002"
+    },
     "payload": {
       "action": "UNLOCK",
       "durationMs": 420,
       "authorizedBy": "owner",
       "deliveryId": "671000000000000000000033"
     },
-    "createdAt": { "$date": "2026-10-22T03:00:00.000Z" }
+    "topic": "lockship/devices/LOCKSHIP-BOX-002/events",
+    "type": "unlock_success"
   },
   {
-    "_id": { "$oid": "671000000000000000000054" },
+    "_id": {
+      "$oid": "671000000000000000000054"
+    },
+    "__v": 0,
+    "createdAt": {
+      "$date": "2026-10-21T20:24:05.387Z"
+    },
     "deviceId": "LOCKSHIP-BOX-003",
-    "ownerId": { "$oid": "671000000000000000000003" },
-    "type": "telemetry",
-    "topic": "lockship/devices/LOCKSHIP-BOX-003/telemetry",
+    "ownerId": {
+      "$oid": "671000000000000000000003"
+    },
     "payload": {
       "battery": 78,
       "lockStatus": "locked",
       "temperature": 29.1,
       "humidity": 70
     },
-    "createdAt": { "$date": "2026-10-22T02:45:00.000Z" }
+    "topic": "lockship/devices/LOCKSHIP-BOX-003/telemetry",
+    "type": "telemetry"
+  },
+  {
+    "_id": {
+      "$oid": "6ad9d957d56ba23fafd88c7f"
+    },
+    "deviceId": "LOCKSHIP-BOX-001",
+    "ownerId": {
+      "$oid": "671000000000000000000002"
+    },
+    "type": "device_offline",
+    "topic": "lockship/device/LOCKSHIP-BOX-001/status",
+    "payload": {
+      "reason": "heartbeat_timeout",
+      "lastSeen": {
+        "$date": "2026-10-22T03:15:00.000Z"
+      }
+    },
+    "createdAt": {
+      "$date": "2026-10-22T09:37:27.766Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ad9d957d56ba23fafd88c82"
+    },
+    "deviceId": "LOCKSHIP-BOX-002",
+    "ownerId": {
+      "$oid": "671000000000000000000002"
+    },
+    "type": "device_offline",
+    "topic": "lockship/device/LOCKSHIP-BOX-002/status",
+    "payload": {
+      "reason": "heartbeat_timeout",
+      "lastSeen": {
+        "$date": "2026-10-22T03:10:00.000Z"
+      }
+    },
+    "createdAt": {
+      "$date": "2026-10-22T09:37:27.839Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ad9d957d56ba23fafd88c85"
+    },
+    "deviceId": "LOCKSHIP-BOX-003",
+    "ownerId": {
+      "$oid": "671000000000000000000003"
+    },
+    "type": "device_offline",
+    "topic": "lockship/device/LOCKSHIP-BOX-003/status",
+    "payload": {
+      "reason": "heartbeat_timeout",
+      "lastSeen": {
+        "$date": "2026-10-22T03:00:00.000Z"
+      }
+    },
+    "createdAt": {
+      "$date": "2026-10-22T09:37:27.846Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000701"
+    },
+    "createdAt": {
+      "$date": "2026-11-01T00:56:35.393Z"
+    },
+    "deviceId": "LOCKSHIP-BOX-005",
+    "ownerId": {
+      "$oid": "671000000000000000000101"
+    },
+    "payload": {
+      "message": "Chủ sở hữu Bùi Tú Anh vừa tạo mới đơn hàng giao vào tủ Lockship Box #05.",
+      "deviceId": "LOCKSHIP-BOX-005",
+      "ownerId": {
+        "$oid": "671000000000000000000101"
+      },
+      "battery": 98,
+      "lockStatus": "locked"
+    },
+    "topic": "lockship/boxes/LOCKSHIP-BOX-005/event",
+    "type": "order_created"
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000702"
+    },
+    "createdAt": {
+      "$date": "2026-11-01T01:26:35.482Z"
+    },
+    "deviceId": "LOCKSHIP-BOX-005",
+    "ownerId": {
+      "$oid": "671000000000000000000101"
+    },
+    "payload": {
+      "message": "Shipper Lê Hoàng Nam đã nhận đơn hàng và đang di chuyển tới trạm tủ Lockship Box #05.",
+      "deviceId": "LOCKSHIP-BOX-005",
+      "ownerId": {
+        "$oid": "671000000000000000000101"
+      },
+      "battery": 98,
+      "lockStatus": "locked"
+    },
+    "topic": "lockship/boxes/LOCKSHIP-BOX-005/event",
+    "type": "delivery_accepted"
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000703"
+    },
+    "createdAt": {
+      "$date": "2026-11-01T01:56:35.483Z"
+    },
+    "deviceId": "LOCKSHIP-BOX-005",
+    "ownerId": {
+      "$oid": "671000000000000000000101"
+    },
+    "payload": {
+      "message": "Shipper Lê Hoàng Nam đã có mặt tại trạm Lockship Box #05 và sẵn sàng nạp kiện hàng.",
+      "deviceId": "LOCKSHIP-BOX-005",
+      "ownerId": {
+        "$oid": "671000000000000000000101"
+      },
+      "battery": 98,
+      "lockStatus": "locked"
+    },
+    "topic": "lockship/boxes/LOCKSHIP-BOX-005/event",
+    "type": "delivery_arrived"
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000704"
+    },
+    "createdAt": {
+      "$date": "2026-11-01T02:26:35.485Z"
+    },
+    "deviceId": "LOCKSHIP-BOX-005",
+    "ownerId": {
+      "$oid": "671000000000000000000101"
+    },
+    "payload": {
+      "message": "Chủ sở hữu Bùi Tú Anh đã phê duyệt yêu cầu mở tủ và sinh mã OTP an toàn.",
+      "deviceId": "LOCKSHIP-BOX-005",
+      "ownerId": {
+        "$oid": "671000000000000000000101"
+      },
+      "battery": 98,
+      "lockStatus": "locked"
+    },
+    "topic": "lockship/boxes/LOCKSHIP-BOX-005/event",
+    "type": "delivery_authorized"
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000705"
+    },
+    "createdAt": {
+      "$date": "2026-11-01T02:56:35.486Z"
+    },
+    "deviceId": "LOCKSHIP-BOX-005",
+    "ownerId": {
+      "$oid": "671000000000000000000101"
+    },
+    "payload": {
+      "message": "Mở khóa thành công hộc tủ Lockship Box #05 qua giao thức MQTT an toàn.",
+      "deviceId": "LOCKSHIP-BOX-005",
+      "ownerId": {
+        "$oid": "671000000000000000000101"
+      },
+      "battery": 98,
+      "lockStatus": "unlocked"
+    },
+    "topic": "lockship/boxes/LOCKSHIP-BOX-005/event",
+    "type": "unlock_succeeded"
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000706"
+    },
+    "createdAt": {
+      "$date": "2026-11-01T03:26:35.486Z"
+    },
+    "deviceId": "LOCKSHIP-BOX-005",
+    "ownerId": {
+      "$oid": "671000000000000000000101"
+    },
+    "payload": {
+      "message": "Đơn hàng tại trạm Lockship Box #05 đã được chốt khóa và hoàn tất thành công!",
+      "deviceId": "LOCKSHIP-BOX-005",
+      "ownerId": {
+        "$oid": "671000000000000000000101"
+      },
+      "battery": 98,
+      "lockStatus": "locked"
+    },
+    "topic": "lockship/boxes/LOCKSHIP-BOX-005/event",
+    "type": "delivery_completed"
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000707"
+    },
+    "createdAt": {
+      "$date": "2026-11-01T03:56:35.487Z"
+    },
+    "deviceId": "LOCKSHIP-BOX-005",
+    "ownerId": {
+      "$oid": "671000000000000000000101"
+    },
+    "payload": {
+      "message": "Trạm Lockship Box #05 gửi tín hiệu hoạt động: Pin 98%, chốt khóa đã chốt an toàn.",
+      "deviceId": "LOCKSHIP-BOX-005",
+      "ownerId": {
+        "$oid": "671000000000000000000101"
+      },
+      "battery": 98,
+      "lockStatus": "locked"
+    },
+    "topic": "lockship/boxes/LOCKSHIP-BOX-005/event",
+    "type": "device_online"
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000708"
+    },
+    "createdAt": {
+      "$date": "2026-11-01T01:19:55.488Z"
+    },
+    "deviceId": "LOCKSHIP-BOX-006",
+    "ownerId": {
+      "$oid": "671000000000000000000102"
+    },
+    "payload": {
+      "message": "Chủ sở hữu Lê Châu Bảo Ngân vừa tạo mới đơn hàng tại trạm Lockship Box #06.",
+      "deviceId": "LOCKSHIP-BOX-006",
+      "ownerId": {
+        "$oid": "671000000000000000000102"
+      },
+      "battery": 98,
+      "lockStatus": "locked"
+    },
+    "topic": "lockship/boxes/LOCKSHIP-BOX-006/event",
+    "type": "order_created"
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000709"
+    },
+    "createdAt": {
+      "$date": "2026-11-01T01:53:15.490Z"
+    },
+    "deviceId": "LOCKSHIP-BOX-006",
+    "ownerId": {
+      "$oid": "671000000000000000000102"
+    },
+    "payload": {
+      "message": "Shipper Phạm Quốc Tuấn đã nhận đơn hàng giao vào trạm Lockship Box #06.",
+      "deviceId": "LOCKSHIP-BOX-006",
+      "ownerId": {
+        "$oid": "671000000000000000000102"
+      },
+      "battery": 98,
+      "lockStatus": "locked"
+    },
+    "topic": "lockship/boxes/LOCKSHIP-BOX-006/event",
+    "type": "delivery_accepted"
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000710"
+    },
+    "createdAt": {
+      "$date": "2026-11-01T02:43:15.492Z"
+    },
+    "deviceId": "LOCKSHIP-BOX-006",
+    "ownerId": {
+      "$oid": "671000000000000000000102"
+    },
+    "payload": {
+      "message": "Mở khóa thành công hộc tủ Lockship Box #06 cho đơn hàng bằng mã định danh an toàn.",
+      "deviceId": "LOCKSHIP-BOX-006",
+      "ownerId": {
+        "$oid": "671000000000000000000102"
+      },
+      "battery": 98,
+      "lockStatus": "unlocked"
+    },
+    "topic": "lockship/boxes/LOCKSHIP-BOX-006/event",
+    "type": "unlock_succeeded"
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000711"
+    },
+    "createdAt": {
+      "$date": "2026-11-01T03:16:35.494Z"
+    },
+    "deviceId": "LOCKSHIP-BOX-006",
+    "ownerId": {
+      "$oid": "671000000000000000000102"
+    },
+    "payload": {
+      "message": "Hoàn tất giao nhận đơn hàng tại trạm Lockship Box #06.",
+      "deviceId": "LOCKSHIP-BOX-006",
+      "ownerId": {
+        "$oid": "671000000000000000000102"
+      },
+      "battery": 98,
+      "lockStatus": "locked"
+    },
+    "topic": "lockship/boxes/LOCKSHIP-BOX-006/event",
+    "type": "delivery_completed"
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000712"
+    },
+    "createdAt": {
+      "$date": "2026-11-01T01:36:35.496Z"
+    },
+    "deviceId": "LOCKSHIP-BOX-007",
+    "ownerId": {
+      "$oid": "671000000000000000000103"
+    },
+    "payload": {
+      "message": "Chủ sở hữu Nguyễn Hữu Thành vừa tạo mới đơn hàng tại trạm Lockship Box #07.",
+      "deviceId": "LOCKSHIP-BOX-007",
+      "ownerId": {
+        "$oid": "671000000000000000000103"
+      },
+      "battery": 98,
+      "lockStatus": "locked"
+    },
+    "topic": "lockship/boxes/LOCKSHIP-BOX-007/event",
+    "type": "order_created"
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000713"
+    },
+    "createdAt": {
+      "$date": "2026-11-01T02:18:15.498Z"
+    },
+    "deviceId": "LOCKSHIP-BOX-007",
+    "ownerId": {
+      "$oid": "671000000000000000000103"
+    },
+    "payload": {
+      "message": "Shipper Võ Minh Khang đã nhận đơn hàng trạm Lockship Box #07 qua ứng dụng Lockship.",
+      "deviceId": "LOCKSHIP-BOX-007",
+      "ownerId": {
+        "$oid": "671000000000000000000103"
+      },
+      "battery": 98,
+      "lockStatus": "locked"
+    },
+    "topic": "lockship/boxes/LOCKSHIP-BOX-007/event",
+    "type": "delivery_accepted"
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000714"
+    },
+    "createdAt": {
+      "$date": "2026-11-01T02:59:55.500Z"
+    },
+    "deviceId": "LOCKSHIP-BOX-007",
+    "ownerId": {
+      "$oid": "671000000000000000000103"
+    },
+    "payload": {
+      "message": "Mở khóa thành công hộc số 02 trạm Lockship Box #07 bằng mã PIN bảo mật.",
+      "deviceId": "LOCKSHIP-BOX-007",
+      "ownerId": {
+        "$oid": "671000000000000000000103"
+      },
+      "battery": 98,
+      "lockStatus": "unlocked"
+    },
+    "topic": "lockship/boxes/LOCKSHIP-BOX-007/event",
+    "type": "unlock_succeeded"
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000715"
+    },
+    "createdAt": {
+      "$date": "2026-11-01T02:09:55.502Z"
+    },
+    "deviceId": "LOCKSHIP-BOX-008",
+    "ownerId": {
+      "$oid": "671000000000000000000104"
+    },
+    "payload": {
+      "message": "Chủ sở hữu Châu Văn Liêm vừa tạo mới đơn hàng tại trạm Lockship Box #08.",
+      "deviceId": "LOCKSHIP-BOX-008",
+      "ownerId": {
+        "$oid": "671000000000000000000104"
+      },
+      "battery": 98,
+      "lockStatus": "locked"
+    },
+    "topic": "lockship/boxes/LOCKSHIP-BOX-008/event",
+    "type": "order_created"
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000716"
+    },
+    "createdAt": {
+      "$date": "2026-11-01T03:41:35.504Z"
+    },
+    "deviceId": "LOCKSHIP-BOX-008",
+    "ownerId": {
+      "$oid": "671000000000000000000104"
+    },
+    "payload": {
+      "message": "Trạm Lockship Box #08 đồng bộ trạng thái trực tuyến: Pin 96%, tín hiệu IoT ổn định.",
+      "deviceId": "LOCKSHIP-BOX-008",
+      "ownerId": {
+        "$oid": "671000000000000000000104"
+      },
+      "battery": 98,
+      "lockStatus": "locked"
+    },
+    "topic": "lockship/boxes/LOCKSHIP-BOX-008/event",
+    "type": "device_online"
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000717"
+    },
+    "createdAt": {
+      "$date": "2026-11-01T02:26:35.505Z"
+    },
+    "deviceId": "LOCKSHIP-BOX-009",
+    "ownerId": {
+      "$oid": "671000000000000000000105"
+    },
+    "payload": {
+      "message": "Chủ sở hữu Đặng Huỳnh Khải Minh vừa tạo mới đơn hàng tại trạm Lockship Box #09.",
+      "deviceId": "LOCKSHIP-BOX-009",
+      "ownerId": {
+        "$oid": "671000000000000000000105"
+      },
+      "battery": 98,
+      "lockStatus": "locked"
+    },
+    "topic": "lockship/boxes/LOCKSHIP-BOX-009/event",
+    "type": "order_created"
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000718"
+    },
+    "createdAt": {
+      "$date": "2026-11-01T02:34:55.506Z"
+    },
+    "deviceId": "LOCKSHIP-BOX-010",
+    "ownerId": {
+      "$oid": "671000000000000000000106"
+    },
+    "payload": {
+      "message": "Chủ sở hữu Trần Tiến Đạt vừa tạo mới đơn hàng tại trạm Lockship Box #10.",
+      "deviceId": "LOCKSHIP-BOX-010",
+      "ownerId": {
+        "$oid": "671000000000000000000106"
+      },
+      "battery": 98,
+      "lockStatus": "locked"
+    },
+    "topic": "lockship/boxes/LOCKSHIP-BOX-010/event",
+    "type": "order_created"
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000719"
+    },
+    "createdAt": {
+      "$date": "2026-11-01T03:33:15.507Z"
+    },
+    "deviceId": "LOCKSHIP-BOX-011",
+    "ownerId": {
+      "$oid": "671000000000000000000107"
+    },
+    "payload": {
+      "message": "Chủ sở hữu Lê Huỳnh Khả Vy xác nhận hoàn tất giao nhận tại trạm Lockship Box #11.",
+      "deviceId": "LOCKSHIP-BOX-011",
+      "ownerId": {
+        "$oid": "671000000000000000000107"
+      },
+      "battery": 98,
+      "lockStatus": "locked"
+    },
+    "topic": "lockship/boxes/LOCKSHIP-BOX-011/event",
+    "type": "delivery_completed"
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000720"
+    },
+    "createdAt": {
+      "$date": "2026-11-01T04:06:35.509Z"
+    },
+    "deviceId": "LOCKSHIP-BOX-012",
+    "ownerId": {
+      "$oid": "671000000000000000000108"
+    },
+    "payload": {
+      "message": "Trạm Lockship Box #12 gửi tín hiệu hoạt động: Pin 99%, sẵn sàng nhận kiện hàng.",
+      "deviceId": "LOCKSHIP-BOX-012",
+      "ownerId": {
+        "$oid": "671000000000000000000108"
+      },
+      "battery": 98,
+      "lockStatus": "locked"
+    },
+    "topic": "lockship/boxes/LOCKSHIP-BOX-012/event",
+    "type": "device_online"
   }
 ]

@@ -1,92 +1,537 @@
 [
   {
-    "_id": { "$oid": "671000000000000000000001" },
+    "_id": {
+      "$oid": "671000000000000000000001"
+    },
     "name": "Quản trị viên Hệ thống (Admin)",
     "email": "admin@lockship.vn",
     "password": "$2a$12$cQP6b.U1jdPqLgzJKsQ40OS/GnZfK0K0h9zA3bZGo9Fc6MAiDEngO",
+    "phone": "0909000001",
     "role": "admin",
     "ownerId": null,
-    "phone": "0909000001",
+    "status": "active",
+    "avatar": null,
+    "passwordResetTokenHash": null,
+    "passwordResetExpiresAt": null,
+    "tokenVersion": 0,
+    "createdAt": {
+      "$date": "2026-10-02T00:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-21T20:24:05.309Z"
+    },
     "address": "Trung tâm Điều hành Lockship, 12 Đại lộ Hòa Bình, Q. Ninh Kiều, TP. Cần Thơ",
-    "status": "active",
-    "authProvider": "local",
-    "tokenVersion": 0,
-    "createdAt": { "$date": "2026-10-20T08:00:00.000Z" },
-    "updatedAt": { "$date": "2026-10-20T08:00:00.000Z" }
+    "authProvider": "local"
   },
   {
-    "_id": { "$oid": "671000000000000000000002" },
-    "name": "Nguyễn Văn Hùng (Chủ xe Cần Thơ)",
-    "email": "owner.hung@lockship.vn",
-    "password": "$2a$12$cQP6b.U1jdPqLgzJKsQ40OS/GnZfK0K0h9zA3bZGo9Fc6MAiDEngO",
+    "_id": {
+      "$oid": "6abf8c787f0f3eae7f67ff80"
+    },
+    "name": "Huynh Thai An",
+    "email": "anhtce182245@fpt.edu.vn",
+    "password": "$2a$12$ShJs0RyvHp6DY1MLgwb5J.jkRoNkXxhoLzMr1MKBpfdXKIBvexkZe",
+    "phone": "0393383583",
+    "role": "admin",
+    "ownerId": null,
+    "status": "active",
+    "avatar": "",
+    "passwordResetTokenHash": "d033d6dc603fcbd714b5b3bd4b87f1c0089c7a6ad597549147ad75f25c083410",
+    "passwordResetExpiresAt": {
+      "$date": "2026-10-02T11:58:39.193Z"
+    },
+    "tokenVersion": 0,
+    "createdAt": {
+      "$date": "2026-10-02T10:50:32.710Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-02T11:23:07.824Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ac0d3f06623316a73d10932"
+    },
+    "name": "Thái An Huỳnh",
+    "email": "huynhthaian181104@gmail.com",
+    "googleId": "116137598805954694674",
+    "authProvider": "google",
+    "phone": null,
+    "address": "Cần Thơ",
+    "role": "admin",
+    "ownerId": null,
+    "status": "active",
+    "registrationPending": false,
+    "avatar": "https://lh3.googleusercontent.com/a/ACg8ocIbf1LlJ1bnuYg67gmSeaf8Kg4dgHPMwcGvMginP31B1mIhEU6ijw=s96-c",
+    "passwordResetTokenHash": null,
+    "passwordResetExpiresAt": null,
+    "tokenVersion": 0,
+    "createdAt": {
+      "$date": "2026-10-03T10:07:44.926Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-03T10:07:44.926Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ac5b383e4293d82e4b6624e"
+    },
+    "name": "Huỳnh Thái An",
+    "email": "huynhthaiandev@gmail.com",
+    "googleId": "117928001110723356753",
+    "authProvider": "google",
+    "phone": "0393383583",
+    "address": "cth",
+    "role": "shipper",
+    "ownerId": {
+      "$oid": "671000000000000000000001"
+    },
+    "status": "active",
+    "registrationPending": false,
+    "avatar": "https://lh3.googleusercontent.com/a/ACg8ocL3GctqDExi9L9EtcbEzDP-gv2fsTtF6sdQd_SdLpXUTSMNOmU=s96-c",
+    "passwordResetTokenHash": null,
+    "passwordResetExpiresAt": null,
+    "tokenVersion": 2,
+    "createdAt": {
+      "$date": "2026-10-07T02:50:43.222Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-07T03:03:21.263Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6ad8fb8e16ac978e06f379f3"
+    },
+    "name": "Huỳnh Thái An",
+    "email": "huynhthaian18112004@gmail.com",
+    "googleId": "108530004388869756300",
+    "authProvider": "google",
+    "phone": null,
+    "address": "Cần Thơ",
     "role": "owner",
     "ownerId": null,
-    "phone": "0909000002",
+    "status": "active",
+    "registrationPending": false,
+    "avatar": "https://lh3.googleusercontent.com/a/ACg8ocKbh798hoA7eHBvam72xmp0TRu-OurjoxSCZAJ5oJOLTtTnlQ=s96-c",
+    "passwordResetTokenHash": null,
+    "passwordResetExpiresAt": null,
+    "tokenVersion": 0,
+    "createdAt": {
+      "$date": "2026-10-21T17:51:10.186Z"
+    },
+    "updatedAt": {
+      "$date": "2026-10-21T17:51:10.186Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000002"
+    },
+    "__v": 0,
     "address": "Kho vận Hùng Phát, 45 Đường 30 Tháng 4, P. An Phú, Q. Ninh Kiều, TP. Cần Thơ",
-    "status": "active",
     "authProvider": "local",
-    "tokenVersion": 0,
-    "createdAt": { "$date": "2026-10-20T08:30:00.000Z" },
-    "updatedAt": { "$date": "2026-10-20T08:30:00.000Z" }
-  },
-  {
-    "_id": { "$oid": "671000000000000000000003" },
-    "name": "Trần Thị Mai (Logistics Mekong)",
-    "email": "owner.mai@lockship.vn",
-    "password": "$2a$12$cQP6b.U1jdPqLgzJKsQ40OS/GnZfK0K0h9zA3bZGo9Fc6MAiDEngO",
-    "role": "owner",
+    "avatar": null,
+    "createdAt": {
+      "$date": "2026-10-21T20:24:05.328Z"
+    },
+    "email": "owner.hung@lockship.vn",
+    "name": "Nguyễn Văn Hùng (Chủ xe Cần Thơ)",
     "ownerId": null,
-    "phone": "0909000003",
+    "password": "$2a$12$cQP6b.U1jdPqLgzJKsQ40OS/GnZfK0K0h9zA3bZGo9Fc6MAiDEngO",
+    "passwordResetExpiresAt": null,
+    "passwordResetTokenHash": null,
+    "phone": "0909000002",
+    "registrationPending": false,
+    "role": "owner",
+    "status": "active",
+    "tokenVersion": 0,
+    "updatedAt": {
+      "$date": "2026-10-21T20:24:05.328Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000003"
+    },
+    "__v": 0,
     "address": "Trung tâm Tiếp vận Tây Đô, 78 Trần Hưng Đạo, P. An Nghiệp, Q. Ninh Kiều, TP. Cần Thơ",
-    "status": "active",
     "authProvider": "local",
+    "avatar": null,
+    "createdAt": {
+      "$date": "2026-10-21T20:24:05.339Z"
+    },
+    "email": "owner.mai@lockship.vn",
+    "name": "Trần Thị Mai (Logistics Mekong)",
+    "ownerId": null,
+    "password": "$2a$12$cQP6b.U1jdPqLgzJKsQ40OS/GnZfK0K0h9zA3bZGo9Fc6MAiDEngO",
+    "passwordResetExpiresAt": null,
+    "passwordResetTokenHash": null,
+    "phone": "0909000003",
+    "registrationPending": false,
+    "role": "owner",
+    "status": "active",
     "tokenVersion": 0,
-    "createdAt": { "$date": "2026-10-20T09:00:00.000Z" },
-    "updatedAt": { "$date": "2026-10-20T09:00:00.000Z" }
+    "updatedAt": {
+      "$date": "2026-10-21T20:24:05.339Z"
+    }
   },
   {
-    "_id": { "$oid": "671000000000000000000004" },
-    "name": "Lê Hoàng Nam (Tài xế Đội 1)",
-    "email": "shipper.nam@lockship.vn",
-    "password": "$2a$12$cQP6b.U1jdPqLgzJKsQ40OS/GnZfK0K0h9zA3bZGo9Fc6MAiDEngO",
-    "role": "shipper",
-    "ownerId": { "$oid": "671000000000000000000002" },
-    "phone": "0909000004",
+    "_id": {
+      "$oid": "671000000000000000000004"
+    },
+    "__v": 0,
     "address": "15 Cách Mạng Tháng 8, P. An Hòa, Q. Ninh Kiều, TP. Cần Thơ",
-    "status": "active",
     "authProvider": "local",
+    "avatar": null,
+    "createdAt": {
+      "$date": "2026-10-21T20:24:05.341Z"
+    },
+    "email": "shipper.nam@lockship.vn",
+    "name": "Lê Hoàng Nam (Tài xế Đội 1)",
+    "ownerId": {
+      "$oid": "671000000000000000000002"
+    },
+    "password": "$2a$12$cQP6b.U1jdPqLgzJKsQ40OS/GnZfK0K0h9zA3bZGo9Fc6MAiDEngO",
+    "passwordResetExpiresAt": null,
+    "passwordResetTokenHash": null,
+    "phone": "0909000004",
+    "registrationPending": false,
+    "role": "shipper",
+    "status": "active",
     "tokenVersion": 0,
-    "createdAt": { "$date": "2026-10-20T09:30:00.000Z" },
-    "updatedAt": { "$date": "2026-10-20T09:30:00.000Z" }
+    "updatedAt": {
+      "$date": "2026-10-21T20:24:05.341Z"
+    }
   },
   {
-    "_id": { "$oid": "671000000000000000000005" },
-    "name": "Phạm Quốc Tuấn (Tài xế Đội 1)",
-    "email": "shipper.tuan@lockship.vn",
-    "password": "$2a$12$cQP6b.U1jdPqLgzJKsQ40OS/GnZfK0K0h9zA3bZGo9Fc6MAiDEngO",
-    "role": "shipper",
-    "ownerId": { "$oid": "671000000000000000000002" },
-    "phone": "0909000005",
+    "_id": {
+      "$oid": "671000000000000000000005"
+    },
+    "__v": 0,
     "address": "22 Võ Văn Kiệt, P. An Hòa, Q. Ninh Kiều, TP. Cần Thơ",
-    "status": "active",
     "authProvider": "local",
+    "avatar": null,
+    "createdAt": {
+      "$date": "2026-10-21T20:24:05.344Z"
+    },
+    "email": "shipper.tuan@lockship.vn",
+    "name": "Phạm Quốc Tuấn (Tài xế Đội 1)",
+    "ownerId": {
+      "$oid": "671000000000000000000002"
+    },
+    "password": "$2a$12$cQP6b.U1jdPqLgzJKsQ40OS/GnZfK0K0h9zA3bZGo9Fc6MAiDEngO",
+    "passwordResetExpiresAt": null,
+    "passwordResetTokenHash": null,
+    "phone": "0909000005",
+    "registrationPending": false,
+    "role": "shipper",
+    "status": "active",
     "tokenVersion": 0,
-    "createdAt": { "$date": "2026-10-20T10:00:00.000Z" },
-    "updatedAt": { "$date": "2026-10-20T10:00:00.000Z" }
+    "updatedAt": {
+      "$date": "2026-10-21T20:24:05.344Z"
+    }
   },
   {
-    "_id": { "$oid": "671000000000000000000006" },
-    "name": "Võ Minh Khang (Tài xế Mekong)",
-    "email": "shipper.khang@lockship.vn",
-    "password": "$2a$12$cQP6b.U1jdPqLgzJKsQ40OS/GnZfK0K0h9zA3bZGo9Fc6MAiDEngO",
-    "role": "shipper",
-    "ownerId": { "$oid": "671000000000000000000003" },
-    "phone": "0909000006",
+    "_id": {
+      "$oid": "671000000000000000000006"
+    },
+    "__v": 0,
     "address": "89 Mậu Thân, P. Xuân Khánh, Q. Ninh Kiều, TP. Cần Thơ",
+    "authProvider": "local",
+    "avatar": null,
+    "createdAt": {
+      "$date": "2026-10-21T20:24:05.347Z"
+    },
+    "email": "shipper.khang@lockship.vn",
+    "name": "Võ Minh Khang (Tài xế Mekong)",
+    "ownerId": {
+      "$oid": "671000000000000000000003"
+    },
+    "password": "$2a$12$cQP6b.U1jdPqLgzJKsQ40OS/GnZfK0K0h9zA3bZGo9Fc6MAiDEngO",
+    "passwordResetExpiresAt": null,
+    "passwordResetTokenHash": null,
+    "phone": "0909000006",
+    "registrationPending": false,
+    "role": "shipper",
+    "status": "active",
+    "tokenVersion": 0,
+    "updatedAt": {
+      "$date": "2026-10-21T20:24:05.347Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000101"
+    },
+    "name": "Bùi Tú Anh",
+    "email": "tuanh.bui@lockship.vn",
+    "password": "$2a$12$XIYFgx/JOanNUsqu5ho4GOrOH/F/0N271ASHT/a.N2b9v0ht5jTme",
+    "phone": "0901234501",
+    "address": "Số 12 Đường 3/2, P. Xuân Khánh, Q. Ninh Kiều, Cần Thơ",
+    "role": "owner",
     "status": "active",
     "authProvider": "local",
+    "currentLocation": {
+      "lat": 10.0299,
+      "lng": 105.7706,
+      "updatedAt": {
+        "$date": "2026-11-01T04:56:34.978Z"
+      }
+    },
     "tokenVersion": 0,
-    "createdAt": { "$date": "2026-10-20T10:30:00.000Z" },
-    "updatedAt": { "$date": "2026-10-20T10:30:00.000Z" }
+    "createdAt": {
+      "$date": "2026-11-01T04:56:34.978Z"
+    },
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:34.978Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000102"
+    },
+    "name": "Lê Châu Bảo Ngân",
+    "email": "baongan.le@lockship.vn",
+    "password": "$2a$12$XIYFgx/JOanNUsqu5ho4GOrOH/F/0N271ASHT/a.N2b9v0ht5jTme",
+    "phone": "0901234502",
+    "address": "Số 45 Đại lộ Hòa Bình, P. Tân An, Q. Ninh Kiều, Cần Thơ",
+    "role": "owner",
+    "status": "active",
+    "authProvider": "local",
+    "currentLocation": {
+      "lat": 10.0342,
+      "lng": 105.7831,
+      "updatedAt": {
+        "$date": "2026-11-01T04:56:35.019Z"
+      }
+    },
+    "tokenVersion": 0,
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.019Z"
+    },
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.019Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000103"
+    },
+    "name": "Nguyễn Hữu Thành",
+    "email": "huuthanh.nguyen@lockship.vn",
+    "password": "$2a$12$XIYFgx/JOanNUsqu5ho4GOrOH/F/0N271ASHT/a.N2b9v0ht5jTme",
+    "phone": "0901234503",
+    "address": "Số 108 Nguyễn Văn Cừ, P. An Hòa, Q. Ninh Kiều, Cần Thơ",
+    "role": "owner",
+    "status": "active",
+    "authProvider": "local",
+    "currentLocation": {
+      "lat": 10.0451,
+      "lng": 105.7623,
+      "updatedAt": {
+        "$date": "2026-11-01T04:56:35.021Z"
+      }
+    },
+    "tokenVersion": 0,
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.021Z"
+    },
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.021Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000104"
+    },
+    "name": "Châu Văn Liêm",
+    "email": "vanliem.chau@lockship.vn",
+    "password": "$2a$12$XIYFgx/JOanNUsqu5ho4GOrOH/F/0N271ASHT/a.N2b9v0ht5jTme",
+    "phone": "0901234504",
+    "address": "Số 22 Mậu Thân, P. An Phú, Q. Ninh Kiều, Cần Thơ",
+    "role": "owner",
+    "status": "active",
+    "authProvider": "local",
+    "currentLocation": {
+      "lat": 10.0378,
+      "lng": 105.7745,
+      "updatedAt": {
+        "$date": "2026-11-01T04:56:35.024Z"
+      }
+    },
+    "tokenVersion": 0,
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.024Z"
+    },
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.024Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000105"
+    },
+    "name": "Đặng Huỳnh Khải Minh",
+    "email": "khaiminh.dang@lockship.vn",
+    "password": "$2a$12$XIYFgx/JOanNUsqu5ho4GOrOH/F/0N271ASHT/a.N2b9v0ht5jTme",
+    "phone": "0901234505",
+    "address": "Số 88 Trần Hưng Đạo, P. An Nghiệp, Q. Ninh Kiều, Cần Thơ",
+    "role": "owner",
+    "status": "active",
+    "authProvider": "local",
+    "currentLocation": {
+      "lat": 10.0315,
+      "lng": 105.7782,
+      "updatedAt": {
+        "$date": "2026-11-01T04:56:35.027Z"
+      }
+    },
+    "tokenVersion": 0,
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.027Z"
+    },
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.027Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000106"
+    },
+    "name": "Trần Tiến Đạt",
+    "email": "tiendat.tran@lockship.vn",
+    "password": "$2a$12$XIYFgx/JOanNUsqu5ho4GOrOH/F/0N271ASHT/a.N2b9v0ht5jTme",
+    "phone": "0901234506",
+    "address": "Số 64 Nguyễn Văn Linh, P. Hưng Lợi, Q. Ninh Kiều, Cần Thơ",
+    "role": "owner",
+    "status": "active",
+    "authProvider": "local",
+    "currentLocation": {
+      "lat": 10.0218,
+      "lng": 105.7612,
+      "updatedAt": {
+        "$date": "2026-11-01T04:56:35.029Z"
+      }
+    },
+    "tokenVersion": 0,
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.029Z"
+    },
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.029Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000107"
+    },
+    "name": "Lê Huỳnh Khả Vy",
+    "email": "khavy.le@lockship.vn",
+    "password": "$2a$12$XIYFgx/JOanNUsqu5ho4GOrOH/F/0N271ASHT/a.N2b9v0ht5jTme",
+    "phone": "0901234507",
+    "address": "KDC Hưng Phú 1, P. Hưng Phú, Q. Cái Răng, Cần Thơ",
+    "role": "owner",
+    "status": "active",
+    "authProvider": "local",
+    "currentLocation": {
+      "lat": 10.0152,
+      "lng": 105.7911,
+      "updatedAt": {
+        "$date": "2026-11-01T04:56:35.033Z"
+      }
+    },
+    "tokenVersion": 0,
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.033Z"
+    },
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.033Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000108"
+    },
+    "name": "Nguyễn Thị Bảo Châu",
+    "email": "baochau.nguyen@lockship.vn",
+    "password": "$2a$12$XIYFgx/JOanNUsqu5ho4GOrOH/F/0N271ASHT/a.N2b9v0ht5jTme",
+    "phone": "0901234508",
+    "address": "Số 150 Cách Mạng Tháng 8, P. Bùi Hữu Nghĩa, Q. Bình Thủy, Cần Thơ",
+    "role": "owner",
+    "status": "active",
+    "authProvider": "local",
+    "currentLocation": {
+      "lat": 10.0573,
+      "lng": 105.7542,
+      "updatedAt": {
+        "$date": "2026-11-01T04:56:35.036Z"
+      }
+    },
+    "tokenVersion": 0,
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.036Z"
+    },
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.036Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000109"
+    },
+    "name": "Trần Duy Khải",
+    "email": "duykhai.tran@lockship.vn",
+    "password": "$2a$12$XIYFgx/JOanNUsqu5ho4GOrOH/F/0N271ASHT/a.N2b9v0ht5jTme",
+    "phone": "0901234509",
+    "address": "Số 39 Lê Bình, P. Hưng Lợi, Q. Ninh Kiều, Cần Thơ",
+    "role": "owner",
+    "status": "active",
+    "authProvider": "local",
+    "currentLocation": {
+      "lat": 10.0245,
+      "lng": 105.7689,
+      "updatedAt": {
+        "$date": "2026-11-01T04:56:35.038Z"
+      }
+    },
+    "tokenVersion": 0,
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.038Z"
+    },
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.038Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "671000000000000000000110"
+    },
+    "name": "Bùi Ngọc Yến Linh",
+    "email": "yenlinh.bui@lockship.vn",
+    "password": "$2a$12$XIYFgx/JOanNUsqu5ho4GOrOH/F/0N271ASHT/a.N2b9v0ht5jTme",
+    "phone": "0901234510",
+    "address": "Số 75 Lý Tự Trọng, P. An Phú, Q. Ninh Kiều, Cần Thơ",
+    "role": "owner",
+    "status": "active",
+    "authProvider": "local",
+    "currentLocation": {
+      "lat": 10.0361,
+      "lng": 105.7794,
+      "updatedAt": {
+        "$date": "2026-11-01T04:56:35.039Z"
+      }
+    },
+    "tokenVersion": 0,
+    "createdAt": {
+      "$date": "2026-11-01T04:56:35.039Z"
+    },
+    "updatedAt": {
+      "$date": "2026-11-01T04:56:35.039Z"
+    }
   }
 ]
