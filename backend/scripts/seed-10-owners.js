@@ -1,9 +1,17 @@
 import { randomUUID } from "node:crypto";
+import dns from "node:dns";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+
+// Set reliable public DNS servers for Windows SRV queries (mongodb+srv://)
+try {
+    dns.setServers(["8.8.8.8", "1.1.1.1"]);
+} catch {
+    // ignore
+}
 
 // Load environment variables from backend/.env
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -725,3 +733,4 @@ if (process.argv[1] && process.argv[1].endsWith("seed-10-owners.js")) {
             process.exit(1);
         });
 }
+
