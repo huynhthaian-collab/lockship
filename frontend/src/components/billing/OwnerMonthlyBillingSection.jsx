@@ -45,9 +45,10 @@ export default function OwnerMonthlyBillingSection({ onRefresh }) {
 
     // Modals
     const [historyModalOpen, setHistoryModalOpen] = useState(false)
-    const [momoModalOpen, setMomoModalOpen] = useState(false)
+    const [vietqrModalOpen, setVietqrModalOpen] = useState(false)
     const [copiedSyntax, setCopiedSyntax] = useState(false)
-    const [copiedPhone, setCopiedPhone] = useState(false)
+    const [copiedAccountNo, setCopiedAccountNo] = useState(false)
+    const [copiedAmount, setCopiedAmount] = useState(false)
     const [proofNote, setProofNote] = useState('')
     const [notifyingPaid, setNotifyingPaid] = useState(false)
     const [successMessage, setSuccessMessage] = useState('')
@@ -57,7 +58,7 @@ export default function OwnerMonthlyBillingSection({ onRefresh }) {
         setRefreshing(true)
         setError('')
         try {
-            const data = await invoiceApi.getCurrent()
+            const data = await invoiceApi.getCurrent('2026-10')
             setInvoiceData(data)
         } catch (err) {
             setError(err.message || 'Không thể tải thông tin cước phí tháng.')
@@ -88,30 +89,35 @@ export default function OwnerMonthlyBillingSection({ onRefresh }) {
     useSocketEvent('billing:payment_verified', onPaymentVerified)
 
     const invoice = invoiceData?.invoice || {
-        month: new Date().toISOString().slice(0, 7),
+        month: '2026-10',
         totalUsages: 0,
         unitPrice: 5000,
         totalAmount: 0,
         usageHistory: [],
         paymentStatus: 'UNPAID',
-        transferSyntax: 'LOCKSHIP OWNER',
+        transferSyntax: 'LOCKSHIP OWNER T10',
     }
 
-    const momoConfig = invoiceData?.momoConfig || {
-        phone: '0909000001',
-        accountName: 'CÔNG TY TNHH LOCKSHIP VIỆT NAM',
-        qrUrl: '',
-        qrImageUrl: '',
+    const vietqrConfig = invoiceData?.vietqrConfig || {
+        bankId: 'BIDV',
+        bankName: 'Ngân hàng TMCP Đầu tư và Phát triển Việt Nam (BIDV)',
+        branch: 'PGD Thanh Bình',
+        accountNo: '6910924374',
+        accountName: 'TRAN THI THUY QUYEN',
+        qrImageUrl: `https://img.vietqr.io/image/BIDV-6910924374-compact2.png?amount=${invoice.totalAmount}&addInfo=${encodeURIComponent(invoice.transferSyntax || 'LOCKSHIP OWNER T10')}&accountName=TRAN%20THI%20THUY%20QUYEN`,
     }
 
     const handleCopy = (text, type) => {
-        navigator.clipboard.writeText(text)
+        navigator.clipboard.writeText(String(text || ''))
         if (type === 'syntax') {
             setCopiedSyntax(true)
             setTimeout(() => setCopiedSyntax(false), 2500)
-        } else {
-            setCopiedPhone(true)
-            setTimeout(() => setCopiedPhone(false), 2500)
+        } else if (type === 'accountNo') {
+            setCopiedAccountNo(true)
+            setTimeout(() => setCopiedAccountNo(false), 2500)
+        } else if (type === 'amount') {
+            setCopiedAmount(true)
+            setTimeout(() => setCopiedAmount(false), 2500)
         }
     }
 
@@ -121,7 +127,7 @@ export default function OwnerMonthlyBillingSection({ onRefresh }) {
         try {
             await invoiceApi.notifyPaid(invoice._id, { paymentProofNote: proofNote })
             setSuccessMessage('Đã gửi thông báo thanh toán thành công! Vui lòng chờ Admin xác nhận.')
-            setMomoModalOpen(false)
+            setVietqrModalOpen(false)
             setProofNote('')
             loadInvoice(true)
             setTimeout(() => setSuccessMessage(''), 8000)
@@ -239,11 +245,11 @@ export default function OwnerMonthlyBillingSection({ onRefresh }) {
                             {!isPaid && (
                                 <button
                                     type="button"
-                                    onClick={() => setMomoModalOpen(true)}
+                                    onClick={() => setVietqrModalOpen(true)}
                                     className="inline-flex items-center gap-2 rounded-xl border border-pink-400/40 bg-gradient-to-r from-pink-600 to-rose-600 px-5 py-2.5 text-xs font-extrabold text-white shadow-[0_0_20px_rgba(219,39,119,0.4)] transition-all hover:scale-105 hover:from-pink-500 hover:to-rose-500 active:scale-95"
                                 >
                                     <QrCode size={16} />
-                                    {isPending ? 'Xem lại mã MoMo' : 'Thanh toán MoMo QR'}
+                                    {isPending ? 'Xem lại mã VietQR BIDV' : 'Thanh toán VietQR BIDV'}
                                 </button>
                             )}
                         </div>
@@ -325,65 +331,80 @@ export default function OwnerMonthlyBillingSection({ onRefresh }) {
                 )}
             </Modal>
 
-            {/* Modal Thanh toán MoMo QR */}
+            {/* Modal Thanh toán VietQR BIDV */}
             <Modal
-                open={momoModalOpen}
-                onClose={() => setMomoModalOpen(false)}
-                title="Thanh toán cước phí qua MoMo"
-                description="Quét mã QR MoMo hoặc chuyển khoản với đúng cú pháp dưới đây để được duyệt tự động"
+                open={vietqrModalOpen}
+                onClose={() => setVietqrModalOpen(false)}
+                title="Thanh toán cước phí qua VietQR BIDV"
+                description="Quét mã VietQR hoặc chuyển khoản 24/7 đến tài khoản BIDV với cú pháp chuẩn bên dưới để hệ thống và Admin đối soát nhanh chóng"
                 size="md"
             >
                 <div className="space-y-4">
                     {/* QR Code Container */}
-                    <div className="flex flex-col items-center justify-center rounded-2xl border border-pink-500/20 bg-pink-950/20 p-5">
-                        <div className="relative overflow-hidden rounded-xl border-2 border-pink-400/50 bg-white p-2.5 shadow-[0_0_25px_rgba(219,39,119,0.25)]">
+                    <div className="flex flex-col items-center justify-center rounded-2xl border border-cyan-500/20 bg-cyan-950/20 p-5">
+                        <div className="relative overflow-hidden rounded-xl border-2 border-cyan-400/50 bg-white p-2.5 shadow-[0_0_25px_rgba(6,182,212,0.25)]">
                             <img
-                                src={import.meta.env.VITE_MOMO_QR_URL || '/momo-qr.png'}
-                                alt="Mã MoMo QR Lockship"
-                                className="size-48 object-contain sm:size-52"
+                                src={`https://img.vietqr.io/image/BIDV-6910924374-compact2.png?amount=${invoice.totalAmount}&addInfo=${encodeURIComponent(invoice.transferSyntax || 'LOCKSHIP OWNER T10')}&accountName=TRAN%20THI%20THUY%20QUYEN`}
+                                alt="Mã VietQR BIDV Lockship"
+                                className="size-52 object-contain sm:size-56"
                                 onError={(e) => {
-                                    // Fallback to generated QR code via API if static image is not found
-                                    e.currentTarget.src = momoConfig.qrImageUrl || `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(`2|99|${momoConfig.phone}|${momoConfig.accountName}|info@lockship.vn|0|0|${invoice.totalAmount}|${invoice.transferSyntax}|transfer_mycode`)}`
+                                    e.currentTarget.onerror = null
+                                    e.currentTarget.src = '/bidv-vietqr.jpg'
                                 }}
                             />
                         </div>
-                        <p className="mt-3 text-center text-xs font-bold text-pink-300">
-                            Quét bằng App MoMo hoặc ứng dụng Ngân hàng
+                        <p className="mt-3 text-center text-xs font-bold text-cyan-300">
+                            Quét bằng App Ngân hàng bất kỳ (BIDV, VCB, MB...) hoặc Ví điện tử
                         </p>
                     </div>
 
                     {/* Details Box */}
                     <div className="space-y-2.5 rounded-xl border border-white/10 bg-white/[0.02] p-4 text-xs">
                         <div className="flex items-center justify-between">
-                            <span className="text-slate-400">Người thụ hưởng:</span>
-                            <span className="font-bold text-white">{momoConfig.accountName}</span>
+                            <span className="text-slate-400">Ngân hàng:</span>
+                            <span className="font-bold text-white">BIDV - PGD Thanh Bình</span>
                         </div>
                         <div className="flex items-center justify-between">
-                            <span className="text-slate-400">Số điện thoại MoMo:</span>
-                            <div className="flex items-center gap-1.5 font-mono font-bold text-pink-400">
-                                <span>{momoConfig.phone}</span>
+                            <span className="text-slate-400">Chủ tài khoản:</span>
+                            <span className="font-bold text-white">TRAN THI THUY QUYEN</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <span className="text-slate-400">Số tài khoản BIDV:</span>
+                            <div className="flex items-center gap-1.5 font-mono font-bold text-cyan-300">
+                                <span>6910924374</span>
                                 <button
                                     type="button"
-                                    onClick={() => handleCopy(momoConfig.phone, 'phone')}
-                                    className="p-1 text-slate-400 hover:text-white"
-                                    title="Sao chép số điện thoại"
+                                    onClick={() => handleCopy('6910924374', 'accountNo')}
+                                    className="flex items-center gap-1 rounded bg-cyan-500/20 px-1.5 py-0.5 text-[10px] text-cyan-200 transition hover:bg-cyan-500/40"
+                                    title="Sao chép số tài khoản"
                                 >
-                                    {copiedPhone ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                                    {copiedAccountNo ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                                    <span>{copiedAccountNo ? 'Đã chép' : 'Sao chép'}</span>
                                 </button>
                             </div>
                         </div>
                         <div className="flex items-center justify-between">
                             <span className="text-slate-400">Số tiền thanh toán:</span>
-                            <span className="font-mono text-base font-extrabold text-pink-400">
-                                {formatMoney(invoice.totalAmount)}
-                            </span>
+                            <div className="flex items-center gap-1.5">
+                                <span className="font-mono text-base font-extrabold text-pink-400">
+                                    {formatMoney(invoice.totalAmount)}
+                                </span>
+                                <button
+                                    type="button"
+                                    onClick={() => handleCopy(invoice.totalAmount, 'amount')}
+                                    className="p-1 text-slate-400 hover:text-white"
+                                    title="Sao chép số tiền"
+                                >
+                                    {copiedAmount ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                                </button>
+                            </div>
                         </div>
 
                         {/* Transfer Syntax with Copy */}
                         <div className="mt-3 rounded-lg border border-pink-400/30 bg-pink-500/10 p-3">
                             <div className="flex items-center justify-between">
                                 <span className="text-[11px] font-bold uppercase text-pink-300">
-                                    Cú pháp chuyển khoản bắt buộc:
+                                    Nội dung chuyển khoản bắt buộc:
                                 </span>
                                 <button
                                     type="button"
@@ -410,14 +431,14 @@ export default function OwnerMonthlyBillingSection({ onRefresh }) {
                     {/* Optional Note / Transaction Reference */}
                     <div>
                         <label className="block text-xs font-semibold text-slate-300 mb-1">
-                            Ghi chú hoặc mã giao dịch MoMo (Tùy chọn):
+                            Ghi chú hoặc mã giao dịch ngân hàng (Tùy chọn):
                         </label>
                         <input
                             type="text"
-                            placeholder="Ví dụ: Đã chuyển qua MoMo lúc 14:30 hoặc Mã GD: 123456"
+                            placeholder="Ví dụ: Đã chuyển khoản BIDV lúc 10:30 sáng hoặc Mã GD: 987654"
                             value={proofNote}
                             onChange={(e) => setProofNote(e.target.value)}
-                            className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:border-pink-500 focus:outline-none"
+                            className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none"
                         />
                     </div>
 

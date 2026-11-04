@@ -7,8 +7,13 @@ import AppError from "../utils/app-error.js";
 import { createNotification } from "./notification.service.js";
 import { emitToUser, broadcastSocket } from "./socket.service.js";
 
-const MOMO_PHONE = "0909000001";
-const MOMO_RECIPIENT_NAME = "CÔNG TY TNHH LOCKSHIP VIỆT NAM";
+export const MOMO_PHONE = "0909000001";
+export const MOMO_RECIPIENT_NAME = "LOCKSHIP";
+
+export const BIDV_BANK = "BIDV";
+export const BIDV_ACCOUNT_NO = "6910924374";
+export const BIDV_ACCOUNT_NAME = "TRAN THI THUY QUYEN";
+export const BIDV_BRANCH = "PGD Thanh Bình";
 
 function getCurrentMonthString() {
     const now = new Date();
@@ -17,14 +22,28 @@ function getCurrentMonthString() {
     return `${year}-${month}`;
 }
 
-function generateTransferSyntax(ownerName, monthString) {
+export function generateTransferSyntax(ownerName, monthString = "2026-10") {
     const cleanName = (ownerName || "OWNER")
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^A-Za-z0-9]/g, "")
+        .replace(/[^A-Za-z0-9\s]/g, "")
+        .trim()
+        .replace(/\s+/g, " ")
         .toUpperCase();
-    const cleanMonth = String(monthString || "").replace(/[^0-9]/g, "");
-    return `LOCKSHIP ${cleanName} ${cleanMonth}`;
+
+    let monthTag = "T10";
+    if (monthString && typeof monthString === "string") {
+        if (/^T\d+$/i.test(monthString.trim())) {
+            monthTag = monthString.trim().toUpperCase();
+        } else {
+            const parts = monthString.split("-");
+            const m = parts.length > 1 ? parseInt(parts[1], 10) : parseInt(parts[0], 10);
+            if (!isNaN(m) && m >= 1 && m <= 12) {
+                monthTag = `T${m}`;
+            }
+        }
+    }
+    return `LOCKSHIP ${cleanName} ${monthTag}`;
 }
 
 /**
@@ -156,7 +175,7 @@ export async function getOwnerCurrentInvoice(ownerId, requestedMonth) {
         throw new AppError("Invalid Owner ID.", 400);
     }
 
-    const month = requestedMonth || getCurrentMonthString();
+    const month = requestedMonth || "2026-10";
     let invoice = null;
     let owner = null;
 
@@ -187,8 +206,13 @@ export async function getOwnerCurrentInvoice(ownerId, requestedMonth) {
         };
     }
 
-    const qrUrl = `2|99|${MOMO_PHONE}|${MOMO_RECIPIENT_NAME}|info@lockship.vn|0|0|${invoice.totalAmount}|${invoice.transferSyntax}|transfer_mycode`;
+    const currentSyntax = invoice.transferSyntax || defaultSyntax;
+    const cleanAmount = invoice.totalAmount || 0;
+
+    const qrUrl = `2|99|${MOMO_PHONE}|${MOMO_RECIPIENT_NAME}|info@lockship.vn|0|0|${cleanAmount}|${currentSyntax}|transfer_mycode`;
     const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrUrl)}`;
+
+    const vietqrUrl = `https://img.vietqr.io/image/BIDV-${BIDV_ACCOUNT_NO}-compact2.png?amount=${cleanAmount}&addInfo=${encodeURIComponent(currentSyntax)}&accountName=${encodeURIComponent(BIDV_ACCOUNT_NAME)}`;
 
     return {
         invoice,
@@ -197,6 +221,16 @@ export async function getOwnerCurrentInvoice(ownerId, requestedMonth) {
             accountName: MOMO_RECIPIENT_NAME,
             qrUrl,
             qrImageUrl,
+        },
+        vietqrConfig: {
+            bankId: BIDV_BANK,
+            bankName: "Ngân hàng TMCP Đầu tư và Phát triển Việt Nam (BIDV)",
+            branch: BIDV_BRANCH,
+            accountNo: BIDV_ACCOUNT_NO,
+            accountName: BIDV_ACCOUNT_NAME,
+            qrImageUrl: vietqrUrl,
+            transferSyntax: currentSyntax,
+            amount: cleanAmount,
         },
     };
 }
@@ -218,7 +252,7 @@ export async function getOwnerInvoiceHistory(ownerId) {
 }
 
 /**
- * Owner reports payment made via MoMo.
+ * Owner reports payment made via VietQR / MoMo.
  */
 export async function notifyInvoicePaid(invoiceId, ownerId, { paymentProofNote = "" } = {}) {
     if (!mongoose.isValidObjectId(invoiceId)) {
@@ -258,8 +292,8 @@ export async function notifyInvoicePaid(invoiceId, ownerId, { paymentProofNote =
             await createNotification({
                 userId: admin._id,
                 type: "invoice_payment_pending",
-                title: "Chủ tủ báo đã thanh toán cước MoMo",
-                message: `Chủ tủ ${owner?.name || "Owner"} vừa báo thanh toán cước tháng ${invoice.month} (${invoice.totalAmount.toLocaleString("vi-VN")} đ) qua MoMo. Vui lòng đối soát và duyệt.`,
+                title: "Chủ tủ báo đã thanh toán cước",
+                message: `Chủ tủ ${owner?.name || "Owner"} vừa báo thanh toán cước tháng ${invoice.month} (${invoice.totalAmount.toLocaleString("vi-VN")} đ) qua VietQR BIDV. Vui lòng đối soát và duyệt.`,
                 isRead: false,
             });
         }
@@ -314,18 +348,18 @@ export async function getAdminInvoices({ month, status, search = "" } = {}) {
 
     const filteredInvoices = search
         ? invoices.filter((inv) => {
-              const name = inv.ownerId?.name || "";
-              const email = inv.ownerId?.email || "";
-              const phone = inv.ownerId?.phone || "";
-              const syntax = inv.transferSyntax || "";
-              const q = search.toLowerCase();
-              return (
-                  name.toLowerCase().includes(q) ||
-                  email.toLowerCase().includes(q) ||
-                  phone.toLowerCase().includes(q) ||
-                  syntax.toLowerCase().includes(q)
-              );
-          })
+            const name = inv.ownerId?.name || "";
+            const email = inv.ownerId?.email || "";
+            const phone = inv.ownerId?.phone || "";
+            const syntax = inv.transferSyntax || "";
+            const q = search.toLowerCase();
+            return (
+                name.toLowerCase().includes(q) ||
+                email.toLowerCase().includes(q) ||
+                phone.toLowerCase().includes(q) ||
+                syntax.toLowerCase().includes(q)
+            );
+        })
         : invoices;
 
     // Summary aggregates

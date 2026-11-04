@@ -14,14 +14,15 @@ function buildQrMetadata(boxId) {
     return { qrUrl, qrImageUrl };
 }
 
-function generateTransferSyntax(ownerName, monthString) {
+function generateTransferSyntax(ownerName) {
     const cleanName = (ownerName || "OWNER")
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^A-Za-z0-9]/g, "")
+        .replace(/[^A-Za-z0-9\s]/g, "")
+        .trim()
+        .replace(/\s+/g, " ")
         .toUpperCase();
-    const cleanMonth = String(monthString || "").replace(/[^0-9]/g, "");
-    return `LOCKSHIP ${cleanName} ${cleanMonth}`;
+    return `LOCKSHIP ${cleanName} T10`;
 }
 
 const SEED_OWNERS = [
@@ -37,9 +38,9 @@ const SEED_OWNERS = [
         usagesCount: 3,
         status: "UNPAID",
         dates: [
-            { day: "05", time: "11:20", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-1011" },
-            { day: "14", time: "09:45", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202611-1012" },
-            { day: "24", time: "16:30", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-1013" },
+            { day: "05", time: "11:20", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1011" },
+            { day: "14", time: "09:45", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-1012" },
+            { day: "24", time: "16:30", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1013" },
         ],
     },
     {
@@ -54,11 +55,11 @@ const SEED_OWNERS = [
         usagesCount: 5,
         status: "UNPAID",
         dates: [
-            { day: "03", time: "09:15", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-2021" },
-            { day: "08", time: "14:30", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202611-2022" },
-            { day: "15", time: "18:40", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-2023" },
-            { day: "21", time: "10:20", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202611-2024" },
-            { day: "27", time: "16:05", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-2025" },
+            { day: "03", time: "09:15", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-2021" },
+            { day: "08", time: "14:30", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-2022" },
+            { day: "15", time: "18:40", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-2023" },
+            { day: "21", time: "10:20", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-2024" },
+            { day: "27", time: "16:05", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-2025" },
         ],
     },
     {
@@ -73,9 +74,9 @@ const SEED_OWNERS = [
         usagesCount: 3,
         status: "UNPAID",
         dates: [
-            { day: "04", time: "10:15", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-3031" },
-            { day: "13", time: "15:20", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202611-3032" },
-            { day: "22", time: "17:40", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-3033" },
+            { day: "04", time: "10:15", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-3031" },
+            { day: "13", time: "15:20", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-3032" },
+            { day: "22", time: "17:40", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-3033" },
         ],
     },
     {
@@ -90,9 +91,9 @@ const SEED_OWNERS = [
         usagesCount: 3,
         status: "UNPAID",
         dates: [
-            { day: "06", time: "08:50", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-4041" },
-            { day: "16", time: "14:10", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202611-4042" },
-            { day: "25", time: "11:35", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-4043" },
+            { day: "06", time: "08:50", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-4041" },
+            { day: "16", time: "14:10", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-4042" },
+            { day: "25", time: "11:35", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-4043" },
         ],
     },
     {
@@ -107,10 +108,10 @@ const SEED_OWNERS = [
         usagesCount: 4,
         status: "UNPAID",
         dates: [
-            { day: "04", time: "08:30", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-5051" },
-            { day: "11", time: "12:15", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202611-5052" },
-            { day: "18", time: "17:50", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-5053" },
-            { day: "26", time: "15:10", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202611-5054" },
+            { day: "04", time: "08:30", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-5051" },
+            { day: "11", time: "12:15", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-5052" },
+            { day: "18", time: "17:50", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-5053" },
+            { day: "26", time: "15:10", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-5054" },
         ],
     },
     {
@@ -125,8 +126,8 @@ const SEED_OWNERS = [
         usagesCount: 2,
         status: "UNPAID",
         dates: [
-            { day: "07", time: "09:40", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-6061" },
-            { day: "21", time: "16:15", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202611-6062" },
+            { day: "07", time: "09:40", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-6061" },
+            { day: "21", time: "16:15", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-6062" },
         ],
     },
     {
@@ -141,7 +142,7 @@ const SEED_OWNERS = [
         usagesCount: 1,
         status: "UNPAID",
         dates: [
-            { day: "12", time: "14:20", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-7071" },
+            { day: "12", time: "14:20", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-7071" },
         ],
     },
     {
@@ -156,8 +157,8 @@ const SEED_OWNERS = [
         usagesCount: 2,
         status: "UNPAID",
         dates: [
-            { day: "06", time: "10:00", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-8081" },
-            { day: "20", time: "15:45", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202611-8082" },
+            { day: "06", time: "10:00", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-8081" },
+            { day: "20", time: "15:45", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-8082" },
         ],
     },
     {
@@ -172,10 +173,10 @@ const SEED_OWNERS = [
         usagesCount: 4,
         status: "UNPAID",
         dates: [
-            { day: "03", time: "11:00", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-9091" },
-            { day: "10", time: "16:20", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202611-9092" },
-            { day: "17", time: "08:45", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-9093" },
-            { day: "25", time: "14:30", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202611-9094" },
+            { day: "03", time: "11:00", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-9091" },
+            { day: "10", time: "16:20", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-9092" },
+            { day: "17", time: "08:45", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-9093" },
+            { day: "25", time: "14:30", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-9094" },
         ],
     },
     {
@@ -190,8 +191,8 @@ const SEED_OWNERS = [
         usagesCount: 2,
         status: "UNPAID",
         dates: [
-            { day: "09", time: "13:15", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-1001" },
-            { day: "23", time: "17:00", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202611-1002" },
+            { day: "09", time: "13:15", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1001" },
+            { day: "23", time: "17:00", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-1002" },
         ],
     },
     {
@@ -205,13 +206,13 @@ const SEED_OWNERS = [
         location: { lat: 10.0356, lng: 105.7791 },
         usagesCount: 5,
         status: "PENDING_VERIFICATION",
-        proofNote: "Đã chuyển khoản MoMo 25.000đ lúc 10:30 sáng nay với cú pháp LOCKSHIP LECHAUBAONGAN 202611.",
+        proofNote: "Đã chuyển khoản VietQR BIDV 25.000đ lúc 10:30 sáng với cú pháp LOCKSHIP LE CHAU BAO NGAN T10.",
         dates: [
-            { day: "02", time: "08:15", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-1111" },
-            { day: "07", time: "13:40", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202611-1112" },
-            { day: "14", time: "17:30", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-1113" },
-            { day: "20", time: "11:10", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202611-1114" },
-            { day: "26", time: "15:45", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-1115" },
+            { day: "02", time: "08:15", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1111" },
+            { day: "07", time: "13:40", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-1112" },
+            { day: "14", time: "17:30", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1113" },
+            { day: "20", time: "11:10", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-1114" },
+            { day: "26", time: "15:45", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1115" },
         ],
     },
     {
@@ -226,9 +227,9 @@ const SEED_OWNERS = [
         usagesCount: 3,
         status: "UNPAID",
         dates: [
-            { day: "05", time: "10:30", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-1221" },
-            { day: "14", time: "15:00", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202611-1222" },
-            { day: "23", time: "18:15", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-1223" },
+            { day: "05", time: "10:30", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1221" },
+            { day: "14", time: "15:00", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-1222" },
+            { day: "23", time: "18:15", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1223" },
         ],
     },
     {
@@ -243,10 +244,10 @@ const SEED_OWNERS = [
         usagesCount: 4,
         status: "UNPAID",
         dates: [
-            { day: "04", time: "09:10", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-1331" },
-            { day: "12", time: "14:45", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202611-1332" },
-            { day: "19", time: "16:30", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-1333" },
-            { day: "27", time: "11:20", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202611-1334" },
+            { day: "04", time: "09:10", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1331" },
+            { day: "12", time: "14:45", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-1332" },
+            { day: "19", time: "16:30", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1333" },
+            { day: "27", time: "11:20", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-1334" },
         ],
     },
     {
@@ -260,14 +261,14 @@ const SEED_OWNERS = [
         location: { lat: 10.0389, lng: 105.7878 },
         usagesCount: 5,
         status: "PAID",
-        proofNote: "Admin đã xác nhận đối soát khớp lệnh MoMo thành công.",
-        paidAt: new Date("2026-11-25T16:00:00.000Z"),
+        proofNote: "Admin đã xác nhận đối soát khớp lệnh VietQR BIDV thành công.",
+        paidAt: new Date("2026-10-25T16:00:00.000Z"),
         dates: [
-            { day: "01", time: "10:00", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-1441" },
-            { day: "06", time: "14:15", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202611-1442" },
-            { day: "12", time: "16:40", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-1443" },
-            { day: "18", time: "09:30", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202611-1444" },
-            { day: "24", time: "15:20", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-1445" },
+            { day: "01", time: "10:00", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1441" },
+            { day: "06", time: "14:15", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-1442" },
+            { day: "12", time: "16:40", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1443" },
+            { day: "18", time: "09:30", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-1444" },
+            { day: "24", time: "15:20", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1445" },
         ],
     },
     {
@@ -282,11 +283,11 @@ const SEED_OWNERS = [
         usagesCount: 5,
         status: "UNPAID",
         dates: [
-            { day: "03", time: "08:45", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-1551" },
-            { day: "09", time: "13:20", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202611-1552" },
-            { day: "15", time: "17:15", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-1553" },
-            { day: "22", time: "10:50", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202611-1554" },
-            { day: "28", time: "16:40", action: "DELIVERED_TO_LOCKER", ord: "ORD-202611-1555" },
+            { day: "03", time: "08:45", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1551" },
+            { day: "09", time: "13:20", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-1552" },
+            { day: "15", time: "17:15", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1553" },
+            { day: "22", time: "10:50", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-1554" },
+            { day: "28", time: "16:40", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1555" },
         ],
     },
 ];
@@ -378,7 +379,7 @@ async function main() {
 
     // Unified default password hash for "123456" / "Lockship@123"
     const hashedPassword = await bcrypt.hash("Lockship@123", 10);
-    const currentMonth = "2026-11";
+    const currentMonth = "2026-10";
 
     console.log(`\n=== 1. SEEDING 15 OWNERS & ASSIGNED BOXES ===`);
 
@@ -442,7 +443,7 @@ async function main() {
                 isOnline: true,
                 qrUrl,
                 qrImageUrl,
-                installedAt: new Date("2026-10-15T08:00:00Z"),
+                installedAt: new Date("2026-09-25T08:00:00Z"),
                 createdAt: new Date(),
                 updatedAt: new Date(),
             });
@@ -470,7 +471,7 @@ async function main() {
             console.log(`[*] Updated Box ${item.boxCode} -> Owner ${item.name}`);
         }
 
-        // C. Upsert MonthlyInvoice for 2026-11 with SPACED OUT usageHistory dates
+        // C. Upsert MonthlyInvoice for 2026-10 with SPACED OUT usageHistory dates
         const totalAmount = item.usagesCount * 5000;
         const transferSyntax = generateTransferSyntax(item.name, currentMonth);
 
@@ -482,7 +483,7 @@ async function main() {
             actionType: d.action,
             orderReference: d.ord,
             cost: 5000,
-            usedAt: new Date(`2026-11-${d.day}T${d.time}:00.000Z`),
+            usedAt: new Date(`2026-10-${d.day}T${d.time}:00.000Z`),
         }));
 
         const existingInvoice = await invoicesCollection.findOne({
@@ -583,3 +584,4 @@ async function main() {
 }
 
 main().catch(console.error);
+

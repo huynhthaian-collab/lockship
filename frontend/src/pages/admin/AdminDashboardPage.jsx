@@ -14,6 +14,7 @@ import { adminApi } from '../../services/adminApi.js'
 import { feedbackApi } from '../../services/feedbackApi.js'
 import AdminBoxInstallationSection from '../../components/admin/AdminBoxInstallationSection.jsx'
 import AdminBillingManagementSection from '../../components/admin/AdminBillingManagementSection.jsx'
+import AdminRevenueReportSection from '../../components/admin/AdminRevenueReportSection.jsx'
 
 function AdminMetricCard({ to, label, value, detail, icon: Icon, tone = 'blue' }) {
     const toneStyles = {
@@ -595,7 +596,10 @@ export default function AdminDashboardPage() {
             {/* Yêu cầu Đăng ký & Nghiệm thu Lắp đặt Tủ Khóa */}
             <AdminBoxInstallationSection onActionCompleted={() => refresh(true)} />
 
-            {/* Quản lý Cước & Thanh toán Tháng (MoMo QR) */}
+            {/* Báo cáo Doanh thu & Cước phí (Biểu đồ tần suất & Bảng đối soát 15 Owner) */}
+            <AdminRevenueReportSection onActionCompleted={() => refresh(true)} />
+
+            {/* Quản lý Cước & Thanh toán Tháng (MoMo / VietQR BIDV) */}
             <AdminBillingManagementSection onActionCompleted={() => refresh(true)} />
         </AdminPage>
     )

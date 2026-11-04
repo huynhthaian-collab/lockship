@@ -236,7 +236,7 @@ export default function AdminBillingManagementSection({ onActionCompleted }) {
                         className="rounded-lg border border-white/10 bg-[#0f172a] px-3 py-1.5 text-xs text-slate-200 focus:border-cyan-400 focus:outline-none"
                     >
                         <option value="ALL">Tất cả trạng thái</option>
-                        <option value="PENDING_VERIFICATION">Đang chờ duyệt MoMo</option>
+                        <option value="PENDING_VERIFICATION">Đang chờ đối soát (VietQR BIDV / MoMo)</option>
                         <option value="UNPAID">Chưa thanh toán</option>
                         <option value="PAID">Đã thanh toán (PAID)</option>
                     </select>
@@ -247,8 +247,9 @@ export default function AdminBillingManagementSection({ onActionCompleted }) {
                         className="rounded-lg border border-white/10 bg-[#0f172a] px-3 py-1.5 text-xs text-slate-200 focus:border-cyan-400 focus:outline-none"
                     >
                         <option value="ALL">Tất cả các tháng</option>
+                        <option value="2026-10">Tháng 10/2026 (Kỳ chuẩn)</option>
                         <option value="2026-11">Tháng 11/2026</option>
-                        <option value="2026-10">Tháng 10/2026</option>
+                        <option value="2026-09">Tháng 09/2026</option>
                     </select>
                 </div>
 
@@ -365,7 +366,7 @@ export default function AdminBillingManagementSection({ onActionCompleted }) {
                                 </span>
                             </p>
                             <p>
-                                <strong>Cú pháp MoMo:</strong>{' '}
+                                <strong>Cú pháp Chuyển khoản:</strong>{' '}
                                 <span className="font-mono text-cyan-300 font-bold">
                                     {verifyingInvoice.transferSyntax}
                                 </span>
@@ -385,7 +386,7 @@ export default function AdminBillingManagementSection({ onActionCompleted }) {
                                 type="text"
                                 value={adminNote}
                                 onChange={(e) => setAdminNote(e.target.value)}
-                                placeholder="Ví dụ: Đã kiểm tra sao kê MoMo khớp số tiền"
+                                placeholder="Ví dụ: Đã kiểm tra sao kê VietQR BIDV khớp số tiền"
                                 className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:border-emerald-400 focus:outline-none"
                             />
                         </div>
