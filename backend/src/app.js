@@ -23,6 +23,8 @@ import { readAuthCookie } from "./utils/auth-cookie.js";
 
 const app = express();
 
+app.set("trust proxy", 1);
+
 app.disable("x-powered-by");
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 

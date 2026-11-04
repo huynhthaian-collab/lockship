@@ -9,10 +9,11 @@ const standardOptions = {
     skip: isTestEnv,
 };
 
-function createAuthRateLimiter({ developmentLimit, productionLimit, message, errorCode }) {
+function createAuthRateLimiter({ developmentLimit = 100, productionLimit = 100, message, errorCode, skipSuccessfulRequests = true }) {
     return rateLimit({
         ...standardOptions,
         limit: env.NODE_ENV === "development" ? developmentLimit : productionLimit,
+        skipSuccessfulRequests,
         message: {
             success: false,
             message,
@@ -32,29 +33,35 @@ export const apiRateLimiter = rateLimit({
 });
 
 export const loginRateLimiter = createAuthRateLimiter({
-    developmentLimit: 20,
-    productionLimit: 10,
+    developmentLimit: 100,
+    productionLimit: 100,
+    skipSuccessfulRequests: true,
     message: "Too many login attempts. Please try again later.",
     errorCode: "AUTH_RATE_LIMITED",
 });
 
+export const authLimiter = loginRateLimiter;
+
 export const registerRateLimiter = createAuthRateLimiter({
-    developmentLimit: 10,
-    productionLimit: 5,
+    developmentLimit: 100,
+    productionLimit: 100,
+    skipSuccessfulRequests: true,
     message: "Too many registration attempts. Please try again later.",
     errorCode: "REGISTER_RATE_LIMITED",
 });
 
 export const passwordResetRateLimiter = createAuthRateLimiter({
-    developmentLimit: 10,
-    productionLimit: 5,
+    developmentLimit: 100,
+    productionLimit: 100,
+    skipSuccessfulRequests: true,
     message: "Too many password reset requests. Please try again later.",
     errorCode: "PASSWORD_RESET_RATE_LIMITED",
 });
 
 export const otpVerificationRateLimiter = createAuthRateLimiter({
-    developmentLimit: 20,
-    productionLimit: 10,
+    developmentLimit: 100,
+    productionLimit: 100,
+    skipSuccessfulRequests: true,
     message: "Too many verification attempts. Please try again later.",
     errorCode: "OTP_RATE_LIMITED",
 });

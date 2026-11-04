@@ -59,3 +59,4 @@ if (fs.existsSync(fullDbPath)) {
 console.log("✓ Seed fixtures updated successfully in backend/seed-data/!");
 await mongoose.disconnect();
 process.exit(0);
+

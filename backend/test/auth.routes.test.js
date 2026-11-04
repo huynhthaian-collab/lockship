@@ -109,7 +109,7 @@ test("Google OAuth redirects safely when configuration is missing or state is in
 test("session checks do not consume login quota and real login attempts remain limited", {
     skip: env.NODE_ENV === "test",
 }, async () => {
-    const loginLimit = env.NODE_ENV === "development" ? 20 : 10;
+    const loginLimit = 100;
 
     for (let attempt = 0; attempt < loginLimit + 5; attempt += 1) {
         const response = await fetch(`${baseUrl}/api/auth/me`);

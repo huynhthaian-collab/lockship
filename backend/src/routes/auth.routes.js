@@ -13,7 +13,7 @@ import {
 
 const router = Router();
 
-router.get("/google", loginRateLimiter, authController.googleLogin);
+router.get("/google", authController.googleLogin);
 router.get("/google/callback", authController.googleCallback);
 router.post(
     "/google/complete-profile",
