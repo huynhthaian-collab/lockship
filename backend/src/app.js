@@ -18,6 +18,7 @@ import vehicleRoutes from "./routes/vehicle.routes.js";
 import publicBoxRoutes from "./routes/public-box.routes.js";
 import ownerAccessRoutes from "./routes/owner-access.routes.js";
 import boxRoutes from "./routes/box.routes.js";
+import invoiceRoutes from "./routes/invoice.routes.js";
 import { sendSuccess } from "./utils/api-response.js";
 import { readAuthCookie } from "./utils/auth-cookie.js";
 
@@ -71,6 +72,10 @@ app.use("/api/public/boxes", publicBoxRoutes);
 app.use("/api/owner/access-requests", ownerAccessRoutes);
 app.use("/api/boxes", boxRoutes);
 app.use("/api/v1/boxes", boxRoutes);
+app.use("/api/admin/boxes", boxRoutes);
+app.use("/api/invoices", invoiceRoutes);
+app.use("/api/v1/invoices", invoiceRoutes);
+app.use("/api/admin/invoices", invoiceRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

@@ -92,4 +92,26 @@ export const boxApi = {
     async getBoxQr(boxId) {
         return dataOf(await apiClient.get(`/boxes/${boxId}/qr`))
     },
+    async listPendingInstallations() {
+        return dataOf(await apiClient.get('/boxes/pending-installations')).boxes ?? []
+    },
+    async confirmInstallation(boxId, payload) {
+        const response = await apiClient.patch(`/boxes/${boxId}/confirm-installation`, payload)
+        return response.data ?? {}
+    },
+}
+
+export const adminInvoiceApi = {
+    async listInvoices(params = {}) {
+        const query = new URLSearchParams()
+        if (params.month && params.month !== 'ALL') query.append('month', params.month)
+        if (params.status && params.status !== 'ALL') query.append('status', params.status)
+        if (params.search) query.append('search', params.search)
+        const qs = query.toString() ? `?${query.toString()}` : ''
+        return dataOf(await apiClient.get(`/admin/invoices${qs}`))
+    },
+    async verifyPayment(invoiceId, payload = {}) {
+        const response = await apiClient.patch(`/admin/invoices/${invoiceId}/verify-payment`, payload)
+        return response.data ?? {}
+    },
 }

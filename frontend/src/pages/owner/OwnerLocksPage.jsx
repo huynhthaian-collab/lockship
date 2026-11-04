@@ -23,6 +23,7 @@ import InteractiveMapPicker from '../../components/gis/InteractiveMapPicker.jsx'
 import { useSocketEvent } from '../../hooks/useSocketEvent.js'
 import { deviceApi, vehicleApi } from '../../services/ownerApi.js'
 import { LOCKSHIP_BOXES } from '../../data/smartLockerBoxes.js'
+import OwnerBoxRegistrationSection from '../../components/box/OwnerBoxRegistrationSection.jsx'
 
 function formatDate(value) {
     return value ? new Date(value).toLocaleString('vi-VN') : 'Chưa có dữ liệu'
@@ -452,6 +453,9 @@ export default function OwnerLocksPage() {
                             </>
                         )}
                     </Card>
+
+                    {/* Owner Box Registration & Warehouse Section */}
+                    <OwnerBoxRegistrationSection onRefresh={refresh} />
                 </>
             )}
         </OwnerPage>

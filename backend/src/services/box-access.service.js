@@ -10,6 +10,7 @@ import AppError from "../utils/app-error.js";
 import { emitToRequest, emitToUser } from "./socket.service.js";
 import { createNotification } from "./notification.service.js";
 import { sendBoxAccessNotificationEmail } from "./email.service.js";
+import { recordBoxUsage } from "./billing.service.js";
 
 // Canonical Box list for metadata enrichment
 const KNOWN_BOXES = {
@@ -293,6 +294,15 @@ export async function respondAccessRequest(ownerId, requestId, { action, orderId
         request.respondedAt = new Date();
         request.notes = notes || "Đã phê duyệt và cấp mã mở tủ cho shipper.";
         await request.save();
+
+        recordBoxUsage({
+            boxId: request.boxId,
+            ownerId,
+            actionType: "GUEST_QR_ACCESS",
+            orderReference: request.orderId ? "ORDER-" + String(request.orderId).slice(-6).toUpperCase() : "REQ-" + String(request._id).slice(-6).toUpperCase(),
+            cost: 5000,
+            details: { requestId: request._id, shipperPhone: request.shipperPhone },
+        }).catch(() => null);
 
         // Push real-time event to Shipper's private request room
         emitToRequest(request._id.toString(), "request_approved", {

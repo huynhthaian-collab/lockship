@@ -12,6 +12,8 @@ import SpatialTiltCard from '../../components/spatial/SpatialTiltCard.jsx'
 import { useSocketEvent } from '../../hooks/useSocketEvent.js'
 import { adminApi } from '../../services/adminApi.js'
 import { feedbackApi } from '../../services/feedbackApi.js'
+import AdminBoxInstallationSection from '../../components/admin/AdminBoxInstallationSection.jsx'
+import AdminBillingManagementSection from '../../components/admin/AdminBillingManagementSection.jsx'
 
 function AdminMetricCard({ to, label, value, detail, icon: Icon, tone = 'blue' }) {
     const toneStyles = {
@@ -589,6 +591,12 @@ export default function AdminDashboardPage() {
                     </div>
                 )}
             </Card>
+
+            {/* Yêu cầu Đăng ký & Nghiệm thu Lắp đặt Tủ Khóa */}
+            <AdminBoxInstallationSection onActionCompleted={() => refresh(true)} />
+
+            {/* Quản lý Cước & Thanh toán Tháng (MoMo QR) */}
+            <AdminBillingManagementSection onActionCompleted={() => refresh(true)} />
         </AdminPage>
     )
 }

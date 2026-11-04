@@ -7,6 +7,7 @@ import AppError from "../utils/app-error.js";
 import { createDeliveryArrivedNotification, createNotification, createUnlockCodeNotification } from "./notification.service.js";
 import { getActiveUnlockCode, issueUnlockCode, verifyUnlockCode } from "./unlock-code.service.js";
 import { emitToUser, broadcastSocket } from "./socket.service.js";
+import { recordBoxUsage } from "./billing.service.js";
 
 const editableFields = ["pickupAddress", "deliveryAddress", "description"];
 
@@ -346,7 +347,7 @@ export async function completeDelivery(shipperId, deliveryId) {
         throw new AppError("The IoT device must confirm a successful unlock before completion.", 409, null, errorCode);
     }
 
-    return transitionDelivery({
+    const completed = await transitionDelivery({
         deliveryId,
         scope: { shipperId },
         allowedStatuses: ["authorized"],
@@ -354,6 +355,17 @@ export async function completeDelivery(shipperId, deliveryId) {
         timestamps: { completedAt: new Date() },
         conditions: { unlockStatus: "succeeded" },
     });
+
+    recordBoxUsage({
+        boxId: delivery.boxId || "",
+        ownerId: delivery.ownerId,
+        actionType: "ORDER_DELIVERED",
+        orderReference: "ORDER-" + String(delivery._id).slice(-6).toUpperCase(),
+        cost: 5000,
+        details: { deliveryId: delivery._id, shipperId },
+    }).catch(() => null);
+
+    return completed;
 }
 
 export async function cancelDelivery(ownerId, deliveryId) {

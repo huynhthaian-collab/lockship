@@ -1,11 +1,16 @@
 import mongoose from "mongoose";
+import Box from "../models/box.model.js";
 import IoTDevice from "../models/iot-device.model.js";
+import User from "../models/user.model.js";
 import AppError from "../utils/app-error.js";
+import { createNotification } from "../services/notification.service.js";
+import { emitToUser, broadcastSocket } from "../services/socket.service.js";
 
 function buildQrMetadata(boxId, origin) {
-    const baseHost = origin && !origin.includes("localhost")
-        ? origin.replace(/\/$/, "")
-        : "https://lockship-gamma.vercel.app";
+    const baseHost =
+        origin && !origin.includes("localhost")
+            ? origin.replace(/\/$/, "")
+            : "https://lockship-gamma.vercel.app";
     const qrUrl = `${baseHost}/public/box-scan/${boxId}`;
     const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(qrUrl)}`;
     return { qrUrl, qrImageUrl };
@@ -16,20 +21,112 @@ function buildQrMetadata(boxId, origin) {
  */
 export async function listBoxes(req, res, next) {
     try {
-        const devices = await IoTDevice.find().populate("ownerId", "name email").sort({ createdAt: -1 });
-        const boxes = devices.map((device) => {
-            const { qrUrl, qrImageUrl } = buildQrMetadata(device.deviceId, req.get("origin"));
+        if (mongoose.connection.readyState === 1) {
+            const boxesFromDb = await Box.find()
+                .populate("ownerId", "name email phone")
+                .sort({ createdAt: -1 });
+
+            if (boxesFromDb && boxesFromDb.length > 0) {
+                const boxes = boxesFromDb.map((b) => {
+                    const { qrUrl, qrImageUrl } = buildQrMetadata(b.boxId, req.get("origin"));
+                    return {
+                        id: b._id,
+                        boxId: b.boxId,
+                        name: b.name,
+                        code: b.code,
+                        status: b.status,
+                        lockStatus: b.lockStatus,
+                        registrationStatus: b.registrationStatus || "ACTIVE",
+                        requestedAddress: b.requestedAddress,
+                        requestedNote: b.requestedNote,
+                        requestedAt: b.requestedAt,
+                        address: b.address,
+                        location: b.location,
+                        totalCompartments: b.totalCompartments,
+                        availableCompartments: b.availableCompartments,
+                        battery: b.battery,
+                        isOnline: b.isOnline,
+                        owner: b.ownerId,
+                        qrUrl: b.qrUrl || qrUrl,
+                        qrImageUrl: b.qrImageUrl || qrImageUrl,
+                        installedAt: b.installedAt,
+                        createdAt: b.createdAt,
+                    };
+                });
+
+                return res.status(200).json({
+                    success: true,
+                    data: { boxes },
+                });
+            }
+
+            // Fallback to IoTDevice collection
+            const devices = await IoTDevice.find()
+                .populate("ownerId", "name email phone")
+                .sort({ createdAt: -1 });
+            const boxes = devices.map((device) => {
+                const { qrUrl, qrImageUrl } = buildQrMetadata(device.deviceId, req.get("origin"));
+                return {
+                    id: device._id,
+                    boxId: device.deviceId,
+                    name: `Tủ khóa thông minh #${device.deviceId}`,
+                    status: device.status === "online" ? "AVAILABLE" : "OFFLINE",
+                    lockStatus: device.lockStatus,
+                    registrationStatus: "ACTIVE",
+                    battery: device.battery,
+                    owner: device.ownerId,
+                    qrUrl,
+                    qrImageUrl,
+                    lastSeen: device.lastSeen,
+                };
+            });
+
+            return res.status(200).json({
+                success: true,
+                data: { boxes },
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: { boxes: [] },
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+/**
+ * List available warehouse boxes for Owner registration (registrationStatus === 'UNASSIGNED')
+ */
+export async function listAvailableBoxes(req, res, next) {
+    try {
+        if (mongoose.connection.readyState !== 1) {
+            return res.status(200).json({ success: true, data: { boxes: [] } });
+        }
+
+        const availableBoxes = await Box.find({
+            $or: [
+                { registrationStatus: "UNASSIGNED" },
+                { ownerId: null, registrationStatus: { $ne: "ACTIVE" } },
+            ],
+        }).sort({ boxId: 1 });
+
+        const boxes = availableBoxes.map((b) => {
+            const { qrUrl, qrImageUrl } = buildQrMetadata(b.boxId, req.get("origin"));
             return {
-                id: device._id,
-                boxId: device.deviceId,
-                name: `Tủ khóa thông minh #${device.deviceId}`,
-                status: device.status,
-                lockStatus: device.lockStatus,
-                battery: device.battery,
-                owner: device.ownerId,
-                qrUrl,
-                qrImageUrl,
-                lastSeen: device.lastSeen,
+                id: b._id,
+                boxId: b.boxId,
+                code: b.code,
+                name: b.name,
+                totalCompartments: b.totalCompartments || 12,
+                availableCompartments: b.availableCompartments || 12,
+                battery: b.battery || 100,
+                status: b.status || "AVAILABLE",
+                registrationStatus: "UNASSIGNED",
+                qrUrl: b.qrUrl || qrUrl,
+                qrImageUrl: b.qrImageUrl || qrImageUrl,
+                description: b.description || "Tủ khóa Lockship thông minh mới trong kho",
             };
         });
 
@@ -43,11 +140,241 @@ export async function listBoxes(req, res, next) {
 }
 
 /**
+ * List boxes owned by the authenticated Owner
+ */
+export async function listMyBoxes(req, res, next) {
+    try {
+        if (mongoose.connection.readyState !== 1) {
+            return res.status(200).json({ success: true, data: { boxes: [] } });
+        }
+
+        const ownerId = req.user.id;
+        const myBoxes = await Box.find({ ownerId }).sort({ createdAt: -1 });
+
+        const boxes = myBoxes.map((b) => {
+            const { qrUrl, qrImageUrl } = buildQrMetadata(b.boxId, req.get("origin"));
+            return {
+                id: b._id,
+                boxId: b.boxId,
+                name: b.name,
+                code: b.code,
+                registrationStatus: b.registrationStatus,
+                requestedAddress: b.requestedAddress,
+                requestedNote: b.requestedNote,
+                requestedAt: b.requestedAt,
+                address: b.address,
+                location: b.location,
+                status: b.status,
+                lockStatus: b.lockStatus,
+                pinCode: b.pinCode,
+                totalCompartments: b.totalCompartments,
+                availableCompartments: b.availableCompartments,
+                battery: b.battery,
+                isOnline: b.isOnline,
+                qrUrl: b.qrUrl || qrUrl,
+                qrImageUrl: b.qrImageUrl || qrImageUrl,
+                installedAt: b.installedAt,
+                createdAt: b.createdAt,
+            };
+        });
+
+        res.status(200).json({
+            success: true,
+            data: { boxes },
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+/**
+ * Owner requests to register an unassigned Box
+ * MANDATORY: requestedAddress is required and must have at least 10 characters.
+ */
+export async function requestBoxRegistration(req, res, next) {
+    try {
+        const boxIdentifier = req.params.boxId || req.params.id;
+        const { requestedAddress, requestedNote } = req.body;
+
+        // Strict Validation: requestedAddress is mandatory (min 10 chars)
+        if (!requestedAddress || typeof requestedAddress !== "string" || requestedAddress.trim().length < 10) {
+            throw new AppError("Địa chỉ đề xuất lắp đặt là bắt buộc và phải có ít nhất 10 ký tự.", 400);
+        }
+
+        const cleanBoxId = String(boxIdentifier || "").trim();
+        const box = await Box.findOne({
+            $or: [
+                { boxId: { $regex: new RegExp(`^${cleanBoxId}$`, "i") } },
+                ...(mongoose.isValidObjectId(cleanBoxId) ? [{ _id: cleanBoxId }] : []),
+            ],
+        });
+
+        if (!box) {
+            throw new AppError("Không tìm thấy tủ khóa yêu cầu.", 404);
+        }
+
+        if (box.ownerId || box.registrationStatus === "ACTIVE" || box.registrationStatus === "PENDING_INSTALLATION") {
+            throw new AppError(
+                "Tủ khóa này đã có chủ sở hữu hoặc đang trong quá trình xét duyệt lắp đặt.",
+                409,
+            );
+        }
+
+        box.ownerId = req.user.id;
+        box.registrationStatus = "PENDING_INSTALLATION";
+        box.requestedAddress = requestedAddress.trim();
+        box.requestedNote = (requestedNote || "").trim();
+        box.requestedAt = new Date();
+
+        await box.save();
+
+        // Notify Admins
+        try {
+            const admins = await User.find({ role: "admin", status: "active" }).select("_id");
+            for (const admin of admins) {
+                await createNotification({
+                    userId: admin._id,
+                    type: "box_registration_requested",
+                    title: "Yêu cầu đăng ký lắp đặt Box mới",
+                    message: `Chủ tủ ${req.user.name} vừa gửi yêu cầu đăng ký tủ ${box.name} (${box.boxId}) tại: ${box.requestedAddress}`,
+                    isRead: false,
+                });
+            }
+        } catch (notifErr) {
+            // Non-blocking
+        }
+
+        broadcastSocket("box:registration_requested", {
+            boxId: box.boxId,
+            boxName: box.name,
+            ownerId: req.user.id,
+            ownerName: req.user.name,
+            requestedAddress: box.requestedAddress,
+            requestedNote: box.requestedNote,
+            requestedAt: box.requestedAt,
+        });
+
+        res.status(200).json({
+            success: true,
+            message: "Yêu cầu đăng ký tủ khóa thành công! Vui lòng chờ Quản trị viên xét duyệt và nghiệm thu lắp đặt.",
+            data: { box },
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+/**
+ * List pending installation requests (Admin only)
+ */
+export async function adminListPendingBoxes(req, res, next) {
+    try {
+        if (mongoose.connection.readyState !== 1) {
+            return res.status(200).json({ success: true, data: { boxes: [] } });
+        }
+
+        const pendingBoxes = await Box.find({
+            registrationStatus: "PENDING_INSTALLATION",
+        })
+            .populate("ownerId", "name email phone")
+            .sort({ requestedAt: -1, createdAt: -1 });
+
+        res.status(200).json({
+            success: true,
+            data: { boxes: pendingBoxes },
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+/**
+ * Admin confirms installation, attaches official GPS coordinates, and activates the Box
+ */
+export async function confirmInstallation(req, res, next) {
+    try {
+        const boxIdentifier = req.params.id || req.params.boxId;
+        const { address, location, note } = req.body;
+
+        const cleanAddress = String(address || "").trim();
+        if (!cleanAddress || cleanAddress.length < 5) {
+            throw new AppError("Địa chỉ nghiệm thu lắp đặt chính thức là bắt buộc và tối thiểu 5 ký tự.", 422);
+        }
+
+        const lat = Number(location?.lat);
+        const lng = Number(location?.lng);
+        if (Number.isNaN(lat) || Number.isNaN(lng)) {
+            throw new AppError("Tọa độ GPS (Vĩ độ lat và Kinh độ lng) phải là số hợp lệ.", 422);
+        }
+
+        const cleanBoxId = String(boxIdentifier || "").trim();
+        const box = await Box.findOne({
+            $or: [
+                { boxId: { $regex: new RegExp(`^${cleanBoxId}$`, "i") } },
+                ...(mongoose.isValidObjectId(cleanBoxId) ? [{ _id: cleanBoxId }] : []),
+            ],
+        });
+
+        if (!box) {
+            throw new AppError("Không tìm thấy tủ khóa.", 404);
+        }
+
+        box.registrationStatus = "ACTIVE";
+        box.status = "AVAILABLE";
+        box.address = cleanAddress;
+        box.location = { lat, lng };
+        box.installedAt = new Date();
+        if (note) {
+            box.description = (box.description ? `${box.description} | ` : "") + `Ghi chú nghiệm thu: ${note.trim()}`;
+        }
+
+        const { qrUrl, qrImageUrl } = buildQrMetadata(box.boxId, req.get("origin"));
+        box.qrUrl = qrUrl;
+        box.qrImageUrl = qrImageUrl;
+
+        await box.save();
+
+        // Notify the Owner
+        if (box.ownerId) {
+            try {
+                await createNotification({
+                    userId: box.ownerId,
+                    type: "box_installation_confirmed",
+                    title: "Tủ khóa đã được nghiệm thu & kích hoạt!",
+                    message: `Tủ khóa ${box.name} (${box.boxId}) của bạn đã được Admin nghiệm thu và kích hoạt thành công tại: ${box.address}.`,
+                    isRead: false,
+                });
+
+                emitToUser(box.ownerId, "box:installation_confirmed", {
+                    boxId: box.boxId,
+                    name: box.name,
+                    status: "AVAILABLE",
+                    registrationStatus: "ACTIVE",
+                    address: box.address,
+                    location: box.location,
+                    installedAt: box.installedAt,
+                });
+            } catch (notifErr) {
+                // Non-blocking
+            }
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Xác nhận nghiệm thu lắp đặt và kích hoạt tủ khóa thành công!",
+            data: { box },
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+/**
  * Create a new Box and generate its QR code (Admin only)
  */
 export async function createBox(req, res, next) {
     try {
-        const { boxId, name, address, ownerId, vehicleId } = req.body;
+        const { boxId, name, address, ownerId, vehicleId, totalCompartments } = req.body;
         const cleanBoxId = String(boxId || "").trim();
 
         if (!cleanBoxId || cleanBoxId.length < 3) {
@@ -56,16 +383,42 @@ export async function createBox(req, res, next) {
 
         const { qrUrl, qrImageUrl } = buildQrMetadata(cleanBoxId, req.get("origin"));
 
-        // If vehicleId and ownerId are provided, also persist as IoTDevice
         let createdDevice = null;
-        if (ownerId && mongoose.isValidObjectId(ownerId) && vehicleId && mongoose.isValidObjectId(vehicleId)) {
-            createdDevice = await IoTDevice.create({
-                deviceId: cleanBoxId,
-                ownerId,
-                vehicleId,
-                status: "offline",
-                lockStatus: "locked",
-            });
+        if (mongoose.connection.readyState === 1) {
+            try {
+                let box = await Box.findOne({ boxId: cleanBoxId });
+                if (!box) {
+                    box = await Box.create({
+                        boxId: cleanBoxId,
+                        name: name || `Lockship Box #${cleanBoxId}`,
+                        address: address || "Vị trí trạm tủ thông minh Lockship",
+                        ownerId: ownerId && mongoose.isValidObjectId(ownerId) ? ownerId : null,
+                        registrationStatus: ownerId ? "ACTIVE" : "UNASSIGNED",
+                        status: "AVAILABLE",
+                        totalCompartments: totalCompartments || 12,
+                        availableCompartments: totalCompartments || 12,
+                        qrUrl,
+                        qrImageUrl,
+                        installedAt: ownerId ? new Date() : null,
+                    });
+                }
+            } catch (err) {
+                // proceed
+            }
+
+            if (ownerId && mongoose.isValidObjectId(ownerId) && vehicleId && mongoose.isValidObjectId(vehicleId)) {
+                try {
+                    createdDevice = await IoTDevice.create({
+                        deviceId: cleanBoxId,
+                        ownerId,
+                        vehicleId,
+                        status: "offline",
+                        lockStatus: "locked",
+                    });
+                } catch (err) {
+                    // proceed
+                }
+            }
         }
 
         res.status(201).json({
@@ -97,11 +450,19 @@ export async function generateBoxQr(req, res, next) {
         const { id } = req.params;
         let cleanBoxId = String(id || "").trim();
 
-        // Check if id is a MongoDB ObjectId in IoTDevice
-        if (mongoose.isValidObjectId(cleanBoxId)) {
-            const device = await IoTDevice.findById(cleanBoxId);
-            if (device) {
-                cleanBoxId = device.deviceId;
+        if (mongoose.connection.readyState === 1 && mongoose.isValidObjectId(cleanBoxId)) {
+            try {
+                const b = await Box.findById(cleanBoxId);
+                if (b) {
+                    cleanBoxId = b.boxId;
+                } else {
+                    const device = await IoTDevice.findById(cleanBoxId);
+                    if (device) {
+                        cleanBoxId = device.deviceId;
+                    }
+                }
+            } catch (err) {
+                // proceed
             }
         }
 
@@ -110,6 +471,14 @@ export async function generateBoxQr(req, res, next) {
         }
 
         const { qrUrl, qrImageUrl } = buildQrMetadata(cleanBoxId, req.get("origin"));
+
+        if (mongoose.connection.readyState === 1) {
+            try {
+                await Box.updateOne({ boxId: cleanBoxId }, { $set: { qrUrl, qrImageUrl } });
+            } catch (err) {
+                // proceed
+            }
+        }
 
         res.status(200).json({
             success: true,
@@ -135,10 +504,19 @@ export async function getBoxQr(req, res, next) {
         const { id } = req.params;
         let cleanBoxId = String(id || "").trim();
 
-        if (mongoose.isValidObjectId(cleanBoxId)) {
-            const device = await IoTDevice.findById(cleanBoxId);
-            if (device) {
-                cleanBoxId = device.deviceId;
+        if (mongoose.connection.readyState === 1 && mongoose.isValidObjectId(cleanBoxId)) {
+            try {
+                const b = await Box.findById(cleanBoxId);
+                if (b) {
+                    cleanBoxId = b.boxId;
+                } else {
+                    const device = await IoTDevice.findById(cleanBoxId);
+                    if (device) {
+                        cleanBoxId = device.deviceId;
+                    }
+                }
+            } catch (err) {
+                // proceed
             }
         }
 

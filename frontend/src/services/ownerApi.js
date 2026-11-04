@@ -148,4 +148,31 @@ export const ownerAccessApi = {
     async respond(requestId, payload) {
         return dataOf(await apiClient.patch(`/owner/access-requests/${requestId}/respond`, payload))
     },
-}
+}
+
+export const boxRegistrationApi = {
+    async listAvailable() {
+        return dataOf(await apiClient.get('/boxes/available')).boxes ?? []
+    },
+    async listMyBoxes() {
+        return dataOf(await apiClient.get('/boxes/my-boxes')).boxes ?? []
+    },
+    async requestRegistration(boxId, payload) {
+        const response = await apiClient.post(`/boxes/${boxId}/request-registration`, payload)
+        return response.data ?? {}
+    },
+}
+
+export const invoiceApi = {
+    async getCurrent(month) {
+        const params = month ? `?month=${month}` : ''
+        return dataOf(await apiClient.get(`/invoices/current${params}`))
+    },
+    async getHistory() {
+        return dataOf(await apiClient.get('/invoices/history')).invoices ?? []
+    },
+    async notifyPaid(invoiceId, payload = {}) {
+        const response = await apiClient.post(`/invoices/${invoiceId}/notify-paid`, payload)
+        return response.data ?? {}
+    },
+}
