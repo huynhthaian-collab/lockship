@@ -127,3 +127,4 @@ const MonthlyInvoice =
     mongoose.model("MonthlyInvoice", monthlyInvoiceSchema, "monthlyinvoices");
 
 export default MonthlyInvoice;
+

@@ -205,6 +205,7 @@ export async function requestBoxRegistration(req, res, next) {
         const box = await Box.findOne({
             $or: [
                 { boxId: { $regex: new RegExp(`^${cleanBoxId}$`, "i") } },
+                { code: { $regex: new RegExp(`^${cleanBoxId}$`, "i") } },
                 ...(mongoose.isValidObjectId(cleanBoxId) ? [{ _id: cleanBoxId }] : []),
             ],
         });
@@ -311,6 +312,7 @@ export async function confirmInstallation(req, res, next) {
         const box = await Box.findOne({
             $or: [
                 { boxId: { $regex: new RegExp(`^${cleanBoxId}$`, "i") } },
+                { code: { $regex: new RegExp(`^${cleanBoxId}$`, "i") } },
                 ...(mongoose.isValidObjectId(cleanBoxId) ? [{ _id: cleanBoxId }] : []),
             ],
         });

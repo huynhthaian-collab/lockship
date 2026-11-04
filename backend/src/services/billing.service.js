@@ -50,6 +50,7 @@ export async function recordBoxUsage({
             targetBox = await Box.findOne({
                 $or: [
                     { boxId: { $regex: new RegExp(`^${cleanBoxId}$`, "i") } },
+                    { code: { $regex: new RegExp(`^${cleanBoxId}$`, "i") } },
                     ...(mongoose.isValidObjectId(cleanBoxId) ? [{ _id: cleanBoxId }] : []),
                 ],
             });

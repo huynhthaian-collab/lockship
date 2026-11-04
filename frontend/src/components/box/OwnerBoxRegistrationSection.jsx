@@ -474,3 +474,4 @@ export default function OwnerBoxRegistrationSection({ onRefresh }) {
         </section>
     )
 }
+

@@ -27,15 +27,14 @@ function formatMoney(amount) {
 }
 
 function formatDate(value) {
-    return value
-        ? new Date(value).toLocaleString('vi-VN', {
-              hour: '2-digit',
-              minute: '2-digit',
-              day: '2-digit',
-              month: '2-digit',
-              year: 'numeric',
-          })
-        : '—'
+    if (!value) return '—'
+    const d = new Date(value)
+    const day = String(d.getDate()).padStart(2, '0')
+    const month = String(d.getMonth() + 1).padStart(2, '0')
+    const year = d.getFullYear()
+    const hours = String(d.getHours()).padStart(2, '0')
+    const minutes = String(d.getMinutes()).padStart(2, '0')
+    return `${day}/${month}/${year} ${hours}:${minutes}`
 }
 
 export default function OwnerMonthlyBillingSection({ onRefresh }) {
@@ -257,8 +256,8 @@ export default function OwnerMonthlyBillingSection({ onRefresh }) {
                 open={historyModalOpen}
                 onClose={() => setHistoryModalOpen(false)}
                 title={`Nhật ký lượt dùng tủ - Tháng ${invoice.month}`}
-                description="Danh sách các lượt mở khóa và giao hàng hoàn tất được tính cước 5.000 VNĐ"
-                size="lg"
+                description="Bảng chi tiết lịch sử từng lượt sử dụng được tính cước 5.000 VNĐ / lượt"
+                size="xl"
             >
                 {(!invoice.usageHistory || invoice.usageHistory.length === 0) ? (
                     <div className="py-8 text-center text-slate-400">
@@ -266,26 +265,62 @@ export default function OwnerMonthlyBillingSection({ onRefresh }) {
                         <p className="text-sm">Chưa có lượt dùng nào phát sinh trong tháng này.</p>
                     </div>
                 ) : (
-                    <div className="max-h-96 overflow-y-auto divide-y divide-white/5">
-                        {invoice.usageHistory.map((item, idx) => (
-                            <div key={item._id || idx} className="py-3 flex items-center justify-between text-xs">
-                                <div>
-                                    <p className="font-semibold text-white">
-                                        {item.boxName || item.boxId}
-                                    </p>
-                                    <p className="text-[11px] text-slate-400">
-                                        Loại: <span className="text-cyan-300 font-medium">{item.actionType}</span>
-                                        {item.orderReference && ` · Mã: ${item.orderReference}`}
-                                    </p>
-                                    <p className="text-[10px] text-slate-500 font-mono mt-0.5">
-                                        {formatDate(item.usedAt)}
-                                    </p>
-                                </div>
-                                <span className="font-mono font-bold text-pink-400">
-                                    +{formatMoney(item.cost || 5000)}
-                                </span>
-                            </div>
-                        ))}
+                    <div className="max-h-[28rem] overflow-y-auto">
+                        <table className="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr className="border-b border-white/10 text-slate-400 text-[11px] uppercase tracking-wider sticky top-0 bg-[#141b2d] z-10">
+                                    <th className="py-2.5 px-3">Ngày giờ sử dụng (DD/MM/YYYY HH:mm)</th>
+                                    <th className="py-2.5 px-3">Tủ khóa (Box)</th>
+                                    <th className="py-2.5 px-3">Loại thao tác</th>
+                                    <th className="py-2.5 px-3">Mã đơn hàng</th>
+                                    <th className="py-2.5 px-3 text-right">Cước phí</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-white/5">
+                                {invoice.usageHistory.map((item, idx) => (
+                                    <tr key={item._id || idx} className="hover:bg-white/[0.02] transition">
+                                        <td className="py-3 px-3 font-mono text-cyan-300 whitespace-nowrap">
+                                            {formatDate(item.usedAt)}
+                                        </td>
+                                        <td className="py-3 px-3">
+                                            <p className="font-semibold text-white">{item.boxName || item.boxId}</p>
+                                            <p className="text-[10px] text-slate-400 truncate max-w-xs">{item.boxAddress || 'Vị trí tủ'}</p>
+                                        </td>
+                                        <td className="py-3 px-3">
+                                            <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-bold ${
+                                                item.actionType === 'DELIVERED_TO_LOCKER'
+                                                    ? 'bg-blue-500/15 text-blue-300 border border-blue-400/30'
+                                                    : item.actionType === 'OTP_PICKUP_SUCCESS'
+                                                    ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-400/30'
+                                                    : 'bg-cyan-500/15 text-cyan-300 border border-cyan-400/30'
+                                            }`}>
+                                                {item.actionType === 'DELIVERED_TO_LOCKER'
+                                                    ? 'Giao hàng vào tủ'
+                                                    : item.actionType === 'OTP_PICKUP_SUCCESS'
+                                                    ? 'Mở tủ lấy hàng (OTP)'
+                                                    : item.actionType}
+                                            </span>
+                                        </td>
+                                        <td className="py-3 px-3 font-mono text-slate-300">
+                                            {item.orderReference || '—'}
+                                        </td>
+                                        <td className="py-3 px-3 text-right font-mono font-bold text-pink-400">
+                                            +{formatMoney(item.cost || 5000)}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                            <tfoot>
+                                <tr className="border-t border-white/10 font-bold bg-white/[0.02]">
+                                    <td colSpan={4} className="py-3 px-3 text-slate-300 text-right">
+                                        Tổng cộng ({invoice.totalUsages || 0} lượt):
+                                    </td>
+                                    <td className="py-3 px-3 text-right font-mono font-extrabold text-pink-400 text-sm">
+                                        {formatMoney(invoice.totalAmount)}
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
                 )}
             </Modal>
@@ -303,12 +338,12 @@ export default function OwnerMonthlyBillingSection({ onRefresh }) {
                     <div className="flex flex-col items-center justify-center rounded-2xl border border-pink-500/20 bg-pink-950/20 p-5">
                         <div className="relative overflow-hidden rounded-xl border-2 border-pink-400/50 bg-white p-2.5 shadow-[0_0_25px_rgba(219,39,119,0.25)]">
                             <img
-                                src={momoConfig.qrImageUrl || `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=momo`}
+                                src={import.meta.env.VITE_MOMO_QR_URL || '/momo-qr.png'}
                                 alt="Mã MoMo QR Lockship"
                                 className="size-48 object-contain sm:size-52"
                                 onError={(e) => {
-                                    // fallback if image fail
-                                    e.currentTarget.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(`2|99|0909000001|LOCKSHIP|${invoice.totalAmount}|${invoice.transferSyntax}`)}`
+                                    // Fallback to generated QR code via API if static image is not found
+                                    e.currentTarget.src = momoConfig.qrImageUrl || `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(`2|99|${momoConfig.phone}|${momoConfig.accountName}|info@lockship.vn|0|0|${invoice.totalAmount}|${invoice.transferSyntax}|transfer_mycode`)}`
                                 }}
                             />
                         </div>
@@ -402,3 +437,4 @@ export default function OwnerMonthlyBillingSection({ onRefresh }) {
         </section>
     )
 }
+

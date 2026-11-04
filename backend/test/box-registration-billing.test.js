@@ -152,3 +152,4 @@ test("Invoices: Owner can fetch current monthly invoice with MoMo configuration"
     assert.ok(body.data.momoConfig);
     assert.equal(body.data.momoConfig.phone, "0909000001");
 });
+
