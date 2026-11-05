@@ -46,13 +46,32 @@ const boxAccessRequestSchema = new mongoose.Schema(
         },
         status: {
             type: String,
-            enum: ["PENDING", "APPROVED", "REJECTED"],
+            enum: [
+                "PENDING",
+                "APPROVED",
+                "REJECTED",
+                "UNLOCKED_FOR_DELIVERY",
+                "PARCEL_IN_LOCKER",
+                "COMPLETED",
+            ],
             default: "PENDING",
             index: true,
         },
         unlockCode: {
             type: String,
             trim: true,
+            default: null,
+        },
+        deliveryProofImage: {
+            type: String,
+            default: null,
+        },
+        deliveredAt: {
+            type: Date,
+            default: null,
+        },
+        pickedUpAt: {
+            type: Date,
             default: null,
         },
         respondedAt: {

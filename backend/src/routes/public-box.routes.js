@@ -30,4 +30,32 @@ router.get(
     boxAccessController.getRequestStatus,
 );
 
+router.post(
+    "/requests/:requestId/confirm-put-in-box",
+    [param("requestId").isMongoId().withMessage("Mã yêu cầu không hợp lệ.")],
+    validateRequest,
+    boxAccessController.confirmPutInBox,
+);
+
+router.post(
+    "/:boxId/requests/:requestId/confirm-put-in-box",
+    [param("requestId").isMongoId().withMessage("Mã yêu cầu không hợp lệ.")],
+    validateRequest,
+    boxAccessController.confirmPutInBox,
+);
+
+router.post(
+    "/requests/:requestId/notify-unlocked",
+    [param("requestId").isMongoId().withMessage("Mã yêu cầu không hợp lệ.")],
+    validateRequest,
+    boxAccessController.notifyUnlocked,
+);
+
+router.post(
+    "/:boxId/requests/:requestId/notify-unlocked",
+    [param("requestId").isMongoId().withMessage("Mã yêu cầu không hợp lệ.")],
+    validateRequest,
+    boxAccessController.notifyUnlocked,
+);
+
 export default router;

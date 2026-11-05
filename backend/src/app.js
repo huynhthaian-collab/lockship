@@ -69,6 +69,7 @@ app.use("/api/feedbacks", feedbackRoutes);
 app.use("/api/v1/feedbacks", feedbackRoutes);
 app.use("/api/iot", iotRoutes);
 app.use("/api/public/boxes", publicBoxRoutes);
+app.use("/api/public", publicBoxRoutes);
 app.use("/api/owner/access-requests", ownerAccessRoutes);
 app.use("/api/boxes", boxRoutes);
 app.use("/api/v1/boxes", boxRoutes);

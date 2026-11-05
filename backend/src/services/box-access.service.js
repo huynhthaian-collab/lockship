@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import Box from "../models/box.model.js";
 import BoxAccessRequest from "../models/box-access-request.model.js";
 import Delivery from "../models/delivery.model.js";
 import IoTDevice from "../models/iot-device.model.js";
@@ -333,4 +334,141 @@ export async function respondAccessRequest(ownerId, requestId, { action, orderId
     }
 
     throw new AppError("Hành động không hợp lệ. Vui lòng chọn APPROVE hoặc REJECT.", 400);
+}
+
+/**
+ * Shipper confirms parcel has been placed in the box with delivery proof image
+ */
+export async function confirmPutInBox({ requestId, boxId, deliveryProofImage, notes }) {
+    if (!mongoose.isValidObjectId(requestId)) {
+        throw new AppError("Mã yêu cầu không hợp lệ.", 400);
+    }
+
+    const request = await BoxAccessRequest.findById(requestId);
+    if (!request) {
+        throw new AppError("Không tìm thấy yêu cầu mở tủ.", 404);
+    }
+
+    request.status = "PARCEL_IN_LOCKER";
+    if (deliveryProofImage) {
+        request.deliveryProofImage = deliveryProofImage;
+    }
+    request.deliveredAt = new Date();
+    if (notes) {
+        request.notes = request.notes ? `${request.notes} | ${notes}` : notes;
+    }
+    await request.save();
+
+    // Update Box status to OCCUPIED and hasParcel = true
+    const targetBoxId = request.boxId;
+    let targetBox = null;
+    if (targetBoxId) {
+        targetBox = await Box.findOne({
+            $or: [
+                { boxId: { $regex: new RegExp(`^${targetBoxId}$`, "i") } },
+                { code: { $regex: new RegExp(`^${targetBoxId}$`, "i") } },
+                ...(mongoose.isValidObjectId(targetBoxId) ? [{ _id: targetBoxId }] : []),
+            ],
+        });
+        if (targetBox) {
+            targetBox.hasParcel = true;
+            targetBox.status = "OCCUPIED";
+            targetBox.lockStatus = "locked";
+            targetBox.lastParcelDeliveredAt = request.deliveredAt;
+            if (deliveryProofImage) {
+                targetBox.lastDeliveryProofImage = deliveryProofImage;
+            }
+            await targetBox.save();
+        }
+    }
+
+    // Update Delivery if linked
+    if (request.orderId && mongoose.isValidObjectId(request.orderId)) {
+        await Delivery.findByIdAndUpdate(request.orderId, {
+            status: "delivered_to_locker",
+            deliveryProofImage: deliveryProofImage || null,
+            deliveredAt: request.deliveredAt,
+            completedAt: request.deliveredAt,
+        });
+    }
+
+    // Notify Owner
+    try {
+        const timeStr = request.deliveredAt.toLocaleTimeString("vi-VN", {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+        await createNotification({
+            userId: request.ownerId,
+            type: "parcel_delivered_to_locker",
+            title: "📦 HÀNG ĐÃ BỎ VÀO TỦ & KHÓA AN TOÀN!",
+            message: `Kiện hàng từ ${request.shipperName} (${request.deliverySource}) đã được bỏ vào tủ ${request.boxId} lúc ${timeStr}. Bạn có thể ra lấy hàng.`,
+            isRead: false,
+        });
+    } catch (e) {
+        // non-blocking
+    }
+
+    // Real-time sockets
+    emitToUser(request.ownerId, "box_parcel_delivered", {
+        requestId: request._id,
+        boxId: request.boxId,
+        boxName: targetBox?.name || `Lockship Box #${request.boxId}`,
+        shipperName: request.shipperName,
+        shipperPhone: request.shipperPhone,
+        deliverySource: request.deliverySource,
+        deliveryProofImage: request.deliveryProofImage,
+        deliveredAt: request.deliveredAt,
+        hasParcel: true,
+    });
+
+    emitToRequest(request._id.toString(), "parcel_confirmed", {
+        requestId: request._id,
+        status: "PARCEL_IN_LOCKER",
+        deliveryProofImage: request.deliveryProofImage,
+        deliveredAt: request.deliveredAt,
+        message: "Kiện hàng đã được xác nhận nằm an toàn trong tủ!",
+    });
+
+    return { request, box: targetBox };
+}
+
+/**
+ * Shipper notifies lock is opened and they are placing the parcel inside
+ */
+export async function notifyUnlockedForDelivery({ requestId, boxId }) {
+    if (!mongoose.isValidObjectId(requestId)) {
+        throw new AppError("Mã yêu cầu không hợp lệ.", 400);
+    }
+
+    const request = await BoxAccessRequest.findById(requestId);
+    if (!request) {
+        throw new AppError("Không tìm thấy yêu cầu mở tủ.", 404);
+    }
+
+    request.status = "UNLOCKED_FOR_DELIVERY";
+    await request.save();
+
+    // Socket to Owner
+    emitToUser(request.ownerId, "box_unlocked_for_delivery", {
+        requestId: request._id,
+        boxId: request.boxId,
+        shipperName: request.shipperName,
+        shipperPhone: request.shipperPhone,
+        unlockedAt: new Date(),
+    });
+
+    try {
+        await createNotification({
+            userId: request.ownerId,
+            type: "box_unlocked_for_delivery",
+            title: `🔓 Shipper vừa mở khóa tủ ${request.boxId}`,
+            message: `Shipper ${request.shipperName} vừa mở khóa tủ ${request.boxId} — Đang thao tác bỏ hàng vào tủ...`,
+            isRead: false,
+        });
+    } catch (e) {
+        // non-blocking
+    }
+
+    return { request };
 }

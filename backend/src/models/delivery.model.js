@@ -7,9 +7,12 @@ const deliveryStatuses = [
     "in-progress",
     "arrived",
     "authorized",
-    "completed",
+    "unlocked_for_delivery",
+    "parcel_in_locker",
     "delivered_to_locker",
     "DELIVERED_TO_LOCKER",
+    "picked_up",
+    "completed",
     "cancelled",
 ];
 
@@ -94,6 +97,14 @@ const deliverySchema = new mongoose.Schema(
             default: null,
         },
         authorizedAt: {
+            type: Date,
+            default: null,
+        },
+        deliveryProofImage: {
+            type: String,
+            default: null,
+        },
+        deliveredAt: {
             type: Date,
             default: null,
         },

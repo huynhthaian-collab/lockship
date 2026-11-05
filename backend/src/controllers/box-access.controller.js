@@ -82,3 +82,43 @@ export async function respondOwnerRequest(req, res, next) {
         next(error);
     }
 }
+
+export async function confirmPutInBox(req, res, next) {
+    try {
+        const { requestId } = req.params;
+        const { deliveryProofImage, notes, boxId } = req.body || {};
+        const result = await boxAccessService.confirmPutInBox({
+            requestId,
+            boxId,
+            deliveryProofImage,
+            notes,
+        });
+
+        res.status(200).json({
+            success: true,
+            message: "Đã xác nhận bỏ hàng vào tủ và khóa an toàn thành công!",
+            data: result,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function notifyUnlocked(req, res, next) {
+    try {
+        const { requestId } = req.params;
+        const { boxId } = req.body || {};
+        const result = await boxAccessService.notifyUnlockedForDelivery({
+            requestId,
+            boxId: boxId || req.params.boxId,
+        });
+
+        res.status(200).json({
+            success: true,
+            message: "Đã ghi nhận trạng thái mở khóa thành công.",
+            data: result,
+        });
+    } catch (error) {
+        next(error);
+    }
+}

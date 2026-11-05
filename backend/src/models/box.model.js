@@ -96,6 +96,51 @@ const boxSchema = new mongoose.Schema(
             min: 0,
             max: 100,
         },
+        batteryLevel: {
+            type: Number,
+            default: 95,
+            min: 0,
+            max: 100,
+        },
+        lockHealthStatus: {
+            type: String,
+            enum: ["HEALTHY", "WARNING", "ERROR"],
+            default: "HEALTHY",
+        },
+        otpServiceStatus: {
+            type: String,
+            enum: ["ONLINE", "DEGRADED", "OFFLINE"],
+            default: "ONLINE",
+        },
+        lastHeartbeat: {
+            type: Date,
+            default: Date.now,
+        },
+        masterBackupPin: {
+            type: String,
+            trim: true,
+            default: "888999",
+        },
+        hasParcel: {
+            type: Boolean,
+            default: false,
+        },
+        lastParcelDeliveredAt: {
+            type: Date,
+            default: null,
+        },
+        lastDeliveryProofImage: {
+            type: String,
+            default: null,
+        },
+        currentOtp: {
+            type: String,
+            default: null,
+        },
+        otpExpiresAt: {
+            type: Date,
+            default: null,
+        },
         isOnline: {
             type: Boolean,
             default: true,

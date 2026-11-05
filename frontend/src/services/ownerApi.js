@@ -138,6 +138,14 @@ export const publicBoxApi = {
     async getStatus(boxId, requestId) {
         return dataOf(await apiClient.get(`/public/boxes/${boxId}/request-status/${requestId}`)).request
     },
+    async notifyUnlocked(requestId, payload = {}) {
+        const response = await apiClient.post(`/public/requests/${requestId}/notify-unlocked`, payload)
+        return response.data?.data ?? {}
+    },
+    async confirmPutInBox(requestId, payload = {}) {
+        const response = await apiClient.post(`/public/requests/${requestId}/confirm-put-in-box`, payload)
+        return response.data?.data ?? {}
+    },
 }
 
 export const ownerAccessApi = {
@@ -147,6 +155,21 @@ export const ownerAccessApi = {
     },
     async respond(requestId, payload) {
         return dataOf(await apiClient.patch(`/owner/access-requests/${requestId}/respond`, payload))
+    },
+}
+
+export const boxReliabilityApi = {
+    async healthCheck(boxId) {
+        return dataOf(await apiClient.post(`/boxes/${boxId}/health-check`))
+    },
+    async requestOtp(boxId) {
+        return dataOf(await apiClient.post(`/boxes/${boxId}/request-owner-otp`))
+    },
+    async emergencyUnlock(boxId, masterBackupPin) {
+        return dataOf(await apiClient.post(`/boxes/${boxId}/emergency-unlock`, { masterBackupPin }))
+    },
+    async confirmPickup(boxId) {
+        return dataOf(await apiClient.post(`/boxes/${boxId}/confirm-pickup`))
     },
 }
 
@@ -161,6 +184,7 @@ export const boxRegistrationApi = {
         const response = await apiClient.post(`/boxes/${boxId}/request-registration`, payload)
         return response.data ?? {}
     },
+    ...boxReliabilityApi,
 }
 
 export const invoiceApi = {

@@ -18,6 +18,16 @@ router.get("/my-boxes", restrictTo("owner", "admin"), boxController.listMyBoxes)
 // POST /api/boxes/:boxId/request-registration - Owner gửi yêu cầu đăng ký lắp đặt Box (bắt buộc nhập địa chỉ)
 router.post("/:boxId/request-registration", restrictTo("owner", "admin"), boxController.requestBoxRegistration);
 
+// Reliability & Emergency Endpoints (Owner & Admin)
+router.post("/:id/health-check", restrictTo("owner", "admin"), boxController.performBoxHealthCheck);
+router.post("/:boxId/health-check", restrictTo("owner", "admin"), boxController.performBoxHealthCheck);
+router.post("/:id/request-owner-otp", restrictTo("owner", "admin"), boxController.requestOwnerOtp);
+router.post("/:boxId/request-owner-otp", restrictTo("owner", "admin"), boxController.requestOwnerOtp);
+router.post("/:id/emergency-unlock", restrictTo("owner", "admin"), boxController.emergencyRemoteUnlock);
+router.post("/:boxId/emergency-unlock", restrictTo("owner", "admin"), boxController.emergencyRemoteUnlock);
+router.post("/:id/confirm-pickup", restrictTo("owner", "admin"), boxController.confirmParcelPickup);
+router.post("/:boxId/confirm-pickup", restrictTo("owner", "admin"), boxController.confirmParcelPickup);
+
 // --- Admin-only endpoints ---
 router.use(restrictTo("admin"));
 
