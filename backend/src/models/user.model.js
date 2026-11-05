@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema(
             required() {
                 return this.authProvider !== "google";
             },
-            minlength: 8,
+            minlength: 6,
             select: false,
         },
         googleId: {
@@ -140,6 +140,11 @@ userSchema.pre("validate", function validateOwnerAssignment() {
 
 userSchema.pre("save", async function hashPassword() {
     if (!this.isModified("password")) {
+        return;
+    }
+
+    // Prevent double hashing if password is already a valid bcrypt hash
+    if (typeof this.password === "string" && /^\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53}$/.test(this.password)) {
         return;
     }
 
