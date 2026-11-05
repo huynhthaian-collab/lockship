@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
     CheckCircle2,
     Edit3,
@@ -22,6 +22,7 @@ import StarRating from '../../components/feedback/StarRating.jsx'
 import AdminReplyModal from '../../components/feedback/AdminReplyModal.jsx'
 import AdminFeedbackModal from '../../components/feedback/AdminFeedbackModal.jsx'
 import Modal from '../../components/ui/Modal.jsx'
+import Pagination from '../../components/ui/Pagination.jsx'
 import { feedbackApi } from '../../services/feedbackApi.js'
 
 function formatDateTime(dateStr) {
@@ -59,6 +60,8 @@ export default function AdminFeedbacksPage() {
     const [search, setSearch] = useState('')
     const [ratingFilter, setRatingFilter] = useState('all')
     const [statusFilter, setStatusFilter] = useState('all')
+    const [page, setPage] = useState(1)
+    const PAGE_SIZE = 6
 
     // Modals state
     const [createModalOpen, setCreateModalOpen] = useState(false)
@@ -93,6 +96,16 @@ export default function AdminFeedbacksPage() {
     useEffect(() => {
         fetchFeedbacks()
     }, [fetchFeedbacks])
+
+    useEffect(() => {
+        setPage(1)
+    }, [ratingFilter, statusFilter, search])
+
+    const pageCount = Math.ceil(feedbacks.length / PAGE_SIZE)
+    const paginatedFeedbacks = useMemo(() => {
+        const start = (page - 1) * PAGE_SIZE
+        return feedbacks.slice(start, start + PAGE_SIZE)
+    }, [feedbacks, page])
 
     async function handleToggleVisibility(item) {
         const newVisible = !item.isVisible
@@ -313,21 +326,22 @@ export default function AdminFeedbacksPage() {
                     </button>
                 </div>
             ) : (
-                <div className="grid gap-4">
-                    {feedbacks.map((fb) => {
-                        const roleInfo = ROLE_BADGES[fb.userRole] || ROLE_BADGES.customer
+                <div className="space-y-4">
+                    <div className="grid gap-4">
+                        {paginatedFeedbacks.map((fb) => {
+                            const roleInfo = ROLE_BADGES[fb.userRole] || ROLE_BADGES.customer
 
-                        return (
-                            <div
-                                key={fb._id}
-                                className={`rounded-2xl border p-5 sm:p-6 backdrop-blur-md transition-all duration-300 ${
-                                    fb.isPinned
-                                        ? 'border-amber-400/40 bg-gradient-to-r from-amber-500/[0.05] via-[#0d1322] to-[#0a0f1d] shadow-[0_0_20px_rgba(251,191,36,0.12)]'
-                                        : fb.isVisible === false
-                                        ? 'border-white/5 bg-white/[0.01] opacity-60'
-                                        : 'border-white/10 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.04]'
-                                }`}
-                            >
+                            return (
+                                <div
+                                    key={fb._id}
+                                    className={`rounded-2xl border p-5 sm:p-6 backdrop-blur-md transition-all duration-300 ${
+                                        fb.isPinned
+                                            ? 'border-amber-400/40 bg-gradient-to-r from-amber-500/[0.05] via-[#0d1322] to-[#0a0f1d] shadow-[0_0_20px_rgba(251,191,36,0.12)]'
+                                            : fb.isVisible === false
+                                            ? 'border-white/5 bg-white/[0.01] opacity-60'
+                                            : 'border-white/10 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.04]'
+                                    }`}
+                                >
                                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                                     <div className="flex-1">
                                         {/* Header Row: User Info + Badges */}
@@ -476,6 +490,15 @@ export default function AdminFeedbacksPage() {
                             </div>
                         )
                     })}
+                    </div>
+
+                    <Pagination
+                        page={page}
+                        pageCount={pageCount}
+                        total={feedbacks.length}
+                        onChange={setPage}
+                        className="rounded-2xl border border-white/10 bg-slate-900/60"
+                    />
                 </div>
             )}
 

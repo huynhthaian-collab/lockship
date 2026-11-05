@@ -16,6 +16,7 @@ import { OwnerError, OwnerLoading } from '../../components/OwnerFeedback.jsx'
 import StatusPill from '../../components/StatusPill.jsx'
 import Card from '../../components/ui/Card.jsx'
 import EmptyState from '../../components/ui/EmptyState.jsx'
+import Pagination from '../../components/ui/Pagination.jsx'
 import { vehicleApi } from '../../services/ownerApi.js'
 
 export default function OwnerVehiclePage() {
@@ -24,6 +25,8 @@ export default function OwnerVehiclePage() {
     const [statusFilter, setStatusFilter] = useState('all')
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
+    const [page, setPage] = useState(1)
+    const PAGE_SIZE = 6
 
     const refresh = useCallback(async () => {
         setError('')
@@ -79,6 +82,16 @@ export default function OwnerVehiclePage() {
             return true
         })
     }, [vehicles, statusFilter, searchTerm])
+
+    useEffect(() => {
+        setPage(1)
+    }, [statusFilter, searchTerm])
+
+    const pageCount = Math.ceil(filteredVehicles.length / PAGE_SIZE)
+    const paginatedVehicles = useMemo(() => {
+        const start = (page - 1) * PAGE_SIZE
+        return filteredVehicles.slice(start, start + PAGE_SIZE)
+    }, [filteredVehicles, page])
 
     return (
         <OwnerPage
@@ -202,7 +215,7 @@ export default function OwnerVehiclePage() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-white/5">
-                                    {filteredVehicles.map((vehicle) => (
+                                    {paginatedVehicles.map((vehicle) => (
                                         <tr className="hover:bg-white/[0.02] transition" key={vehicle._id}>
                                             <td className="px-5 py-3.5 font-mono text-sm font-bold text-white">
                                                 {vehicle.plateNumber}
@@ -237,6 +250,13 @@ export default function OwnerVehiclePage() {
                                     ))}
                                 </tbody>
                             </table>
+
+                            <Pagination
+                                page={page}
+                                pageCount={pageCount}
+                                total={filteredVehicles.length}
+                                onChange={setPage}
+                            />
                         </div>
                     )}
                 </div>

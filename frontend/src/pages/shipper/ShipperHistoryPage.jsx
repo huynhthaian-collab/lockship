@@ -7,12 +7,15 @@ import ShipperPage from '../../components/ShipperPage.jsx'
 import StatusPill from '../../components/StatusPill.jsx'
 import Card from '../../components/ui/Card.jsx'
 import EmptyState from '../../components/ui/EmptyState.jsx'
+import Pagination from '../../components/ui/Pagination.jsx'
 import { shipperDeliveryApi } from '../../services/ownerApi.js'
 
 export default function ShipperHistoryPage() {
     const [deliveries, setDelivery] = useState([])
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(true)
+    const [page, setPage] = useState(1)
+    const PAGE_SIZE = 8
 
     const refresh = useCallback(async () => {
         try {
@@ -51,6 +54,9 @@ export default function ShipperHistoryPage() {
         }
     }, [])
 
+    const pageCount = Math.ceil(deliveries.length / PAGE_SIZE)
+    const paginatedDeliveries = deliveries.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+
     return (
         <ShipperPage
             eyebrow="Lưu trữ & Thống kê"
@@ -70,7 +76,7 @@ export default function ShipperHistoryPage() {
             ) : (
                 <Card className="p-0 border-white/10 bg-slate-900/40 backdrop-blur-xl shadow-2xl overflow-hidden">
                     <div className="divide-y divide-white/5">
-                        {deliveries.map((item) => (
+                        {paginatedDeliveries.map((item) => (
                             <Link
                                 className="flex flex-col gap-3 p-4 hover:bg-white/[0.03] transition sm:flex-row sm:items-center sm:justify-between sm:px-6"
                                 key={item._id}
@@ -97,6 +103,13 @@ export default function ShipperHistoryPage() {
                             </Link>
                         ))}
                     </div>
+
+                    <Pagination
+                        page={page}
+                        pageCount={pageCount}
+                        total={deliveries.length}
+                        onChange={setPage}
+                    />
                 </Card>
             )}
         </ShipperPage>

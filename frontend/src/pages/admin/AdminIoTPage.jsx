@@ -8,6 +8,7 @@ import StatusPill from '../../components/StatusPill.jsx'
 import Card from '../../components/ui/Card.jsx'
 import Table from '../../components/ui/Table.jsx'
 import EmptyState from '../../components/ui/EmptyState.jsx'
+import Pagination from '../../components/ui/Pagination.jsx'
 import SpatialTiltCard from '../../components/spatial/SpatialTiltCard.jsx'
 import { useSocketEvent } from '../../hooks/useSocketEvent.js'
 import { adminApi } from '../../services/adminApi.js'
@@ -23,6 +24,8 @@ export default function AdminIoTPage() {
     const [statusFilter, setStatusFilter] = useState('all')
     const [lockFilter, setLockFilter] = useState('all')
     const [searchTerm, setSearchTerm] = useState('')
+    const [page, setPage] = useState(1)
+    const PAGE_SIZE = 8
     const [error, setError] = useState('')
     const [notice, setNotice] = useState('')
     const [loading, setLoading] = useState(true)
@@ -117,6 +120,16 @@ export default function AdminIoTPage() {
             return true
         })
     }, [devices, statusFilter, lockFilter, searchTerm, ownerMap, vehicleMap])
+
+    useEffect(() => {
+        setPage(1)
+    }, [statusFilter, lockFilter, searchTerm])
+
+    const pageCount = Math.ceil(filteredDevices.length / PAGE_SIZE)
+    const paginatedDevices = useMemo(() => {
+        const start = (page - 1) * PAGE_SIZE
+        return filteredDevices.slice(start, start + PAGE_SIZE)
+    }, [filteredDevices, page])
 
     async function handleRegisterDevice(event) {
         event.preventDefault()
@@ -460,7 +473,7 @@ export default function AdminIoTPage() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-white/5">
-                                {filteredDevices.map((device) => {
+                                {paginatedDevices.map((device) => {
                                     const owner = ownerMap.get(device.ownerId)
                                     const vehicle = vehicleMap.get(device.vehicleId)
                                     const isBusy = deletingId === device._id
@@ -548,7 +561,7 @@ export default function AdminIoTPage() {
 
                     {/* Mobile cards */}
                     <div className="grid gap-3 p-4 md:hidden">
-                        {filteredDevices.map((device) => {
+                        {paginatedDevices.map((device) => {
                             const owner = ownerMap.get(device.ownerId)
                             const vehicle = vehicleMap.get(device.vehicleId)
                             const isBusy = deletingId === device._id
@@ -584,6 +597,13 @@ export default function AdminIoTPage() {
                             )
                         })}
                     </div>
+
+                    <Pagination
+                        page={page}
+                        pageCount={pageCount}
+                        total={filteredDevices.length}
+                        onChange={setPage}
+                    />
                 </Card>
             )}
         </AdminPage>

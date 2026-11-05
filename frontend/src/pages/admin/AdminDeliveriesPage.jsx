@@ -10,6 +10,7 @@ import Table from '../../components/ui/Table.jsx'
 import Button from '../../components/ui/Button.jsx'
 import Modal from '../../components/ui/Modal.jsx'
 import EmptyState from '../../components/ui/EmptyState.jsx'
+import Pagination from '../../components/ui/Pagination.jsx'
 import { useSocketEvent } from '../../hooks/useSocketEvent.js'
 import { adminApi } from '../../services/adminApi.js'
 
@@ -23,6 +24,8 @@ export default function AdminDeliveryPage() {
     const [vehicles, setVehicle] = useState([])
     const [filter, setFilter] = useState('all')
     const [searchTerm, setSearchTerm] = useState('')
+    const [page, setPage] = useState(1)
+    const PAGE_SIZE = 8
     const [selectedDelivery, setSelectedDelivery] = useState(null)
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(true)
@@ -114,6 +117,16 @@ export default function AdminDeliveryPage() {
             return true
         })
     }, [deliveries, filter, searchTerm, userMap, vehicleMap])
+
+    useEffect(() => {
+        setPage(1)
+    }, [filter, searchTerm])
+
+    const pageCount = Math.ceil(filteredDelivery.length / PAGE_SIZE)
+    const paginatedDelivery = useMemo(() => {
+        const start = (page - 1) * PAGE_SIZE
+        return filteredDelivery.slice(start, start + PAGE_SIZE)
+    }, [filteredDelivery, page])
 
     const statusCounts = useMemo(() => {
         const counts = { all: deliveries.length }
@@ -235,7 +248,7 @@ export default function AdminDeliveryPage() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-white/5">
-                                    {filteredDelivery.map((item) => {
+                                    {paginatedDelivery.map((item) => {
                                         const owner = userMap.get(item.ownerId)
                                         const shipper = userMap.get(item.shipperId)
                                         const vehicle = vehicleMap.get(item.vehicleId)
@@ -304,7 +317,7 @@ export default function AdminDeliveryPage() {
 
                         {/* Mobile Cards */}
                         <div className="grid gap-3 p-4 md:hidden">
-                            {filteredDelivery.map((item) => {
+                            {paginatedDelivery.map((item) => {
                                 const owner = userMap.get(item.ownerId)
                                 const shipper = userMap.get(item.shipperId)
                                 const vehicle = vehicleMap.get(item.vehicleId)
@@ -330,6 +343,13 @@ export default function AdminDeliveryPage() {
                                 )
                             })}
                         </div>
+
+                        <Pagination
+                            page={page}
+                            pageCount={pageCount}
+                            total={filteredDelivery.length}
+                            onChange={setPage}
+                        />
                     </Card>
                 </>
             )}

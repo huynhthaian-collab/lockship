@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Bell, Check, CircleDot, ArrowRight, CheckCheck } from 'lucide-react'
 import OwnerPage from '../../components/OwnerPage.jsx'
 import { OwnerError, OwnerLoading, OwnerNotice } from '../../components/OwnerFeedback.jsx'
 import Card from '../../components/ui/Card.jsx'
 import EmptyState from '../../components/ui/EmptyState.jsx'
+import Pagination from '../../components/ui/Pagination.jsx'
 import { useSocketEvent } from '../../hooks/useSocketEvent.js'
 import { notificationApi } from '../../services/ownerApi.js'
 
@@ -18,6 +19,8 @@ export default function OwnerNotificationsPage() {
     const [notice, setNotice] = useState('')
     const [loading, setLoading] = useState(true)
     const [filter, setFilter] = useState('all')
+    const [page, setPage] = useState(1)
+    const PAGE_SIZE = 8
 
     const refresh = useCallback(async () => {
         setError('')
@@ -89,6 +92,16 @@ export default function OwnerNotificationsPage() {
     const safeNotifications = Array.isArray(notifications) ? notifications : []
     const unread = safeNotifications.filter((item) => !item.isRead).length
     const visible = safeNotifications.filter((item) => filter === 'all' || !item.isRead)
+
+    useEffect(() => {
+        setPage(1)
+    }, [filter])
+
+    const pageCount = Math.ceil(visible.length / PAGE_SIZE)
+    const paginatedNotifications = useMemo(() => {
+        const start = (page - 1) * PAGE_SIZE
+        return visible.slice(start, start + PAGE_SIZE)
+    }, [visible, page])
 
     return (
         <OwnerPage
@@ -165,7 +178,7 @@ export default function OwnerNotificationsPage() {
                 ) : (
                     <Card className="p-0 border-white/10 bg-slate-900/40 backdrop-blur-xl shadow-2xl overflow-hidden">
                         <ol className="divide-y divide-white/5">
-                            {visible.map((item) => {
+                            {paginatedNotifications.map((item) => {
                                 const key = item._id || item.id
                                 const typeLabel = (item.type || '').replaceAll('_', ' ')
 
@@ -225,6 +238,13 @@ export default function OwnerNotificationsPage() {
                                 )
                             })}
                         </ol>
+
+                        <Pagination
+                            page={page}
+                            pageCount={pageCount}
+                            total={visible.length}
+                            onChange={setPage}
+                        />
                     </Card>
                 )}
             </div>

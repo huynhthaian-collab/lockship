@@ -17,6 +17,7 @@ import OwnerPage from '../../components/OwnerPage.jsx'
 import { OwnerError, OwnerLoading, OwnerNotice } from '../../components/OwnerFeedback.jsx'
 import StatusPill from '../../components/StatusPill.jsx'
 import Card from '../../components/ui/Card.jsx'
+import Pagination from '../../components/ui/Pagination.jsx'
 import { shipperApi } from '../../services/ownerApi.js'
 
 export default function OwnerShipperPage() {
@@ -28,6 +29,8 @@ export default function OwnerShipperPage() {
     const [notice, setNotice] = useState('')
     const [showCreate, setShowCreate] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
+    const [page, setPage] = useState(1)
+    const PAGE_SIZE = 6
 
     const refresh = useCallback(async () => {
         setError('')
@@ -80,6 +83,16 @@ export default function OwnerShipperPage() {
             return true
         })
     }, [shippers, searchTerm])
+
+    useEffect(() => {
+        setPage(1)
+    }, [searchTerm])
+
+    const pageCount = Math.ceil(filteredShippers.length / PAGE_SIZE)
+    const paginatedShippers = useMemo(() => {
+        const start = (page - 1) * PAGE_SIZE
+        return filteredShippers.slice(start, start + PAGE_SIZE)
+    }, [filteredShippers, page])
 
     async function createShipper(event) {
         event.preventDefault()
@@ -340,7 +353,7 @@ export default function OwnerShipperPage() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-white/5">
-                                {filteredShippers.map((shipper) => (
+                                {paginatedShippers.map((shipper) => (
                                     <tr className="hover:bg-white/[0.02] transition" key={shipper._id}>
                                         <td className="px-5 py-3.5">
                                             <div className="flex items-center gap-3">
@@ -380,6 +393,13 @@ export default function OwnerShipperPage() {
                                 ))}
                             </tbody>
                         </table>
+
+                        <Pagination
+                            page={page}
+                            pageCount={pageCount}
+                            total={filteredShippers.length}
+                            onChange={setPage}
+                        />
                     </div>
                 )}
             </div>

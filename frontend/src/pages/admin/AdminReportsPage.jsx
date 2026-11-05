@@ -37,6 +37,7 @@ import Modal from '../../components/ui/Modal.jsx'
 import SpatialTiltCard from '../../components/spatial/SpatialTiltCard.jsx'
 import StatusPill from '../../components/StatusPill.jsx'
 import EmptyState from '../../components/ui/EmptyState.jsx'
+import Pagination from '../../components/ui/Pagination.jsx'
 import { adminInvoiceApi, adminApi } from '../../services/adminApi.js'
 import { feedbackApi } from '../../services/feedbackApi.js'
 import { useSocketEvent } from '../../hooks/useSocketEvent.js'
@@ -92,6 +93,12 @@ export default function AdminReportsPage() {
     // Incident Reports State (Secondary Tab)
     const [issues, setIssues] = useState([])
     const [issueFilter, setIssueFilter] = useState('all')
+
+    // Pagination States
+    const [invoicePage, setInvoicePage] = useState(1)
+    const INVOICE_PAGE_SIZE = 8
+    const [issuePage, setIssuePage] = useState(1)
+    const ISSUE_PAGE_SIZE = 6
 
     // 1. Fetch Invoices and Feedbacks for Revenue Analytics
     const loadReportData = useCallback(async (silent = false) => {
@@ -207,6 +214,31 @@ export default function AdminReportsPage() {
             return true
         })
     }, [invoices, statusFilter, searchTerm])
+
+    useEffect(() => {
+        setInvoicePage(1)
+    }, [searchTerm, statusFilter, selectedMonth])
+
+    useEffect(() => {
+        setIssuePage(1)
+    }, [issueFilter])
+
+    const invoicePageCount = Math.ceil(filteredInvoices.length / INVOICE_PAGE_SIZE)
+    const paginatedInvoices = useMemo(() => {
+        const start = (invoicePage - 1) * INVOICE_PAGE_SIZE
+        return filteredInvoices.slice(start, start + INVOICE_PAGE_SIZE)
+    }, [filteredInvoices, invoicePage])
+
+    const filteredIssues = useMemo(() => {
+        if (issueFilter === 'all') return issues
+        return issues.filter((i) => (i.status || 'RESOLVED').toLowerCase() === issueFilter.toLowerCase())
+    }, [issues, issueFilter])
+
+    const issuePageCount = Math.ceil(filteredIssues.length / ISSUE_PAGE_SIZE)
+    const paginatedIssues = useMemo(() => {
+        const start = (issuePage - 1) * ISSUE_PAGE_SIZE
+        return filteredIssues.slice(start, start + ISSUE_PAGE_SIZE)
+    }, [filteredIssues, issuePage])
 
     // CSV / Excel Export Handler with UTF-8 BOM
     const handleExportCsv = () => {
@@ -695,7 +727,8 @@ export default function AdminReportsPage() {
                                 description="Hãy thay đổi từ khóa tìm kiếm hoặc bộ lọc trạng thái để xem dữ liệu đối soát."
                             />
                         ) : (
-                            <div className="overflow-x-auto rounded-2xl border border-white/10">
+                            <div className="space-y-3">
+                                <div className="overflow-x-auto rounded-2xl border border-white/10">
                                 <table className="w-full text-left text-xs">
                                     <thead className="bg-white/[0.04] text-[11px] font-extrabold uppercase tracking-wider text-slate-400 border-b border-white/10">
                                         <tr>
@@ -711,9 +744,10 @@ export default function AdminReportsPage() {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-white/5 font-medium">
-                                        {filteredInvoices.map((inv, idx) => {
+                                        {paginatedInvoices.map((inv, idx) => {
+                                            const globalIdx = (invoicePage - 1) * INVOICE_PAGE_SIZE + idx + 1
                                             const firstUsage = inv.usageHistory?.[0]
-                                            const boxCode = firstUsage?.boxId || `BOX-${String(idx + 1).padStart(2, '0')}`
+                                            const boxCode = firstUsage?.boxId || `BOX-${String(globalIdx).padStart(2, '0')}`
                                             const boxName = firstUsage?.boxName || `Lockship Box #${boxCode}`
                                             const address = firstUsage?.boxAddress || inv.ownerId?.address || 'Cần Thơ'
 
@@ -723,7 +757,7 @@ export default function AdminReportsPage() {
                                                     className="hover:bg-white/[0.02] transition-colors"
                                                 >
                                                     <td className="py-3.5 px-3 text-center font-mono font-bold text-slate-400">
-                                                        {idx + 1}
+                                                        {globalIdx}
                                                     </td>
                                                     <td className="py-3.5 px-4">
                                                         <div className="font-extrabold text-white text-sm">
@@ -775,7 +809,15 @@ export default function AdminReportsPage() {
                                     </tbody>
                                 </table>
                             </div>
-                        )}
+
+                            <Pagination
+                                page={invoicePage}
+                                pageCount={invoicePageCount}
+                                total={filteredInvoices.length}
+                                onChange={setInvoicePage}
+                            />
+                        </div>
+                    )}
                     </div>
                 </div>
             ) : (
@@ -788,30 +830,39 @@ export default function AdminReportsPage() {
                                 <span>Danh Sách Phản Ánh & Báo Cáo Sự Cố Từ Shipper / Khách Hàng</span>
                             </h3>
                             <span className="text-xs text-slate-400">
-                                Tổng số: <strong>{issues.length}</strong> báo cáo
+                                Tổng số: <strong>{filteredIssues.length}</strong> báo cáo
                             </span>
                         </div>
 
-                        {issues.length === 0 ? (
+                        {filteredIssues.length === 0 ? (
                             <EmptyState
                                 title="Không có sự cố nào được ghi nhận"
                                 description="Toàn bộ hệ thống tủ khóa thông minh Lockship đang vận hành trơn tru và an toàn."
                             />
                         ) : (
-                            <div className="grid gap-3 sm:grid-cols-2">
-                                {issues.map((issue) => (
-                                    <div
-                                        key={issue._id}
-                                        className="p-4 rounded-2xl border border-white/10 bg-slate-950/60 text-xs space-y-2"
-                                    >
-                                        <div className="flex items-center justify-between">
-                                            <span className="font-bold text-white">{issue.category || 'Sự cố'}</span>
-                                            <StatusPill status={issue.status || 'RESOLVED'} />
+                            <div className="space-y-3">
+                                <div className="grid gap-3 sm:grid-cols-2">
+                                    {paginatedIssues.map((issue) => (
+                                        <div
+                                            key={issue._id}
+                                            className="p-4 rounded-2xl border border-white/10 bg-slate-950/60 text-xs space-y-2"
+                                        >
+                                            <div className="flex items-center justify-between">
+                                                <span className="font-bold text-white">{issue.category || 'Sự cố'}</span>
+                                                <StatusPill status={issue.status || 'RESOLVED'} />
+                                            </div>
+                                            <p className="text-slate-300">{issue.description || 'Không có mô tả'}</p>
+                                            <p className="text-[10px] text-slate-500 font-mono">{formatDate(issue.createdAt)}</p>
                                         </div>
-                                        <p className="text-slate-300">{issue.description || 'Không có mô tả'}</p>
-                                        <p className="text-[10px] text-slate-500 font-mono">{formatDate(issue.createdAt)}</p>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
+
+                                <Pagination
+                                    page={issuePage}
+                                    pageCount={issuePageCount}
+                                    total={filteredIssues.length}
+                                    onChange={setIssuePage}
+                                />
                             </div>
                         )}
                     </div>

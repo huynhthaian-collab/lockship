@@ -27,6 +27,7 @@ import {
 } from 'lucide-react'
 import Card from '../ui/Card.jsx'
 import EmptyState from '../ui/EmptyState.jsx'
+import Pagination from '../ui/Pagination.jsx'
 import { Link } from 'react-router-dom'
 import { ownerAccessApi } from '../../services/ownerApi.js'
 import { useSocketEvent } from '../../hooks/useSocketEvent.js'
@@ -76,6 +77,8 @@ export default function BoxAccessRequestsSection({ className = '' }) {
 
     // Filter tab: 'ALL' | 'PENDING' | 'IN_LOCKER'
     const [activeTab, setActiveTab] = useState('ALL')
+    const [page, setPage] = useState(1)
+    const PAGE_SIZE = 6
 
     // Active Modal States
     const [selectedRequest, setSelectedRequest] = useState(null)
@@ -234,6 +237,13 @@ export default function BoxAccessRequestsSection({ className = '' }) {
         return true
     })
 
+    useEffect(() => {
+        setPage(1)
+    }, [activeTab])
+
+    const pageCount = Math.ceil(filteredRequests.length / PAGE_SIZE)
+    const paginatedRequests = filteredRequests.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+
     return (
         <div className={`space-y-4 ${className}`}>
             {/* Real-time Notification Banner */}
@@ -386,8 +396,9 @@ export default function BoxAccessRequestsSection({ className = '' }) {
                         }
                     />
                 ) : (
-                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                        {filteredRequests.map((req) => {
+                    <div className="space-y-4">
+                        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                            {paginatedRequests.map((req) => {
                             const isPending = req.status === 'PENDING'
                             const isUnlocked = req.status === 'UNLOCKED_FOR_DELIVERY'
                             const isParcelInLocker = req.status === 'PARCEL_IN_LOCKER'
@@ -573,6 +584,14 @@ export default function BoxAccessRequestsSection({ className = '' }) {
                                 </div>
                             )
                         })}
+                        </div>
+
+                        <Pagination
+                            page={page}
+                            pageCount={pageCount}
+                            total={filteredRequests.length}
+                            onChange={setPage}
+                        />
                     </div>
                 )}
             </Card>

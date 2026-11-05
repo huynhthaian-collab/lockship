@@ -22,6 +22,7 @@ import Card from '../../components/ui/Card.jsx'
 import ErrorMessage from '../../components/ErrorMessage.jsx'
 import Loading from '../../components/Loading.jsx'
 import StatusPill from '../../components/StatusPill.jsx'
+import Pagination from '../../components/ui/Pagination.jsx'
 import { useAuth } from '../../context/useAuth.js'
 import { adminApi } from '../../services/adminApi.js'
 
@@ -34,6 +35,8 @@ export default function AdminUserPage() {
     const [roleFilter, setRoleFilter] = useState('all')
     const [statusFilter, setStatusFilter] = useState('all')
     const [searchTerm, setSearchTerm] = useState('')
+    const [page, setPage] = useState(1)
+    const PAGE_SIZE = 8
     const [error, setError] = useState('')
     const [notice, setNotice] = useState('')
     const [loading, setLoading] = useState(true)
@@ -102,6 +105,16 @@ export default function AdminUserPage() {
             return true
         })
     }, [users, roleFilter, statusFilter, searchTerm])
+
+    useEffect(() => {
+        setPage(1)
+    }, [roleFilter, statusFilter, searchTerm])
+
+    const pageCount = Math.ceil(filteredUser.length / PAGE_SIZE)
+    const paginatedUsers = useMemo(() => {
+        const start = (page - 1) * PAGE_SIZE
+        return filteredUser.slice(start, start + PAGE_SIZE)
+    }, [filteredUser, page])
 
     async function createUser(event) {
         event.preventDefault()
@@ -502,7 +515,7 @@ export default function AdminUserPage() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
-                            {filteredUser.map((item) => {
+                            {paginatedUsers.map((item) => {
                                 const isSelf = item._id === currentUser?.id || item._id === currentUser?._id
                                 const assignedOwner = item.ownerId ? userMap.get(item.ownerId) : null
                                 const isBusy = actionId === item._id
@@ -654,6 +667,13 @@ export default function AdminUserPage() {
                             })}
                         </tbody>
                     </table>
+
+                    <Pagination
+                        page={page}
+                        pageCount={pageCount}
+                        total={filteredUser.length}
+                        onChange={setPage}
+                    />
                 </div>
             )}
         </AdminPage>

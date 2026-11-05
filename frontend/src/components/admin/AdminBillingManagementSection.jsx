@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import Card from '../ui/Card.jsx'
 import Modal from '../ui/Modal.jsx'
+import Pagination from '../ui/Pagination.jsx'
 import SpatialTiltCard from '../spatial/SpatialTiltCard.jsx'
 import { adminInvoiceApi } from '../../services/adminApi.js'
 import { useSocketEvent } from '../../hooks/useSocketEvent.js'
@@ -58,6 +59,8 @@ export default function AdminBillingManagementSection({ onActionCompleted }) {
     const [monthFilter, setMonthFilter] = useState('ALL')
     const [statusFilter, setStatusFilter] = useState('ALL')
     const [search, setSearch] = useState('')
+    const [page, setPage] = useState(1)
+    const PAGE_SIZE = 8
 
     // Verify modal state
     const [verifyingInvoice, setVerifyingInvoice] = useState(null)
@@ -92,6 +95,13 @@ export default function AdminBillingManagementSection({ onActionCompleted }) {
     useEffect(() => {
         loadInvoices()
     }, [loadInvoices])
+
+    useEffect(() => {
+        setPage(1)
+    }, [monthFilter, statusFilter, search])
+
+    const pageCount = Math.ceil(invoices.length / PAGE_SIZE)
+    const paginatedInvoices = invoices.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
     // Real-time listener for owner paying or new usage
     const onLiveBillingUpdate = useCallback(() => {
@@ -279,7 +289,7 @@ export default function AdminBillingManagementSection({ onActionCompleted }) {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
-                            {invoices.map((inv) => (
+                            {paginatedInvoices.map((inv) => (
                                 <tr key={inv._id} className="hover:bg-white/[0.02] transition">
                                     <td className="py-3 px-3">
                                         <p className="font-bold text-white">
@@ -338,6 +348,13 @@ export default function AdminBillingManagementSection({ onActionCompleted }) {
                             ))}
                         </tbody>
                     </table>
+
+                    <Pagination
+                        page={page}
+                        pageCount={pageCount}
+                        total={invoices.length}
+                        onChange={setPage}
+                    />
                 </div>
             )}
 

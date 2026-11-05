@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import Card from '../ui/Card.jsx'
 import Modal from '../ui/Modal.jsx'
+import Pagination from '../ui/Pagination.jsx'
 import StatusPill from '../StatusPill.jsx'
 import SpatialTiltCard from '../spatial/SpatialTiltCard.jsx'
 import { invoiceApi } from '../../services/ownerApi.js'
@@ -45,6 +46,8 @@ export default function OwnerMonthlyBillingSection({ onRefresh }) {
 
     // Modals
     const [historyModalOpen, setHistoryModalOpen] = useState(false)
+    const [historyPage, setHistoryPage] = useState(1)
+    const HISTORY_PAGE_SIZE = 5
     const [vietqrModalOpen, setVietqrModalOpen] = useState(false)
     const [copiedSyntax, setCopiedSyntax] = useState(false)
     const [copiedAccountNo, setCopiedAccountNo] = useState(false)
@@ -97,6 +100,17 @@ export default function OwnerMonthlyBillingSection({ onRefresh }) {
         paymentStatus: 'UNPAID',
         transferSyntax: 'LOCKSHIP OWNER T10',
     }
+
+    useEffect(() => {
+        setHistoryPage(1)
+    }, [historyModalOpen, invoiceData])
+
+    const usageHistory = invoice.usageHistory || []
+    const historyPageCount = Math.ceil(usageHistory.length / HISTORY_PAGE_SIZE)
+    const paginatedUsageHistory = usageHistory.slice(
+        (historyPage - 1) * HISTORY_PAGE_SIZE,
+        historyPage * HISTORY_PAGE_SIZE
+    )
 
     const vietqrConfig = invoiceData?.vietqrConfig || {
         bankId: 'BIDV',
@@ -283,7 +297,7 @@ export default function OwnerMonthlyBillingSection({ onRefresh }) {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-white/5">
-                                {invoice.usageHistory.map((item, idx) => (
+                                {paginatedUsageHistory.map((item, idx) => (
                                     <tr key={item._id || idx} className="hover:bg-white/[0.02] transition">
                                         <td className="py-3 px-3 font-mono text-cyan-300 whitespace-nowrap">
                                             {formatDate(item.usedAt)}
@@ -327,6 +341,13 @@ export default function OwnerMonthlyBillingSection({ onRefresh }) {
                                 </tr>
                             </tfoot>
                         </table>
+
+                        <Pagination
+                            page={historyPage}
+                            pageCount={historyPageCount}
+                            total={usageHistory.length}
+                            onChange={setHistoryPage}
+                        />
                     </div>
                 )}
             </Modal>

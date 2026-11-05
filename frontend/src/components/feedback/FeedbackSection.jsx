@@ -13,6 +13,7 @@ import {
 import StarRating from './StarRating.jsx'
 import { RATING_EMOTIONS } from './ratingConstants.js'
 import FeedbackModal from './FeedbackModal.jsx'
+import Pagination from '../ui/Pagination.jsx'
 import { feedbackApi } from '../../services/feedbackApi.js'
 
 function formatRelativeTime(dateString) {
@@ -58,6 +59,8 @@ export default function FeedbackSection({ id = 'feedback', className = '' }) {
     const [loading, setLoading] = useState(true)
     const [filterStar, setFilterStar] = useState('all')
     const [modalOpen, setModalOpen] = useState(false)
+    const [page, setPage] = useState(1)
+    const PAGE_SIZE = 4
 
     async function loadData() {
         setLoading(true)
@@ -75,12 +78,19 @@ export default function FeedbackSection({ id = 'feedback', className = '' }) {
         loadData()
     }, [])
 
+    useEffect(() => {
+        setPage(1)
+    }, [filterStar])
+
     const filteredFeedbacks = (data.feedbacks || []).filter((item) => {
         if (!item || !item.comment) return false
         if (/má mẹ|má cha|địt|đụ|lồn|cặc|dcm|vcl/i.test(item.comment)) return false
         if (filterStar === 'all') return true
         return item.rating === Number(filterStar)
     })
+
+    const pageCount = Math.max(1, Math.ceil(filteredFeedbacks.length / PAGE_SIZE))
+    const pagedFeedbacks = filteredFeedbacks.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
     return (
         <section id={id} className={`relative py-16 sm:py-24 text-white overflow-hidden ${className}`}>
@@ -246,8 +256,9 @@ export default function FeedbackSection({ id = 'feedback', className = '' }) {
                                 </button>
                             </div>
                         ) : (
-                            <div className="grid gap-4 sm:grid-cols-2">
-                                {filteredFeedbacks.map((fb) => {
+                            <div>
+                                <div className="grid gap-4 sm:grid-cols-2">
+                                    {pagedFeedbacks.map((fb) => {
                                     const roleInfo = ROLE_CONFIGS[fb.userRole] || ROLE_CONFIGS.customer
                                     const emotion = RATING_EMOTIONS[fb.rating]
 
@@ -368,7 +379,17 @@ export default function FeedbackSection({ id = 'feedback', className = '' }) {
                                     )
                                 })}
                             </div>
-                        )}
+
+                            {/* Pagination Controls */}
+                            <Pagination
+                                className="mt-4 border-t border-white/10 pt-4"
+                                onChange={setPage}
+                                page={page}
+                                pageCount={pageCount}
+                                total={filteredFeedbacks.length}
+                            />
+                        </div>
+                    )}
                     </div>
                 </div>
             </div>

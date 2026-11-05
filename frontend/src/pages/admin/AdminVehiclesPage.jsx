@@ -18,6 +18,7 @@ import Card from '../../components/ui/Card.jsx'
 import ErrorMessage from '../../components/ErrorMessage.jsx'
 import Loading from '../../components/Loading.jsx'
 import StatusPill from '../../components/StatusPill.jsx'
+import Pagination from '../../components/ui/Pagination.jsx'
 import { adminApi } from '../../services/adminApi.js'
 
 export default function AdminVehiclePage() {
@@ -29,6 +30,8 @@ export default function AdminVehiclePage() {
     const [searchTerm, setSearchTerm] = useState('')
     const [statusFilter, setStatusFilter] = useState('all')
     const [iotFilter, setIotFilter] = useState('all')
+    const [page, setPage] = useState(1)
+    const PAGE_SIZE = 8
     const [error, setError] = useState('')
     const [notice, setNotice] = useState('')
     const [loading, setLoading] = useState(true)
@@ -118,6 +121,16 @@ export default function AdminVehiclePage() {
             return true
         })
     }, [vehicles, statusFilter, iotFilter, searchTerm, ownerMap])
+
+    useEffect(() => {
+        setPage(1)
+    }, [statusFilter, iotFilter, searchTerm])
+
+    const pageCount = Math.ceil(filteredVehicle.length / PAGE_SIZE)
+    const paginatedVehicles = useMemo(() => {
+        const start = (page - 1) * PAGE_SIZE
+        return filteredVehicle.slice(start, start + PAGE_SIZE)
+    }, [filteredVehicle, page])
 
     function startEdit(vehicle) {
         setEditingId(vehicle._id)
@@ -313,7 +326,7 @@ export default function AdminVehiclePage() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
-                            {filteredVehicle.map((vehicle) => {
+                            {paginatedVehicles.map((vehicle) => {
                                 const owner = ownerMap.get(vehicle.ownerId)
                                 const device = vehicle.iotDeviceId ? deviceMap.get(vehicle.iotDeviceId) : null
                                 const editing = editingId === vehicle._id
@@ -486,6 +499,13 @@ export default function AdminVehiclePage() {
                             })}
                         </tbody>
                     </table>
+
+                    <Pagination
+                        page={page}
+                        pageCount={pageCount}
+                        total={filteredVehicle.length}
+                        onChange={setPage}
+                    />
                 </div>
             )}
         </AdminPage>

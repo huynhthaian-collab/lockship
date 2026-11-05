@@ -18,6 +18,7 @@ import { OwnerError, OwnerLoading } from '../../components/OwnerFeedback.jsx'
 import StatusPill from '../../components/StatusPill.jsx'
 import Card from '../../components/ui/Card.jsx'
 import EmptyState from '../../components/ui/EmptyState.jsx'
+import Pagination from '../../components/ui/Pagination.jsx'
 import SpatialTiltCard from '../../components/spatial/SpatialTiltCard.jsx'
 import InteractiveMapPicker from '../../components/gis/InteractiveMapPicker.jsx'
 import { useSocketEvent } from '../../hooks/useSocketEvent.js'
@@ -35,6 +36,8 @@ export default function OwnerLocksPage() {
     const [search, setSearch] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(true)
+    const [page, setPage] = useState(1)
+    const PAGE_SIZE = 6
 
     // Case A: 3 Smart Locker Boxes GIS state
     const [smartBoxes, setSmartBoxes] = useState(LOCKSHIP_BOXES)
@@ -70,6 +73,16 @@ export default function OwnerLocksPage() {
         const vehicle = vehicles.find((item) => item._id === device.vehicleId)
         return `${device.deviceId} ${vehicle?.plateNumber || ''}`.toLowerCase().includes(search.trim().toLowerCase())
     }), [devices, search, vehicles])
+
+    useEffect(() => {
+        setPage(1)
+    }, [search])
+
+    const pageCount = Math.ceil(visible.length / PAGE_SIZE)
+    const paginatedDevices = useMemo(() => {
+        const start = (page - 1) * PAGE_SIZE
+        return visible.slice(start, start + PAGE_SIZE)
+    }, [visible, page])
 
     const online = devices.filter((device) => device.status === 'online').length
     const offline = devices.filter((device) => device.status === 'offline').length
@@ -390,7 +403,7 @@ export default function OwnerLocksPage() {
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-white/5">
-                                            {visible.map((device) => (
+                                            {paginatedDevices.map((device) => (
                                                 <tr className="transition hover:bg-white/[0.04]" key={device._id}>
                                                     <td className="px-5 py-4 font-mono text-xs font-bold text-cyan-300 drop-shadow-[0_0_8px_rgba(34,211,238,0.25)]">
                                                         {device.deviceId}
@@ -424,7 +437,7 @@ export default function OwnerLocksPage() {
                                     </table>
                                 </div>
                                 <div className="grid gap-3 md:hidden">
-                                    {visible.map((device) => (
+                                    {paginatedDevices.map((device) => (
                                         <Link
                                             className="spatial-card block p-4 text-inherit no-underline transition hover:border-cyan-400/40"
                                             key={device._id}
@@ -450,6 +463,13 @@ export default function OwnerLocksPage() {
                                         </Link>
                                     ))}
                                 </div>
+
+                                <Pagination
+                                    page={page}
+                                    pageCount={pageCount}
+                                    total={visible.length}
+                                    onChange={setPage}
+                                />
                             </>
                         )}
                     </Card>

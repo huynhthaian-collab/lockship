@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import Card from '../ui/Card.jsx'
 import Modal from '../ui/Modal.jsx'
+import Pagination from '../ui/Pagination.jsx'
 import { boxApi } from '../../services/adminApi.js'
 import { useSocketEvent } from '../../hooks/useSocketEvent.js'
 
@@ -39,6 +40,8 @@ function formatDate(value) {
 
 export default function AdminBoxInstallationSection({ onActionCompleted }) {
     const [pendingBoxes, setPendingBoxes] = useState([])
+    const [page, setPage] = useState(1)
+    const PAGE_SIZE = 5
     const [loading, setLoading] = useState(true)
     const [refreshing, setRefreshing] = useState(false)
     const [error, setError] = useState('')
@@ -178,8 +181,9 @@ export default function AdminBoxInstallationSection({ onActionCompleted }) {
                     </p>
                 </div>
             ) : (
-                <div className="divide-y divide-white/5">
-                    {pendingBoxes.map((box) => (
+                <div className="space-y-3">
+                    <div className="divide-y divide-white/5">
+                        {pendingBoxes.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE).map((box) => (
                         <div
                             key={box._id || box.boxId}
                             className="flex flex-col justify-between gap-4 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-center"
@@ -248,7 +252,15 @@ export default function AdminBoxInstallationSection({ onActionCompleted }) {
                         </div>
                     ))}
                 </div>
-            )}
+
+                <Pagination
+                    page={page}
+                    pageCount={Math.ceil(pendingBoxes.length / PAGE_SIZE)}
+                    total={pendingBoxes.length}
+                    onChange={setPage}
+                />
+            </div>
+        )}
 
             {/* Modal Duyệt & Gắn Tọa độ GPS */}
             <Modal

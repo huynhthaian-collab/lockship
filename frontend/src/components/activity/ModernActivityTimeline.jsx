@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import {
     Unlock,
     Lock,
@@ -26,6 +26,7 @@ import {
     User
 } from 'lucide-react'
 import { getLogCategoryMeta, formatActivityLog } from '../../utils/activityLogFormatter.js'
+import Pagination from '../ui/Pagination.jsx'
 
 function renderEventIcon(iconType) {
     switch (iconType) {
@@ -70,6 +71,8 @@ export default function ModernActivityTimeline({
     const [searchTerm, setSearchTerm] = useState('')
     const [expandedLogId, setExpandedLogId] = useState(null)
     const [copiedId, setCopiedId] = useState(null)
+    const [page, setPage] = useState(1)
+    const PAGE_SIZE = 10
 
     // Normalize logs: format if raw
     const normalizedLogs = useMemo(() => {
@@ -115,6 +118,16 @@ export default function ModernActivityTimeline({
             return true
         })
     }, [normalizedLogs, activeTab, searchTerm])
+
+    useEffect(() => {
+        setPage(1)
+    }, [activeTab, searchTerm])
+
+    const pageCount = Math.ceil(filteredLogs.length / PAGE_SIZE)
+    const paginatedLogs = useMemo(() => {
+        const start = (page - 1) * PAGE_SIZE
+        return filteredLogs.slice(start, start + PAGE_SIZE)
+    }, [filteredLogs, page])
 
     const copyPayload = (id, payload) => {
         navigator.clipboard?.writeText(JSON.stringify(payload, null, 2))
@@ -198,8 +211,9 @@ export default function ModernActivityTimeline({
                     </p>
                 </div>
             ) : (
-                <div className="space-y-2.5">
-                    {filteredLogs.map((log) => {
+                <div className="space-y-3">
+                    <div className="space-y-2.5">
+                        {paginatedLogs.map((log) => {
                         const meta = getLogCategoryMeta(log.category)
                         const isExpanded = expandedLogId === log.id
 
@@ -313,6 +327,15 @@ export default function ModernActivityTimeline({
                             </div>
                         )
                     })}
+                    </div>
+
+                    <Pagination
+                        page={page}
+                        pageCount={pageCount}
+                        total={filteredLogs.length}
+                        onChange={setPage}
+                        className="rounded-2xl border border-white/10 bg-slate-900/60"
+                    />
                 </div>
             )}
         </div>
