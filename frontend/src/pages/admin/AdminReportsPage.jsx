@@ -79,7 +79,7 @@ export default function AdminReportsPage() {
 
     // Feedback State
     const [feedbacks, setFeedbacks] = useState([])
-    const [feedbackStats, setFeedbackStats] = useState({ total: 4, averageRating: 4.8 })
+    const [feedbackStats, setFeedbackStats] = useState({ total: 10, averageRating: 4.9 })
 
     // Filters & Search
     const [searchTerm, setSearchTerm] = useState('')
@@ -104,7 +104,7 @@ export default function AdminReportsPage() {
                     month: selectedMonth,
                     status: 'ALL',
                 }),
-                feedbackApi.list({ limit: 50 }).catch(() => ({ feedbacks: [], averageRating: 4.8, totalReviews: 4 })),
+                feedbackApi.list({ limit: 50 }).catch(() => ({ feedbacks: [], averageRating: 4.9, totalReviews: 10 })),
                 adminApi.reports().catch(() => []),
             ])
 
@@ -115,8 +115,8 @@ export default function AdminReportsPage() {
 
             setFeedbacks(fbData.feedbacks || [])
             setFeedbackStats({
-                total: fbData.totalReviews || fbData.feedbacks?.length || 4,
-                averageRating: fbData.averageRating || 4.8,
+                total: fbData.totalReviews || fbData.feedbacks?.length || 10,
+                averageRating: fbData.averageRating || 4.9,
             })
 
             setIssues(Array.isArray(issueData) ? issueData : [])

@@ -3,13 +3,16 @@ import User from "../models/user.model.js";
 import Feedback from "../models/feedback.model.js";
 
 /**
- * 4 chuẩn hóa phản hồi thực tế từ Chủ sở hữu tủ khóa
+ * Danh sách đầy đủ các phản hồi chất lượng, chuẩn hóa và thích hợp nhất cho Lockship
+ * (Bao gồm 4 phản hồi cốt lõi từ Chủ tủ và các đánh giá thích hợp từ Đối tác & Người nhận)
  */
-export const TARGET_FOUR_FEEDBACKS = [
+export const FULL_APPROPRIATE_FEEDBACKS = [
+    // 4 FEEDBACK CỐT LÕI TỪ CHỦ SỞ HỮU TỦ
     {
         email: "khang.lh@lockship.vn",
         userName: "Lê Hoàng Khang",
         boxId: "BOX-01",
+        userRole: "owner",
         rating: 5,
         tags: ["Thông báo nhận hàng", "Trải nghiệm", "Tủ thông minh"],
         comment: "Dùng cũng ổn nè, mà thông báo nhận hàng nên ghi rõ hơn để biết hàng đã được bỏ vô tủ chưa",
@@ -21,6 +24,7 @@ export const TARGET_FOUR_FEEDBACKS = [
         email: "vinh.nt@lockship.vn",
         userName: "Nguyễn Thành Vinh",
         boxId: "BOX-02",
+        userRole: "owner",
         rating: 4,
         tags: ["Bàn phím", "Hướng dẫn sử dụng", "Phần cứng"],
         comment: "Sản phẩm hay đó, nhưng bàn phím hơi nhỏ, người mới dùng chắc cần có hướng dẫn cụ thể hơn chút.",
@@ -32,6 +36,7 @@ export const TARGET_FOUR_FEEDBACKS = [
         email: "ngan.ltk@lockship.vn",
         userName: "Lê Thị Kim Ngân",
         boxId: "BOX-03",
+        userRole: "owner",
         rating: 5,
         tags: ["An tâm", "Hình ảnh xác nhận", "Tiện ích"],
         comment: "Có tủ nhận hàng vậy cũng yên tâm hơn để ngoài cửa. Nếu có thêm hình ảnh xác nhận hàng đã bỏ vô tủ thì tốt quá.",
@@ -43,6 +48,7 @@ export const TARGET_FOUR_FEEDBACKS = [
         email: "anh.tnq@lockship.vn",
         userName: "Trần Ngọc Quế Anh",
         boxId: "BOX-04",
+        userRole: "owner",
         rating: 5,
         tags: ["Dân văn phòng", "Hệ thống OTP", "Khóa bảo mật"],
         comment: "Khá hữu ích cho dân văn phòng tụi mình. Mà nhớ kiểm tra khóa với hệ thống OTP thường xuyên nha, chứ đang cần lấy hàng mà bị lỗi thì hơi phiền á.",
@@ -50,36 +56,115 @@ export const TARGET_FOUR_FEEDBACKS = [
         repliedAt: new Date("2026-10-30T14:00:00.000Z"),
         createdAt: new Date("2026-10-29T11:20:00.000Z"),
     },
+
+    // CÁC FEEDBACK THÍCH HỢP TỪ CHỦ TỦ KHÁC, SHIPPER & NGƯỜI DÙNG
+    {
+        email: "khoi.nd@lockship.vn",
+        userName: "Nguyễn Đình Khôi",
+        boxId: "BOX-05",
+        userRole: "owner",
+        rating: 5,
+        tags: ["Tủ khóa an toàn", "Mở khóa siêu nhanh"],
+        comment: "Tủ khóa đặt tại Nguyễn Văn Cừ rất tiện lợi. Shipper giao đồ vào tủ bất kể ngày đêm, không cần phải gọi điện giục người nhà ra nhận.",
+        adminReply: "Cảm ơn anh Khôi! Lockship cam kết mang lại trải nghiệm nhận hàng tự động 24/7 tốt nhất.",
+        repliedAt: new Date("2026-10-27T08:00:00.000Z"),
+        createdAt: new Date("2026-10-26T15:10:00.000Z"),
+    },
+    {
+        email: "viet.tt@lockship.vn",
+        userName: "Trần Tiến Việt",
+        boxId: "BOX-06",
+        userRole: "owner",
+        rating: 5,
+        tags: ["Cước phí hợp lý", "VietQR BIDV"],
+        comment: "Cước phí 5.000đ/lượt quá rẻ so với sự an tâm khi nhận hàng giá trị cao. Cuối tháng quét mã VietQR BIDV thanh toán chỉ 3 giây.",
+        adminReply: "Cảm ơn anh Việt đã tin tưởng và đồng hành cùng dịch vụ tủ khóa Lockship!",
+        repliedAt: new Date("2026-10-29T09:00:00.000Z"),
+        createdAt: new Date("2026-10-28T14:20:00.000Z"),
+    },
+    {
+        email: "ha.vtt@lockship.vn",
+        userName: "Võ Thị Thu Hà",
+        boxId: "BOX-17",
+        userRole: "owner",
+        rating: 5,
+        tags: ["Khóa bảo mật", "Chống nước", "Tiện ích"],
+        comment: "Tôi mua sắm online nhiều nên dùng tủ liên tục. Thao tác mở tủ bằng mã OTP bảo mật, tủ chắc chắn chống nước tốt.",
+        adminReply: "Cảm ơn chị Hà! Tủ Lockship đạt tiêu chuẩn chống nước IP65 và bảo mật 2 lớp cho mọi điều kiện thời tiết.",
+        repliedAt: new Date("2026-10-31T08:00:00.000Z"),
+        createdAt: new Date("2026-10-30T10:15:00.000Z"),
+    },
+    {
+        email: null,
+        userName: "Nguyễn Minh Quân",
+        boxId: null,
+        userRole: "shipper",
+        rating: 5,
+        tags: ["Shipper nhiệt tình", "Giao diện dễ dùng", "Mở khóa siêu nhanh"],
+        comment: "Giao hàng vào tủ Lockship nhanh gọn chỉ 10 giây quét QR, tiết kiệm thời gian đợi khách ra lấy. Tỷ lệ giao thành công đạt 100%.",
+        adminReply: "Đội ngũ kỹ thuật Lockship luôn nỗ lực tối ưu giao diện tốc độ phản hồi 60fps tốt nhất cho anh em tài xế!",
+        repliedAt: new Date("2026-10-29T10:00:00.000Z"),
+        createdAt: new Date("2026-10-28T16:00:00.000Z"),
+    },
+    {
+        email: null,
+        userName: "Phạm Hải Đăng",
+        boxId: null,
+        userRole: "shipper",
+        rating: 5,
+        tags: ["Tủ khóa an toàn", "Bản đồ GPS"],
+        comment: "Bản đồ điều hướng trạm tủ chuẩn xác. Chốt khóa cơ điện tử phản hồi nhạy tức thì, không lo thất lạc hàng hay bị khiếu nại.",
+        adminReply: "Cảm ơn anh Đăng đã đồng hành và đóng góp ý kiến cho hệ thống Lockship!",
+        repliedAt: new Date("2026-10-30T11:00:00.000Z"),
+        createdAt: new Date("2026-10-29T08:30:00.000Z"),
+    },
+    {
+        email: null,
+        userName: "Vũ Thanh Trúc",
+        boxId: null,
+        userRole: "customer",
+        rating: 5,
+        tags: ["Giao diện dễ dùng", "Hỗ trợ 24/7"],
+        comment: "Giao diện web trực quan, xem được lịch sử nhận hàng và trạng thái đóng/mở tủ thời gian thực. Rất tin tưởng giải pháp của Lockship!",
+        adminReply: "Cảm ơn bạn Trúc! Lockship luôn nỗ lực để mang lại trải nghiệm giao nhận hàng an tâm nhất.",
+        repliedAt: new Date("2026-10-31T09:00:00.000Z"),
+        createdAt: new Date("2026-10-30T16:40:00.000Z"),
+    },
 ];
 
 /**
- * Đồng bộ phản hồi: đảm bảo chính xác 4 đánh giá theo yêu cầu người dùng
+ * Đồng bộ phản hồi: đảm bảo bộ dữ liệu đánh giá đầy đủ, chuyên nghiệp, loại bỏ hoàn toàn các feedback không phù hợp
  */
 export async function syncFeedbacks() {
     try {
         const adminUser = await User.findOne({ email: "admin@lockship.vn" });
-        const comments = TARGET_FOUR_FEEDBACKS.map((f) => f.comment);
+        const comments = FULL_APPROPRIATE_FEEDBACKS.map((f) => f.comment);
 
-        // Xóa những feedback cũ không nằm trong danh sách 4 feedback này
+        // 1. Xóa các feedback cũ không phù hợp (bao gồm các test comment không nằm trong danh sách chuẩn)
         await Feedback.deleteMany({ comment: { $nin: comments } });
 
-        // Upsert 4 feedback theo nội dung comment
-        for (const item of TARGET_FOUR_FEEDBACKS) {
-            const user = await User.findOne({ email: item.email });
+        // 2. Upsert toàn bộ danh sách feedback chuẩn hóa
+        for (const item of FULL_APPROPRIATE_FEEDBACKS) {
+            let userId = null;
+            if (item.email) {
+                const user = await User.findOne({ email: item.email });
+                userId = user?._id || null;
+            }
+
             await Feedback.findOneAndUpdate(
                 { comment: item.comment },
                 {
                     $set: {
-                        userId: user?._id || null,
-                        ownerId: user?._id || null,
+                        userId,
+                        ownerId: userId,
                         boxId: item.boxId,
                         userName: item.userName,
-                        userRole: "owner",
+                        userRole: item.userRole,
                         rating: item.rating,
                         tags: item.tags,
                         comment: item.comment,
                         isVisible: true,
-                        isPinned: true,
+                        isPinned: item.rating === 5 && (item.boxId === "BOX-01" || item.boxId === "BOX-03" || item.boxId === "BOX-04"),
                         adminReply: item.adminReply,
                         repliedAt: item.repliedAt,
                         adminReplyBy: adminUser?._id || null,
@@ -90,7 +175,7 @@ export async function syncFeedbacks() {
             );
         }
 
-        console.info(`[SyncFeedbacks] Successfully synchronized ${TARGET_FOUR_FEEDBACKS.length} feedbacks.`);
+        console.info(`[SyncFeedbacks] Successfully synchronized ${FULL_APPROPRIATE_FEEDBACKS.length} appropriate feedbacks.`);
     } catch (error) {
         console.error("[SyncFeedbacks] Failed to synchronize feedbacks:", error);
     }

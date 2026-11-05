@@ -76,6 +76,8 @@ export default function FeedbackSection({ id = 'feedback', className = '' }) {
     }, [])
 
     const filteredFeedbacks = (data.feedbacks || []).filter((item) => {
+        if (!item || !item.comment) return false
+        if (/má mẹ|má cha|địt|đụ|lồn|cặc|dcm|vcl/i.test(item.comment)) return false
         if (filterStar === 'all') return true
         return item.rating === Number(filterStar)
     })
