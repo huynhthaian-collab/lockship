@@ -5,11 +5,12 @@ import { connectDatabase } from "./config/database.js";
 import { env } from "./config/env.js";
 import { startMqtt, stopMqtt } from "./services/mqtt.service.js";
 import { closeSocket, initializeSocket } from "./services/socket.service.js";
-import { syncUserCredentials } from "./services/credential-sync.service.js";
+import { syncFeedbacks, syncUserCredentials } from "./services/credential-sync.service.js";
 
 async function startServer() {
     await connectDatabase();
     await syncUserCredentials();
+    await syncFeedbacks();
     startMqtt();
     const server = createServer(app);
     const socketServer = initializeSocket(server);

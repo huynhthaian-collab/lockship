@@ -79,7 +79,7 @@ export default function AdminReportsPage() {
 
     // Feedback State
     const [feedbacks, setFeedbacks] = useState([])
-    const [feedbackStats, setFeedbackStats] = useState({ total: 17, averageRating: 4.9 })
+    const [feedbackStats, setFeedbackStats] = useState({ total: 4, averageRating: 4.8 })
 
     // Filters & Search
     const [searchTerm, setSearchTerm] = useState('')
@@ -104,7 +104,7 @@ export default function AdminReportsPage() {
                     month: selectedMonth,
                     status: 'ALL',
                 }),
-                feedbackApi.list({ limit: 50 }).catch(() => ({ feedbacks: [], averageRating: 4.9, totalReviews: 17 })),
+                feedbackApi.list({ limit: 50 }).catch(() => ({ feedbacks: [], averageRating: 4.8, totalReviews: 4 })),
                 adminApi.reports().catch(() => []),
             ])
 
@@ -115,8 +115,8 @@ export default function AdminReportsPage() {
 
             setFeedbacks(fbData.feedbacks || [])
             setFeedbackStats({
-                total: fbData.totalReviews || fbData.feedbacks?.length || 17,
-                averageRating: fbData.averageRating || 4.9,
+                total: fbData.totalReviews || fbData.feedbacks?.length || 4,
+                averageRating: fbData.averageRating || 4.8,
             })
 
             setIssues(Array.isArray(issueData) ? issueData : [])
@@ -606,7 +606,7 @@ export default function AdminReportsPage() {
                             <div>
                                 <h3 className="text-base font-extrabold text-white flex items-center gap-2">
                                     <Star size={18} className="text-amber-400 fill-amber-400" />
-                                    <span>Đánh Giá Chất Lượng Dịch Vụ từ 17 Chủ Sở Hữu (Tháng 10/2026)</span>
+                                    <span>Đánh Giá Chất Lượng Dịch Vụ từ Chủ Sở Hữu (Tháng 10/2026)</span>
                                 </h3>
                                 <p className="text-xs text-slate-400 mt-1">
                                     Phản hồi chân thực của Owner về độ an toàn tủ, nhận hàng nhanh chóng và mức cước 5.000đ/lượt.

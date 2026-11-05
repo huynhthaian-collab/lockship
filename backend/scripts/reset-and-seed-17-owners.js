@@ -60,7 +60,7 @@ export const SEED_17_OWNERS = [
         ],
         feedback: {
             rating: 5,
-            comment: "Tủ khóa Lockship tại Bến Ninh Kiều rất an toàn và tiện lợi. Shipper giao hàng vào tủ rất nhanh, cước 5.000đ/lượt quá hợp lý.",
+            comment: "Dùng cũng ổn nè, mà thông báo nhận hàng nên ghi rõ hơn để biết hàng đã được bỏ vô tủ chưa",
             date: "2026-10-25T17:00:00.000Z",
         },
     },
@@ -83,7 +83,8 @@ export const SEED_17_OWNERS = [
         ],
         feedback: {
             rating: 5,
-            comment: "Đặt ngay trước cổng trường ĐH Cần Thơ, sinh viên và giảng viên nhận hàng không lo thất lạc. Thanh toán QR BIDV chỉ 3 giây.",
+            rating: 4,
+            comment: "Sản phẩm hay đó, nhưng bàn phím hơi nhỏ, người mới dùng chắc cần có hướng dẫn cụ thể hơn chút.",
             date: "2026-10-28T16:30:00.000Z",
         },
     },
@@ -104,7 +105,7 @@ export const SEED_17_OWNERS = [
         ],
         feedback: {
             rating: 5,
-            comment: "Khóa tủ phản hồi nhanh tức thì, shipper Shopee và Lazada đều khen thao tác quét QR rất mượt mà.",
+            comment: "Có tủ nhận hàng vậy cũng yên tâm hơn để ngoài cửa. Nếu có thêm hình ảnh xác nhận hàng đã bỏ vô tủ thì tốt quá.",
             date: "2026-10-24T18:00:00.000Z",
         },
     },
@@ -125,7 +126,7 @@ export const SEED_17_OWNERS = [
         ],
         feedback: {
             rating: 5,
-            comment: "Không còn lo đi vắng shipper không giao được hàng. Nhận thông báo kèm ảnh chụp kiện hàng cực kỳ yên tâm.",
+            comment: "Khá hữu ích cho dân văn phòng tụi mình. Mà nhớ kiểm tra khóa với hệ thống OTP thường xuyên nha, chứ đang cần lấy hàng mà bị lỗi thì hơi phiền á.",
             date: "2026-10-26T12:00:00.000Z",
         },
     },
@@ -145,11 +146,7 @@ export const SEED_17_OWNERS = [
             { day: "18", time: "17:50", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-5053" },
             { day: "26", time: "15:10", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-5054" },
         ],
-        feedback: {
-            rating: 5,
-            comment: "Tủ hoạt động bền bỉ, tính năng mở khẩn cấp và mã OTP dự phòng hoạt động rất tin cậy khi cúp điện.",
-            date: "2026-10-27T15:30:00.000Z",
-        },
+        feedback: null,
     },
     {
         stt: 6,
@@ -167,11 +164,7 @@ export const SEED_17_OWNERS = [
             { day: "19", time: "10:30", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-6063" },
             { day: "27", time: "18:15", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-6064" },
         ],
-        feedback: {
-            rating: 5,
-            comment: "Trải nghiệm dịch vụ tuyệt vời. Hóa đơn cuối tháng thanh toán qua VietQR BIDV chỉ mất 3 giây quét mã.",
-            date: "2026-10-28T18:45:00.000Z",
-        },
+        feedback: null,
     },
     {
         stt: 7,
@@ -187,11 +180,7 @@ export const SEED_17_OWNERS = [
             { day: "09", time: "14:00", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-7071" },
             { day: "23", time: "11:20", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-7072" },
         ],
-        feedback: {
-            rating: 4,
-            comment: "Dùng thử tháng đầu thấy rất tiện, 5k/lượt cho kiện hàng an toàn là chi phí rất hợp túi tiền.",
-            date: "2026-10-24T11:45:00.000Z",
-        },
+        feedback: null,
     },
     {
         stt: 8,
@@ -207,11 +196,7 @@ export const SEED_17_OWNERS = [
             { day: "10", time: "10:15", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-8081" },
             { day: "24", time: "15:40", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-8082" },
         ],
-        feedback: {
-            rating: 5,
-            comment: "Hệ thống thông báo đẩy real-time rất nhạy, có cả chuông báo khi shipper mở hộc tủ.",
-            date: "2026-10-25T16:00:00.000Z",
-        },
+        feedback: null,
     },
     {
         stt: 9,
@@ -229,11 +214,7 @@ export const SEED_17_OWNERS = [
             { day: "18", time: "09:15", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-9093" },
             { day: "28", time: "17:00", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-9094" },
         ],
-        feedback: {
-            rating: 5,
-            comment: "Khu vực chợ Cái Khế đông đúc nhưng tủ Lockship được thiết kế chắc chắn, chống cạy phá tuyệt vời.",
-            date: "2026-10-29T10:00:00.000Z",
-        },
+        feedback: null,
     },
     {
         stt: 10,
@@ -249,11 +230,7 @@ export const SEED_17_OWNERS = [
             { day: "08", time: "10:30", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1001" },
             { day: "22", time: "14:45", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-1002" },
         ],
-        feedback: {
-            rating: 4,
-            comment: "Rất tiện lợi khi tôi bận họp không ra lấy đồ được. Tủ khóa thông minh hoạt động rất ổn định.",
-            date: "2026-10-23T15:00:00.000Z",
-        },
+        feedback: null,
     },
     {
         stt: 11,
@@ -272,11 +249,7 @@ export const SEED_17_OWNERS = [
             { day: "20", time: "17:30", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-1104" },
             { day: "26", time: "14:00", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1105" },
         ],
-        feedback: {
-            rating: 5,
-            comment: "Tôi mua hàng online thường xuyên, có tủ Lockship này không bao giờ lo giao hàng lỡ hẹn.",
-            date: "2026-10-27T14:30:00.000Z",
-        },
+        feedback: null,
     },
     {
         stt: 12,
@@ -293,11 +266,7 @@ export const SEED_17_OWNERS = [
             { day: "15", time: "16:15", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-1202" },
             { day: "25", time: "10:50", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1203" },
         ],
-        feedback: {
-            rating: 5,
-            comment: "Giao diện web trực quan, bàn phím số to rõ ràng. Shipper nào quét mã QR cũng khen dễ dùng.",
-            date: "2026-10-26T11:00:00.000Z",
-        },
+        feedback: null,
     },
     {
         stt: 13,
@@ -315,11 +284,7 @@ export const SEED_17_OWNERS = [
             { day: "19", time: "09:30", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1303" },
             { day: "27", time: "16:40", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-1304" },
         ],
-        feedback: {
-            rating: 5,
-            comment: "Hệ thống quản lý rất chỉn chu. Báo cáo cước tháng minh bạch từng lượt dùng, kiểm tra rất rõ ràng.",
-            date: "2026-10-28T17:15:00.000Z",
-        },
+        feedback: null,
     },
     {
         stt: 14,
@@ -338,11 +303,7 @@ export const SEED_17_OWNERS = [
             { day: "22", time: "11:05", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-1404" },
             { day: "29", time: "15:50", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1405" },
         ],
-        feedback: {
-            rating: 5,
-            comment: "Rất an tâm về chất lượng phần cứng và độ bảo mật của tủ khóa Lockship. Sẽ tiếp tục dùng lâu dài.",
-            date: "2026-10-30T16:00:00.000Z",
-        },
+        feedback: null,
     },
     {
         stt: 15,
@@ -361,11 +322,7 @@ export const SEED_17_OWNERS = [
             { day: "23", time: "16:20", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-1504" },
             { day: "28", time: "11:30", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1505" },
         ],
-        feedback: {
-            rating: 5,
-            comment: "Thao tác xác thực mở tủ cho shipper ngay trên điện thoại cực kỳ tiện lợi. Đánh giá 5 sao!",
-            date: "2026-10-29T12:00:00.000Z",
-        },
+        feedback: null,
     },
     {
         stt: 16,
@@ -383,11 +340,7 @@ export const SEED_17_OWNERS = [
             { day: "20", time: "09:40", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1603" },
             { day: "27", time: "17:15", action: "OTP_PICKUP_SUCCESS", ord: "ORD-202610-1604" },
         ],
-        feedback: {
-            rating: 5,
-            comment: "Nhận hàng ngoài giờ hành chính hoàn toàn chủ động, dịch vụ chất lượng chuẩn 5 sao!",
-            date: "2026-10-28T18:00:00.000Z",
-        },
+        feedback: null,
     },
     {
         stt: 17,
@@ -407,11 +360,7 @@ export const SEED_17_OWNERS = [
             { day: "24", time: "16:10", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1705" },
             { day: "30", time: "14:35", action: "DELIVERED_TO_LOCKER", ord: "ORD-202610-1706" },
         ],
-        feedback: {
-            rating: 5,
-            comment: "Tôi là tín đồ mua sắm online, tháng 10 nhận tới 6 kiện hàng qua tủ Lockship. Cực kỳ ưng ý và an tâm!",
-            date: "2026-10-31T15:00:00.000Z",
-        },
+        feedback: null,
     },
 ]
 
@@ -593,22 +542,24 @@ async function runResetAndSeed() {
             });
 
             // D. Create Feedback
-            await Feedback.create({
-                userId: owner._id,
-                ownerId: owner._id,
-                boxId: data.boxCode,
-                userName: data.name,
-                userRole: "owner",
-                rating: data.feedback?.rating || 5,
-                comment: data.feedback?.comment || "Tủ khóa Lockship bảo mật cao, nhận hàng tiện lợi.",
-                tags: ["Tủ khóa an toàn", "Mở khóa siêu nhanh", "Cước phí hợp lý", "Bảo mật cao"],
-                isVisible: true,
-                isPinned: data.stt <= 3,
-                adminReply: "Cảm ơn Quý Chủ tủ đã đồng hành và tin tưởng hệ thống Lockship!",
-                repliedAt: new Date("2026-10-31T18:00:00.000Z"),
-                adminReplyBy: adminUser._id,
-                createdAt: new Date(data.feedback?.date || "2026-10-28T10:00:00.000Z"),
-            });
+            if (data.feedback && data.feedback.comment) {
+                await Feedback.create({
+                    userId: owner._id,
+                    ownerId: owner._id,
+                    boxId: data.boxCode,
+                    userName: data.name,
+                    userRole: "owner",
+                    rating: data.feedback.rating || 5,
+                    comment: data.feedback.comment,
+                    tags: ["Tủ thông minh", "Trải nghiệm"],
+                    isVisible: true,
+                    isPinned: true,
+                    adminReply: "Cảm ơn Quý Chủ tủ đã đồng hành và tin tưởng hệ thống Lockship!",
+                    repliedAt: new Date("2026-10-31T18:00:00.000Z"),
+                    adminReplyBy: adminUser._id,
+                    createdAt: new Date(data.feedback.date || "2026-10-28T10:00:00.000Z"),
+                });
+            }
 
             console.log(`[${data.stt}/17] ${data.name} (${data.email}) -> ${data.boxCode} | ${data.usagesCount} lượt (${totalAmount.toLocaleString("vi-VN")} đ) | PAID 100%`);
         }
