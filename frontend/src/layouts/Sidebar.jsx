@@ -40,7 +40,7 @@ const navigation = {
   ],
   admin: [
     { to: '/admin/dashboard', label: 'Bảng điều khiển', icon: LayoutDashboard, end: true },
-    { to: '/admin/reports', label: '📊 Báo cáo & Thống kê', icon: BarChart3 },
+    { to: '/admin/reports', label: 'Báo cáo & Thống kê', icon: BarChart3 },
     { to: '/admin/deliveries', label: 'Đơn giao hàng', icon: Package },
     { to: '/admin/vehicles', label: 'Phương tiện', icon: CarFront },
     { to: '/admin/users', label: 'Người dùng', icon: Users },
