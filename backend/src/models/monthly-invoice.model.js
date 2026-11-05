@@ -88,6 +88,15 @@ const monthlyInvoiceSchema = new mongoose.Schema(
             type: Date,
             default: null,
         },
+        paymentMethod: {
+            type: String,
+            trim: true,
+            default: "VIETQR_BIDV",
+        },
+        paymentDate: {
+            type: Date,
+            default: null,
+        },
         transferSyntax: {
             type: String,
             trim: true,

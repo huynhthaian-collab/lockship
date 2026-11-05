@@ -8,6 +8,18 @@ const feedbackSchema = new mongoose.Schema(
             default: null,
             index: true,
         },
+        ownerId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            default: null,
+            index: true,
+        },
+        boxId: {
+            type: String,
+            trim: true,
+            default: null,
+            index: true,
+        },
         userName: {
             type: String,
             required: true,

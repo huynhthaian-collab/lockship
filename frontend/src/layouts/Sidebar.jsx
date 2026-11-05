@@ -1,5 +1,6 @@
 import {
   Activity,
+  BarChart3,
   Bell,
   CarFront,
   ChevronLeft,
@@ -39,13 +40,13 @@ const navigation = {
   ],
   admin: [
     { to: '/admin/dashboard', label: 'Bảng điều khiển', icon: LayoutDashboard, end: true },
+    { to: '/admin/reports', label: '📊 Báo cáo & Thống kê', icon: BarChart3 },
     { to: '/admin/deliveries', label: 'Đơn giao hàng', icon: Package },
     { to: '/admin/vehicles', label: 'Phương tiện', icon: CarFront },
     { to: '/admin/users', label: 'Người dùng', icon: Users },
     { to: '/admin/iot', label: 'Khóa thông minh', icon: LockKeyhole },
     { to: '/admin/qr-tester', label: 'Cấp phát & In mã QR Box', icon: QrCode },
     { to: '/admin/feedbacks', label: 'Quản lý Đánh giá', icon: Star },
-    { to: '/admin/reports', label: 'Báo cáo', icon: ClipboardList },
     { to: '/admin/logs', label: 'Nhật ký hoạt động', icon: Activity },
   ],
 }

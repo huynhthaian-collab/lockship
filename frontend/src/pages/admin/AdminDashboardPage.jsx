@@ -14,7 +14,6 @@ import { adminApi } from '../../services/adminApi.js'
 import { feedbackApi } from '../../services/feedbackApi.js'
 import AdminBoxInstallationSection from '../../components/admin/AdminBoxInstallationSection.jsx'
 import AdminBillingManagementSection from '../../components/admin/AdminBillingManagementSection.jsx'
-import AdminRevenueReportSection from '../../components/admin/AdminRevenueReportSection.jsx'
 
 function AdminMetricCard({ to, label, value, detail, icon: Icon, tone = 'blue' }) {
     const toneStyles = {
@@ -596,8 +595,27 @@ export default function AdminDashboardPage() {
             {/* Yêu cầu Đăng ký & Nghiệm thu Lắp đặt Tủ Khóa */}
             <AdminBoxInstallationSection onActionCompleted={() => refresh(true)} />
 
-            {/* Báo cáo Doanh thu & Cước phí (Biểu đồ tần suất & Bảng đối soát 15 Owner) */}
-            <AdminRevenueReportSection onActionCompleted={() => refresh(true)} />
+            {/* Báo cáo Doanh thu & Thống kê đã được tách riêng ra Route /admin/reports */}
+            <div className="rounded-3xl border border-cyan-500/30 bg-gradient-to-r from-cyan-950/40 via-blue-950/30 to-indigo-950/40 p-5 shadow-xl backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="space-y-1 text-center sm:text-left">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-xs font-bold uppercase tracking-wider">
+                        <span>📊 Trang Báo Cáo Chuyên Sâu</span>
+                    </div>
+                    <h3 className="text-base font-extrabold text-white">
+                        Báo cáo Doanh thu, Cước phí & Phân tích Đánh giá Khách hàng
+                    </h3>
+                    <p className="text-xs text-slate-400">
+                        Theo dõi biểu đồ lượt sử dụng theo ngày, top chủ tủ phát sinh cước và bảng đối soát 17 Owner tháng 10/2026.
+                    </p>
+                </div>
+                <Link
+                    to="/admin/reports"
+                    className="shrink-0 px-5 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-extrabold text-xs shadow-lg shadow-cyan-500/25 inline-flex items-center gap-2 transition-all active:scale-95"
+                >
+                    <span>Xem Báo cáo Chi tiết</span>
+                    <span>→</span>
+                </Link>
+            </div>
 
             {/* Quản lý Cước & Thanh toán Tháng (MoMo / VietQR BIDV) */}
             <AdminBillingManagementSection onActionCompleted={() => refresh(true)} />

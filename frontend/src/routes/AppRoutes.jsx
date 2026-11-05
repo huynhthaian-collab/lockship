@@ -122,6 +122,7 @@ export default function AppRoutes() {
               <Route path="iot/:id" element={<AdminIoTDetailPage />} />
               <Route path="feedbacks" element={<AdminFeedbacksPage />} />
               <Route path="reports" element={<AdminReportsPage />} />
+              <Route path="revenue-analytics" element={<AdminReportsPage />} />
               <Route path="logs" element={<AdminLogsPage />} />
               <Route path="qr-tester" element={<QrCodeTesterPage role="admin" />} />
             </Route>
