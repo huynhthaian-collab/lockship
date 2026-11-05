@@ -271,8 +271,8 @@ export default function AdminReportsPage() {
                 inv.paymentStatus === 'PAID'
                     ? 'Đã thanh toán (PAID)'
                     : inv.paymentStatus === 'PENDING_VERIFICATION'
-                    ? 'Chờ đối soát (PENDING)'
-                    : 'Chưa thanh toán (UNPAID)'
+                        ? 'Chờ đối soát (PENDING)'
+                        : 'Chưa thanh toán (UNPAID)'
 
             return [
                 index + 1,
@@ -339,23 +339,21 @@ export default function AdminReportsPage() {
                 <button
                     type="button"
                     onClick={() => setPageTab('REVENUE_ANALYTICS')}
-                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-xs font-extrabold transition-all ${
-                        pageTab === 'REVENUE_ANALYTICS'
+                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-xs font-extrabold transition-all ${pageTab === 'REVENUE_ANALYTICS'
                             ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/25'
                             : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'
-                    }`}
+                        }`}
                 >
                     <BarChart3 size={15} />
-                    <span>📊 Doanh thu & Cước phí (Chính)</span>
+                    <span>Doanh thu & Cước phí (Chính)</span>
                 </button>
                 <button
                     type="button"
                     onClick={() => setPageTab('INCIDENT_REPORTS')}
-                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-xs font-bold transition-all ${
-                        pageTab === 'INCIDENT_REPORTS'
+                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-xs font-bold transition-all ${pageTab === 'INCIDENT_REPORTS'
                             ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/25'
                             : 'bg-white/5 text-slate-400 hover:text-white hover:bg-white/10'
-                    }`}
+                        }`}
                 >
                     <AlertTriangle size={15} />
                     <span>⚠️ Phản ánh sự cố ({issues.length})</span>
@@ -538,16 +536,14 @@ export default function AdminReportsPage() {
                                             {/* Column Bar */}
                                             <div
                                                 style={{ height: `${heightPercent}%` }}
-                                                className={`w-full max-w-[14px] rounded-t-md transition-all duration-300 ${
-                                                    hasUsages
+                                                className={`w-full max-w-[14px] rounded-t-md transition-all duration-300 ${hasUsages
                                                         ? 'bg-gradient-to-t from-cyan-600 via-cyan-400 to-emerald-400 hover:brightness-125 shadow-[0_0_10px_rgba(34,211,238,0.3)]'
                                                         : 'bg-white/5 hover:bg-white/10'
-                                                }`}
+                                                    }`}
                                             />
                                             {/* Day Number Label */}
-                                            <span className={`mt-2 text-[9px] font-mono transition-colors ${
-                                                hasUsages ? 'text-cyan-300 font-bold' : 'text-slate-600'
-                                            }`}>
+                                            <span className={`mt-2 text-[9px] font-mono transition-colors ${hasUsages ? 'text-cyan-300 font-bold' : 'text-slate-600'
+                                                }`}>
                                                 {d.day}
                                             </span>
                                         </div>
@@ -729,95 +725,95 @@ export default function AdminReportsPage() {
                         ) : (
                             <div className="space-y-3">
                                 <div className="overflow-x-auto rounded-2xl border border-white/10">
-                                <table className="w-full text-left text-xs">
-                                    <thead className="bg-white/[0.04] text-[11px] font-extrabold uppercase tracking-wider text-slate-400 border-b border-white/10">
-                                        <tr>
-                                            <th className="py-3 px-3 text-center">STT</th>
-                                            <th className="py-3 px-4">Chủ Sở Hữu (Owner)</th>
-                                            <th className="py-3 px-4">Mã Box & Trạm Tủ</th>
-                                            <th className="py-3 px-4">Địa Chỉ Lắp Đặt</th>
-                                            <th className="py-3 px-3 text-center">Số Lượt</th>
-                                            <th className="py-3 px-4 text-right">Tổng Cước</th>
-                                            <th className="py-3 px-3 text-center">Trạng Thái</th>
-                                            <th className="py-3 px-3 text-center">Phương Thức</th>
-                                            <th className="py-3 px-3 text-center">Thao Tác</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-white/5 font-medium">
-                                        {paginatedInvoices.map((inv, idx) => {
-                                            const globalIdx = (invoicePage - 1) * INVOICE_PAGE_SIZE + idx + 1
-                                            const firstUsage = inv.usageHistory?.[0]
-                                            const boxCode = firstUsage?.boxId || `BOX-${String(globalIdx).padStart(2, '0')}`
-                                            const boxName = firstUsage?.boxName || `Lockship Box #${boxCode}`
-                                            const address = firstUsage?.boxAddress || inv.ownerId?.address || 'Cần Thơ'
+                                    <table className="w-full text-left text-xs">
+                                        <thead className="bg-white/[0.04] text-[11px] font-extrabold uppercase tracking-wider text-slate-400 border-b border-white/10">
+                                            <tr>
+                                                <th className="py-3 px-3 text-center">STT</th>
+                                                <th className="py-3 px-4">Chủ Sở Hữu (Owner)</th>
+                                                <th className="py-3 px-4">Mã Box & Trạm Tủ</th>
+                                                <th className="py-3 px-4">Địa Chỉ Lắp Đặt</th>
+                                                <th className="py-3 px-3 text-center">Số Lượt</th>
+                                                <th className="py-3 px-4 text-right">Tổng Cước</th>
+                                                <th className="py-3 px-3 text-center">Trạng Thái</th>
+                                                <th className="py-3 px-3 text-center">Phương Thức</th>
+                                                <th className="py-3 px-3 text-center">Thao Tác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-white/5 font-medium">
+                                            {paginatedInvoices.map((inv, idx) => {
+                                                const globalIdx = (invoicePage - 1) * INVOICE_PAGE_SIZE + idx + 1
+                                                const firstUsage = inv.usageHistory?.[0]
+                                                const boxCode = firstUsage?.boxId || `BOX-${String(globalIdx).padStart(2, '0')}`
+                                                const boxName = firstUsage?.boxName || `Lockship Box #${boxCode}`
+                                                const address = firstUsage?.boxAddress || inv.ownerId?.address || 'Cần Thơ'
 
-                                            return (
-                                                <tr
-                                                    key={inv._id || idx}
-                                                    className="hover:bg-white/[0.02] transition-colors"
-                                                >
-                                                    <td className="py-3.5 px-3 text-center font-mono font-bold text-slate-400">
-                                                        {globalIdx}
-                                                    </td>
-                                                    <td className="py-3.5 px-4">
-                                                        <div className="font-extrabold text-white text-sm">
-                                                            {inv.ownerId?.name || 'Chủ tủ'}
-                                                        </div>
-                                                        <div className="text-[11px] text-slate-400 font-mono">
-                                                            {inv.ownerId?.phone || '—'} · {inv.ownerId?.email || '—'}
-                                                        </div>
-                                                    </td>
-                                                    <td className="py-3.5 px-4">
-                                                        <span className="font-mono font-bold text-cyan-300 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-400/20 text-[11px]">
-                                                            {boxCode}
-                                                        </span>
-                                                        <div className="text-[11px] text-slate-300 font-medium mt-0.5 line-clamp-1">
-                                                            {boxName}
-                                                        </div>
-                                                    </td>
-                                                    <td className="py-3.5 px-4 text-slate-400 max-w-xs truncate text-[11px]" title={address}>
-                                                        {address}
-                                                    </td>
-                                                    <td className="py-3.5 px-3 text-center font-mono font-extrabold text-white text-sm">
-                                                        {inv.totalUsages || 0}
-                                                    </td>
-                                                    <td className="py-3.5 px-4 text-right font-mono font-black text-emerald-400 text-sm">
-                                                        {formatMoney(inv.totalAmount)}
-                                                    </td>
-                                                    <td className="py-3.5 px-3 text-center">
-                                                        <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/40 bg-emerald-500/20 px-2.5 py-0.5 text-[11px] font-bold text-emerald-300">
-                                                            <CheckCircle2 size={12} />
-                                                            ĐÃ THANH TOÁN
-                                                        </span>
-                                                    </td>
-                                                    <td className="py-3.5 px-3 text-center font-mono text-[11px] text-cyan-300">
-                                                        VietQR BIDV
-                                                    </td>
-                                                    <td className="py-3.5 px-3 text-center">
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => setSelectedInvoiceForHistory(inv)}
-                                                            className="inline-flex items-center gap-1 rounded-xl border border-cyan-400/30 bg-cyan-500/10 px-2.5 py-1 text-xs font-bold text-cyan-300 hover:bg-cyan-500/20 transition-all"
-                                                        >
-                                                            <Eye size={12} />
-                                                            <span>Lịch sử</span>
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            )
-                                        })}
-                                    </tbody>
-                                </table>
+                                                return (
+                                                    <tr
+                                                        key={inv._id || idx}
+                                                        className="hover:bg-white/[0.02] transition-colors"
+                                                    >
+                                                        <td className="py-3.5 px-3 text-center font-mono font-bold text-slate-400">
+                                                            {globalIdx}
+                                                        </td>
+                                                        <td className="py-3.5 px-4">
+                                                            <div className="font-extrabold text-white text-sm">
+                                                                {inv.ownerId?.name || 'Chủ tủ'}
+                                                            </div>
+                                                            <div className="text-[11px] text-slate-400 font-mono">
+                                                                {inv.ownerId?.phone || '—'} · {inv.ownerId?.email || '—'}
+                                                            </div>
+                                                        </td>
+                                                        <td className="py-3.5 px-4">
+                                                            <span className="font-mono font-bold text-cyan-300 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-400/20 text-[11px]">
+                                                                {boxCode}
+                                                            </span>
+                                                            <div className="text-[11px] text-slate-300 font-medium mt-0.5 line-clamp-1">
+                                                                {boxName}
+                                                            </div>
+                                                        </td>
+                                                        <td className="py-3.5 px-4 text-slate-400 max-w-xs truncate text-[11px]" title={address}>
+                                                            {address}
+                                                        </td>
+                                                        <td className="py-3.5 px-3 text-center font-mono font-extrabold text-white text-sm">
+                                                            {inv.totalUsages || 0}
+                                                        </td>
+                                                        <td className="py-3.5 px-4 text-right font-mono font-black text-emerald-400 text-sm">
+                                                            {formatMoney(inv.totalAmount)}
+                                                        </td>
+                                                        <td className="py-3.5 px-3 text-center">
+                                                            <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/40 bg-emerald-500/20 px-2.5 py-0.5 text-[11px] font-bold text-emerald-300">
+                                                                <CheckCircle2 size={12} />
+                                                                ĐÃ THANH TOÁN
+                                                            </span>
+                                                        </td>
+                                                        <td className="py-3.5 px-3 text-center font-mono text-[11px] text-cyan-300">
+                                                            VietQR BIDV
+                                                        </td>
+                                                        <td className="py-3.5 px-3 text-center">
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => setSelectedInvoiceForHistory(inv)}
+                                                                className="inline-flex items-center gap-1 rounded-xl border border-cyan-400/30 bg-cyan-500/10 px-2.5 py-1 text-xs font-bold text-cyan-300 hover:bg-cyan-500/20 transition-all"
+                                                            >
+                                                                <Eye size={12} />
+                                                                <span>Lịch sử</span>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <Pagination
+                                    page={invoicePage}
+                                    pageCount={invoicePageCount}
+                                    total={filteredInvoices.length}
+                                    onChange={setInvoicePage}
+                                />
                             </div>
-
-                            <Pagination
-                                page={invoicePage}
-                                pageCount={invoicePageCount}
-                                total={filteredInvoices.length}
-                                onChange={setInvoicePage}
-                            />
-                        </div>
-                    )}
+                        )}
                     </div>
                 </div>
             ) : (
